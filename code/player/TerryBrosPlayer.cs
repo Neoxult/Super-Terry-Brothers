@@ -24,14 +24,9 @@ namespace TerryBros.Player
 			viewDirection = Vector3.Right;
 		}
 
-		public TerryBrosPlayer( Client cl)
+		public TerryBrosPlayer( Client cl) : this()
 		{
 			Clothing.LoadFromClient( cl );
-
-			//TODO: Use Forward and left for easier understanding
-			//NOTE: Currently set for Construct map
-			moveDirection = Vector3.Backward;
-			viewDirection = Vector3.Right;
 		}
 		public override void Respawn()
 		{
