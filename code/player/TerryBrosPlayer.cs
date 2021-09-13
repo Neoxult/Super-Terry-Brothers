@@ -3,6 +3,8 @@ using System;
 
 namespace TerryBros.Player
 {
+	using Camera;
+
 	partial class TerryBrosPlayer : Sandbox.Player
 	{
 		public override void Respawn()
@@ -22,7 +24,7 @@ namespace TerryBros.Player
 			//
 			// Use ThirdPersonCamera (you can make your own Camera for 100% control)
 			//
-			Camera = new ThirdPersonCamera();
+			Camera = new SideScrollerCamera();
 
 			EnableAllCollisions = true;
 			EnableDrawing = true;
