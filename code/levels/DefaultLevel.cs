@@ -39,20 +39,12 @@ namespace TerryBros.Levels
 			for ( int i = 0; i < height; i++  )
 			{
 				int x = GridX + i;
-				if ( upward )
-				{
-					for ( int y = GridY; y < GridY + i + 1; y++ )
-					{
-						CreateBox( x, y );
-					}
 
-				}
-				else
+				int maxHeight = upward ? i + 1 : height - i;
+				for ( int j = 0; j < maxHeight; j++ )
 				{
-					for ( int y = GridY + height - i - 1 ; y > GridY - 1; y-- )
-					{
-						CreateBox( x, y );
-					}
+					int y = GridY + j;
+					CreateBox( x, y );
 				}
 			}
 		}
