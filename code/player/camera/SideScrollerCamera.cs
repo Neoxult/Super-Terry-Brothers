@@ -13,16 +13,16 @@ namespace TerryBros.Player.Camera
 
 		public override void Update()
 		{
-			var pawn = Local.Pawn as TerryBrosPlayer;
+			var player = Local.Pawn as TerryBrosPlayer;
 
-			if ( pawn == null )
+			if ( player == null )
 				return;
 
-			Pos = pawn.Position;
+			Pos = player.Position;
 			Pos += Vector3.Up * Screen.Height * orthoSize * viewHeightScale;
-			Pos -= lookDirection * distance;
+			Pos -= player.viewDirection * distance;
 
-			Rot = Rotation.LookAt( lookDirection, Vector3.Up );
+			Rot = Rotation.LookAt( player.viewDirection, Vector3.Up );
 
 			Ortho = true;
 			OrthoSize = orthoSize;

@@ -7,6 +7,15 @@ namespace TerryBros.Player
 
 	partial class TerryBrosPlayer : Sandbox.Player
 	{
+		public Vector3 moveDirection { get; private set; }
+		public Vector3 viewDirection { get; private set; }
+		public TerryBrosPlayer()
+		{
+			//TODO: Use Forward and left for easier understanding
+			//NOTE: Currently set for Construct map
+			moveDirection = Vector3.Backward;
+			viewDirection = Vector3.Right;
+		}
 		public override void Respawn()
 		{
 			SetModel( "models/citizen/citizen.vmdl" );
