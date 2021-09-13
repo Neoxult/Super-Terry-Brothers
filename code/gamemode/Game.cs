@@ -36,7 +36,7 @@ namespace TerryBros.Gamemode
 		{
 			base.ClientJoined( client );
 
-			var player = new TerryBrosPlayer();
+			var player = new TerryBrosPlayer(client);
 			client.Pawn = player;
 
 			//TODO: Change to proper Level Creation and Spawn
