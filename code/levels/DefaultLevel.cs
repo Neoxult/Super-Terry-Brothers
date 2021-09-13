@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 
 namespace TerryBros.Levels
 {
@@ -14,9 +15,11 @@ namespace TerryBros.Levels
 			this.forward = forward;
 			this.up = up;
 
-			createFloor();
+			CreateFloor();
+			CreateStair( 5, 1, 3, true );
+			CreateStair( 8, 1, 3, false );
 		}
-		private ModelEntity createBox( Vector3 pos, int boxOffsetX, int boxOffsetY)
+		private ModelEntity CreateBox(int GridX, int GridY)
 		{
 			ModelEntity box = new ModelEntity
 			{
@@ -25,18 +28,42 @@ namespace TerryBros.Levels
 
 			box.SetModel( "models/citizen_props/crate01.vmdl" );
 			box.SetupPhysicsFromModel( PhysicsMotionType.Static );
-			box.Position = pos + boxOffsetX * forward * box.CollisionBounds.Size + boxOffsetX * up * box.CollisionBounds.Size;//  groundPos + i * forward * box.CollisionBounds.Size - j * up * box.CollisionBounds.Size;
+			box.Position = groundPos + GridX * forward * box.CollisionBounds.Size + GridY * up * box.CollisionBounds.Size;//  groundPos + i * forward * box.CollisionBounds.Size - j * up * box.CollisionBounds.Size;
 
 			return box;
 		}
-		private void createFloor()
+		private void CreateStair(int GridX, int GridY, int height, bool upward = true)
+		{
+			int direction = upward ? 1 : -1;
+
+			for ( int i = 0; i < height; i++  )
+			{
+				int x = GridX + i;
+				if ( upward )
+				{
+					for ( int y = GridY; y < GridY + i + 1; y++ )
+					{
+						CreateBox( x, y );
+					}
+
+				}
+				else
+				{
+					for ( int y = GridY + height - i - 1 ; y > GridY - 1; y-- )
+					{
+						CreateBox( x, y );
+					}
+				}
+			}
+		}
+		private void CreateFloor()
 		{
 			
-			for (int i=0; i<100; i++ )
+			for (int i=-100; i<100; i++ )
 			{
 				for (int j=0; j>-4; j-- )
 				{
-					createBox(groundPos, i ,j);
+					CreateBox(i, j);
 				}
 			}
 
