@@ -29,7 +29,7 @@ namespace TerryBros.Gamemode
 				// and when it is created clientside it creates the actual
 				// UI panels. You don't have to create your HUD via an entity,
 				// this just feels like a nice neat way to do it.
-				new TerryBrosHudEntity();
+				new Hud();
 			}
 
 			if ( IsClient )
