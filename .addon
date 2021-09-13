@@ -1,4 +1,23 @@
 {
+    "name": "Super Terry Brothers",
+    "version": "0.01",
     "sharedassets": "*.*",
-    "type": "game"
+    "type": "game",
+
+    "depends": [
+        "base",
+        "citizen",
+        "rust"
+    ],
+
+    //
+    // Addons can contain multiple addons, describe them here
+    //
+    "gamemodes": [
+        {
+            "name": "STerryBros",
+            "title": "Super Terry Brothers",
+            "description": "Get to the finish line, without dying"
+        }
+    ]
 }
