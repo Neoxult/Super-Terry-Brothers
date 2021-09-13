@@ -1,12 +1,10 @@
-﻿using Sandbox;
-
-namespace TerryBros.Levels
+﻿namespace TerryBros.Levels
 {
-	partial class Level
-	{
-		public Level()
-		{
+    partial class Level
+    {
+        public Level()
+        {
 
-		}
-	}
+        }
+    }
 }
