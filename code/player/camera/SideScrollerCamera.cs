@@ -8,9 +8,6 @@ namespace TerryBros.Player.Camera
 		private float viewHeightScale = 0.2f;
 		private float orthoSize = 0.3f;
 
-		//TODO: Make that globally available
-		private Vector3 lookDirection = Vector3.Right;
-
 		public override void Update()
 		{
 			var player = Local.Pawn as TerryBrosPlayer;
@@ -21,6 +18,7 @@ namespace TerryBros.Player.Camera
 			Pos = player.Position;
 			Pos += Vector3.Up * Screen.Height * orthoSize * viewHeightScale;
 			Pos -= player.viewDirection * distance;
+			//Pos += player.moveDirection * 100;
 
 			Rot = Rotation.LookAt( player.viewDirection, Vector3.Up );
 
