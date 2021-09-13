@@ -15,7 +15,7 @@
     //
     "gamemodes": [
         {
-            "name": "STerryBros",
+            "name": "terrybros",
             "title": "Super Terry Brothers",
             "description": "Get to the finish line, without dying"
         }
