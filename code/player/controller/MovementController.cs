@@ -9,6 +9,7 @@ namespace TerryBros.Player.Controller
 			if ( Pawn is not TerryBrosPlayer player )
 				return;
 
+			//TODO: Do a proper implementation of the controller
 			Input.Rotation = Rotation.LookAt( player.moveDirection, Vector3.Up );
 
 			//TODO: Correct for current moveDirection

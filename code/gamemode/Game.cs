@@ -2,6 +2,7 @@
 using Sandbox;
 using TerryBros.Player;
 using TerryBros.UI;
+using TerryBros.Levels;
 using System;
 
 //
@@ -19,22 +20,12 @@ namespace TerryBros.Gamemode
 	/// </summary>
 	public partial class Game : Sandbox.Game
 	{
+		private Level currentLevel = null;
 		public Game()
 		{
 			if ( IsServer )
 			{
-				Log.Info( "My Gamemode Has Created Serverside!" );
-
-				// Create a HUD entity. This entity is globally networked
-				// and when it is created clientside it creates the actual
-				// UI panels. You don't have to create your HUD via an entity,
-				// this just feels like a nice neat way to do it.
 				new Hud();
-			}
-
-			if ( IsClient )
-			{
-				Log.Info( "My Gamemode Has Created Clientside!" );
 			}
 		}
 
@@ -48,7 +39,18 @@ namespace TerryBros.Gamemode
 			var player = new TerryBrosPlayer();
 			client.Pawn = player;
 
+			//TODO: Change to proper Level Creation and Spawn
+			//Create a Level underneath the spawns
 			player.Respawn();
+			player.Position += Vector3.Up * 200f;
+
+			if ( currentLevel != null ) 
+				return;
+
+			if ( player.Controller is not WalkController controller ) 
+				return;
+
+			currentLevel = new DefaultLevel( player.Position - Vector3.Up *100f, player.moveDirection, Vector3.Up ); ;
 		}
 	}
 

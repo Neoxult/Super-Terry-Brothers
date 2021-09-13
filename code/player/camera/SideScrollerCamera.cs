@@ -18,7 +18,6 @@ namespace TerryBros.Player.Camera
 			Pos = player.Position;
 			Pos += Vector3.Up * Screen.Height * orthoSize * viewHeightScale;
 			Pos -= player.viewDirection * distance;
-			//Pos += player.moveDirection * 100;
 
 			Rot = Rotation.LookAt( player.viewDirection, Vector3.Up );
 
