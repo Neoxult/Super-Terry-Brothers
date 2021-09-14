@@ -1,4 +1,3 @@
-﻿
 using Sandbox;
 
 using TerryBros.Player;
@@ -19,9 +18,9 @@ namespace TerryBros.Gamemode
             if (IsServer)
             {
                 new Hud();
+                currentLevel = new DefaultLevel(new Vector3(0, 0, 0), Vector3.Backward, Vector3.Up);
             }
         }
-
         public override void ClientJoined(Client client)
         {
             base.ClientJoined(client);
@@ -32,19 +31,6 @@ namespace TerryBros.Gamemode
             //TODO: Change to proper Level Creation and Spawn
             //Create a Level underneath the spawns
             player.Respawn();
-            player.Position += Vector3.Up * 200f;
-
-            if (currentLevel != null)
-            {
-                return;
-            }
-
-            if (player.Controller is not WalkController controller)
-            {
-                return;
-            }
-
-            currentLevel = new DefaultLevel(player.Position - Vector3.Up * 100f, player.moveDirection, Vector3.Up);
         }
     }
 }

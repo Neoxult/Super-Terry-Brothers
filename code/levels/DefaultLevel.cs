@@ -1,10 +1,10 @@
-﻿using Sandbox;
+using Sandbox;
 
 using TerryBros.Player;
 
 namespace TerryBros.Levels
 {
-    partial class DefaultLevel : Level
+    public partial class DefaultLevel : Level
     {
         private Vector3 groundPos;
         private Vector3 forward;
@@ -12,6 +12,17 @@ namespace TerryBros.Levels
 
         public DefaultLevel(Vector3 groundPos, Vector3 forward, Vector3 up)
         {
+            var spawn = Entity.Create<SpawnPoint>();
+            spawn.Position = new Vector3(0, 0, 10);
+
+            var light = Entity.Create<EnvironmentLightEntity>();
+            light.Rotation = Rotation.LookAt(new Vector3(1, -1, -4), up);
+            light.Brightness = 2f;
+
+            light = Entity.Create<EnvironmentLightEntity>();
+            light.Rotation = Rotation.LookAt(new Vector3(-1, -0.5f, -1), up);
+            light.Brightness = 2f;
+
             this.groundPos = groundPos;
             this.forward = forward;
             this.up = up;

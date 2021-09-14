@@ -3,6 +3,7 @@
     "version": "0.01",
     "sharedassets": "*.*",
     "type": "game",
+    "ident": "neox.terrybros",
 
     "depends": [
         "base",

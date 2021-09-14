@@ -1,6 +1,6 @@
-﻿namespace TerryBros.Levels
+namespace TerryBros.Levels
 {
-    partial class Level
+    public partial class Level : Sandbox.Entity
     {
         public Level()
         {
