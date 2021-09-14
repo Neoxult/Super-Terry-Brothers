@@ -1,8 +1,11 @@
-using Sandbox;
 using System.Linq;
-using TerryBros.Player;
-using TerryBros.Settings;
+
+using Sandbox;
+
 using TerryBros.Objects;
+using TerryBros.Player;
+using TerryBros.Player.Controller;
+using TerryBros.Settings;
 
 namespace TerryBros.Levels
 {
@@ -26,7 +29,8 @@ namespace TerryBros.Levels
                 if (isNewSpawnSet)
                 {
                     spawn.Delete();
-                } else
+                }
+                else
                 {
                     spawn.Transform = newSpawn;
                     isNewSpawnSet = true;
@@ -97,7 +101,16 @@ namespace TerryBros.Levels
         private static void CreateBlock()
         {
             TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
+            MovementController movementController = player.Controller as MovementController;
+            Vector3 forwardVector = movementController.Forward ? globalSettings.forwardDir : -globalSettings.forwardDir;
+            Vector3 position = player.Position + forwardVector * 100f + new Vector3(0, 0, 25f);
 
+            CreateBlock(position);
+            ClientCreateBlock(position);
+        }
+
+        public static void CreateBlock(Vector3 position)
+        {
             VertexBuffer vb = new VertexBuffer();
             vb.Init(true);
             vb.AddCube(Vector3.Zero, Vector3.One * 50.0f, Rotation.Identity);
@@ -111,18 +124,23 @@ namespace TerryBros.Levels
                 .AddCollisionBox(Vector3.One * 25.0f)
                 .Create();
 
-            Vector3 position = player.Position + player.EyeRot.Forward * 100f;
-            position += new Vector3(0, 0, 25f);
-
             AnimEntity entity = new AnimEntity();
             entity.SetModel(model);
             entity.SetupPhysicsFromModel(PhysicsMotionType.Static);
             entity.RenderColor = Color.Random;
             entity.Position = position;
+            entity.Spawn();
 
-            entity.RenderDirty();
+            if (Host.IsClient)
+            {
+                DebugOverlay.Box(position - 25f, position + 25f, Color.FromBytes(255, 0, 0), 2000f);
+            }
+        }
 
-            DebugOverlay.Box(position - 25f, position + 25f, Color.FromBytes(255, 0, 0), 2000f);
+        [ClientRpc]
+        public static void ClientCreateBlock(Vector3 position)
+        {
+            CreateBlock(position);
         }
     }
 }
