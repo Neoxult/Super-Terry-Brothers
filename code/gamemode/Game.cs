@@ -18,8 +18,15 @@ namespace TerryBros.Gamemode
             if (IsServer)
             {
                 new Hud();
+            }
+        }
+        public override void PostLevelLoaded()
+        {
+            if (currentLevel == null || !currentLevel.IsValid)
+            {
                 currentLevel = new DefaultLevel(new Vector3(0, 0, 0), Vector3.Backward, Vector3.Up);
             }
+            base.PostLevelLoaded();
         }
         public override void ClientJoined(Client client)
         {
@@ -28,8 +35,6 @@ namespace TerryBros.Gamemode
             var player = new TerryBrosPlayer(client);
             client.Pawn = player;
 
-            //TODO: Change to proper Level Creation and Spawn
-            //Create a Level underneath the spawns
             player.Respawn();
         }
     }

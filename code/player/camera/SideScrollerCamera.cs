@@ -1,11 +1,11 @@
-﻿using Sandbox;
+using Sandbox;
 
 namespace TerryBros.Player.Camera
 {
     public partial class SideScrollerCamera : Sandbox.Camera
     {
         private float distance = 1500;
-        private float viewHeightScale = 0.2f;
+        private float viewHeightScale = 0.3f;
         private float orthoSize = 0.3f;
 
         public override void Update()

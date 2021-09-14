@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>terrybros</name>
+    </assembly>
+    <members>
+        <member name="F:TerryBros.Player.TerryBrosPlayer.Clothing">
+            <summary>
+            The clothing container is what dresses the citizen
+            </summary>
+        </member>
+        <member name="M:TerryBros.Player.TerryBrosPlayer.Simulate(Sandbox.Client)">
+            <summary>
+            Called every tick, clientside and serverside.
+            </summary>
+        </member>
+        <member name="T:TerryBros.UI.Hud">
+            <summary>
+            This is the HUD entity. It creates a RootPanel clientside, which can be accessed
+            via RootPanel on this entity, or Local.Hud.
+            </summary>
+        </member>
+    </members>
+</doc>

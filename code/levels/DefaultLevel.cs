@@ -1,5 +1,5 @@
 using Sandbox;
-
+using System.Linq;
 using TerryBros.Player;
 
 namespace TerryBros.Levels
@@ -12,8 +12,25 @@ namespace TerryBros.Levels
 
         public DefaultLevel(Vector3 groundPos, Vector3 forward, Vector3 up)
         {
-            var spawn = Entity.Create<SpawnPoint>();
-            spawn.Position = new Vector3(0, 0, 10);
+            bool isNewSpawnSet = false;
+            Transform newSpawn = new Transform(new Vector3(0, 0, 40));
+
+            foreach (SpawnPoint spawn in All.OfType<SpawnPoint>())
+            {
+                if (isNewSpawnSet)
+                {
+                    spawn.Delete();
+                } else
+                {
+                    spawn.Transform = newSpawn;
+                    isNewSpawnSet = true;
+                }
+            }
+            if (!isNewSpawnSet)
+            {
+                var spawn = Create<SpawnPoint>();
+                spawn.Transform = newSpawn;
+            }
 
             var light = Entity.Create<EnvironmentLightEntity>();
             light.Rotation = Rotation.LookAt(new Vector3(1, -1, -4), up);
@@ -31,7 +48,6 @@ namespace TerryBros.Levels
             CreateStair(5, 1, 3, true);
             CreateStair(8, 1, 3, false);
         }
-
         private ModelEntity CreateBox(int GridX, int GridY)
         {
             ModelEntity box = new ModelEntity
@@ -41,14 +57,12 @@ namespace TerryBros.Levels
 
             box.SetModel("models/citizen_props/crate01.vmdl");
             box.SetupPhysicsFromModel(PhysicsMotionType.Static);
-            box.Position = groundPos + GridX * forward * box.CollisionBounds.Size + GridY * up * box.CollisionBounds.Size; // groundPos + i * forward * box.CollisionBounds.Size - j * up * box.CollisionBounds.Size;
+            box.Position = groundPos + GridX * forward * box.CollisionBounds.Size + GridY * up * box.CollisionBounds.Size;
 
             return box;
         }
         private void CreateStair(int GridX, int GridY, int height, bool upward = true)
         {
-            int direction = upward ? 1 : -1;
-
             for (int i = 0; i < height; i++)
             {
                 int x = GridX + i;
@@ -67,7 +81,7 @@ namespace TerryBros.Levels
         {
             for (int i = -100; i < 100; i++)
             {
-                for (int j = 0; j > -4; j--)
+                for (int j = 0; j > -3; j--)
                 {
                     CreateBox(i, j);
                 }
