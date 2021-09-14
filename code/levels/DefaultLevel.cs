@@ -2,6 +2,7 @@ using Sandbox;
 using System.Linq;
 using TerryBros.Player;
 using TerryBros.Settings;
+using TerryBros.Objects;
 
 namespace TerryBros.Levels
 {
@@ -36,6 +37,8 @@ namespace TerryBros.Levels
                 var spawn = Create<SpawnPoint>();
                 spawn.Transform = newSpawn;
             }
+
+            var sky = Create<defaultSky>();
 
             var light = Entity.Create<EnvironmentLightEntity>();
             light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), up);
