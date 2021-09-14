@@ -1,4 +1,4 @@
-﻿using Sandbox;
+using Sandbox;
 
 namespace TerryBros.Player
 {
@@ -12,15 +12,9 @@ namespace TerryBros.Player
         /// </summary>
         public Clothing.Container Clothing = new();
 
-        public Vector3 moveDirection { get; private set; }
-        public Vector3 viewDirection { get; private set; }
-
         public TerryBrosPlayer()
         {
-            //TODO: Use Forward and left for easier understanding
-            //NOTE: Currently set for Construct map
-            moveDirection = Vector3.Backward;
-            viewDirection = Vector3.Right;
+
         }
 
         public TerryBrosPlayer(Client cl) : this()

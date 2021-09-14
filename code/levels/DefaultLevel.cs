@@ -1,17 +1,22 @@
 using Sandbox;
 using System.Linq;
 using TerryBros.Player;
+using TerryBros.Settings;
 
 namespace TerryBros.Levels
 {
     public partial class DefaultLevel : Level
     {
-        private Vector3 groundPos;
-        private Vector3 forward;
-        private Vector3 up;
+        private Vector3 groundPos = Vector3.Zero;
+        private Vector3 forward = Vector3.Forward;
+        private Vector3 up = Vector3.Up;
 
-        public DefaultLevel(Vector3 groundPos, Vector3 forward, Vector3 up)
+        public DefaultLevel()
         {
+            globalSettings.forwardDir = forward;
+            globalSettings.upwardDir = up;
+            globalSettings.lookDir = Vector3.Cross(up, forward);
+
             bool isNewSpawnSet = false;
             Transform newSpawn = new Transform(new Vector3(0, 0, 40));
 
@@ -33,16 +38,12 @@ namespace TerryBros.Levels
             }
 
             var light = Entity.Create<EnvironmentLightEntity>();
-            light.Rotation = Rotation.LookAt(new Vector3(1, -1, -4), up);
+            light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), up);
             light.Brightness = 2f;
 
             light = Entity.Create<EnvironmentLightEntity>();
-            light.Rotation = Rotation.LookAt(new Vector3(-1, -0.5f, -1), up);
+            light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), up);
             light.Brightness = 2f;
-
-            this.groundPos = groundPos;
-            this.forward = forward;
-            this.up = up;
 
             CreateFloor();
             CreateStair(5, 1, 3, true);

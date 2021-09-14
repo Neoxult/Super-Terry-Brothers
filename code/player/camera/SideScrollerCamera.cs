@@ -1,5 +1,7 @@
 using Sandbox;
 
+using TerryBros.Settings;
+
 namespace TerryBros.Player.Camera
 {
     public partial class SideScrollerCamera : Sandbox.Camera
@@ -19,9 +21,9 @@ namespace TerryBros.Player.Camera
 
             Pos = player.Position;
             Pos += Vector3.Up * Screen.Height * orthoSize * viewHeightScale;
-            Pos -= player.viewDirection * distance;
+            Pos -= globalSettings.lookDir * distance;
 
-            Rot = Rotation.LookAt(player.viewDirection, Vector3.Up);
+            Rot = Rotation.LookAt(globalSettings.lookDir, globalSettings.upwardDir);
 
             Ortho = true;
             OrthoSize = orthoSize;

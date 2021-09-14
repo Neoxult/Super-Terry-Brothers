@@ -1,4 +1,6 @@
-﻿using Sandbox;
+using Sandbox;
+
+using TerryBros.Settings;
 
 namespace TerryBros.Player.Controller
 {
@@ -12,7 +14,7 @@ namespace TerryBros.Player.Controller
             }
 
             //TODO: Do a proper implementation of the controller
-            Input.Rotation = Rotation.LookAt(player.moveDirection, Vector3.Up);
+            Input.Rotation = Rotation.LookAt(globalSettings.forwardDir, globalSettings.upwardDir);
 
             //TODO: Correct for current moveDirection
             Input.Forward = -1f * Input.Left;

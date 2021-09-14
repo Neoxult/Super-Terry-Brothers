@@ -20,13 +20,13 @@ namespace TerryBros.Gamemode
                 new Hud();
             }
         }
-        public override void PostLevelLoaded()
+        [Event.Entity.PostSpawn]
+        private void PostLevelSpawn()
         {
             if (currentLevel == null || !currentLevel.IsValid)
             {
-                currentLevel = new DefaultLevel(new Vector3(0, 0, 0), Vector3.Backward, Vector3.Up);
+                currentLevel = new DefaultLevel();
             }
-            base.PostLevelLoaded();
         }
         public override void ClientJoined(Client client)
         {
