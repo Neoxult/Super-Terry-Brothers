@@ -11,6 +11,7 @@ tools_thumbnail_cache.bin
 tools_asset_info.bin
 config/*
 *.fgd
+.intermediate
 
 # User-specific files
 *.rsuser
