@@ -56,19 +56,12 @@ namespace TerryBros.Levels
             CreateStair(5, 1, 3, true);
             CreateStair(8, 1, 3, false);
         }
+
         private ModelEntity CreateBox(int GridX, int GridY)
         {
-            ModelEntity box = new ModelEntity
-            {
-                Rotation = Rotation.LookAt(forward, up)
-            };
-
-            box.SetModel("models/citizen_props/crate01.vmdl");
-            box.SetupPhysicsFromModel(PhysicsMotionType.Static);
-            box.Position = groundPos + GridX * forward * box.CollisionBounds.Size + GridY * up * box.CollisionBounds.Size;
-
-            return box;
+            return CreateBlock(groundPos + GridX * forward * 50f + GridY * up * 50f);
         }
+
         private void CreateStair(int GridX, int GridY, int height, bool upward = true)
         {
             for (int i = 0; i < height; i++)
@@ -98,7 +91,7 @@ namespace TerryBros.Levels
 
         // Just some testing, to create blocks dynamically
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player's")]
-        private static void CreateBlock()
+        public static void ServerCreateBlock()
         {
             TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
             MovementController movementController = player.Controller as MovementController;
@@ -109,7 +102,13 @@ namespace TerryBros.Levels
             ClientCreateBlock(position);
         }
 
-        public static void CreateBlock(Vector3 position)
+        [ClientRpc]
+        public static void ClientCreateBlock(Vector3 position)
+        {
+            CreateBlock(position);
+        }
+
+        public static AnimEntity CreateBlock(Vector3 position)
         {
             VertexBuffer vb = new VertexBuffer();
             vb.Init(true);
@@ -135,12 +134,8 @@ namespace TerryBros.Levels
             {
                 DebugOverlay.Box(position - 25f, position + 25f, Color.FromBytes(255, 0, 0), 2000f);
             }
-        }
 
-        [ClientRpc]
-        public static void ClientCreateBlock(Vector3 position)
-        {
-            CreateBlock(position);
+            return entity;
         }
     }
 }
