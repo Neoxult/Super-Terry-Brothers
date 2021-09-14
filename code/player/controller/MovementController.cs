@@ -8,8 +8,10 @@ namespace TerryBros.Player.Controller
 {
     public partial class MovementController : WalkController
     {
-        public Rotation CurrentRotation;
         public bool Forward = true;
+        public bool IsJumpAttacking = false;
+        public TimeSince JumpAttackStarted = 0f;
+        public Vector3 JumpAttackPosition;
 
         public override void Simulate()
         {
@@ -18,26 +20,43 @@ namespace TerryBros.Player.Controller
                 return;
             }
 
+            SprintSpeed = DefaultSpeed;
+
             if (Input.Left != 0f)
             {
                 Forward = Input.Left <= 0f;
-                Input.Rotation = Rotation.LookAt(Forward ? globalSettings.forwardDir : -globalSettings.forwardDir, globalSettings.upwardDir);
                 Input.Forward = Math.Abs(Input.Left);
                 Input.Left = 0f;
-
-                CurrentRotation = Input.Rotation;
             }
-            else
-            {
-                if (CurrentRotation == null)
-                {
-                    Input.Rotation = Rotation.LookAt(globalSettings.forwardDir, globalSettings.upwardDir);
-                }
 
-                Input.Rotation = CurrentRotation;
-            }
+            Input.Rotation = Rotation.LookAt(Forward ? globalSettings.forwardDir : -globalSettings.forwardDir, globalSettings.upwardDir);
 
             base.Simulate();
+
+            if (Host.IsServer)
+            {
+                if (!IsJumpAttacking && player.GroundEntity == null && Input.Pressed(InputButton.Jump))
+                {
+                    IsJumpAttacking = true;
+                    JumpAttackStarted = 0f;
+                    JumpAttackPosition = player.Position;
+
+                    TraceResult tr = Trace.Ray(player.Position, player.Position + Vector3.Down * 5000f)
+                        .Ignore(player)
+                        .HitLayer(CollisionLayer.All)
+                        .Radius(0f)
+                        .Run();
+
+                    if (tr.EndPos != null)
+                    {
+                        DebugOverlay.Line(tr.StartPos, tr.EndPos, Color.Red, 10f);
+                    }
+                }
+                else if (player.GroundEntity != null)
+                {
+                    IsJumpAttacking = false;
+                }
+            }
         }
     }
 }

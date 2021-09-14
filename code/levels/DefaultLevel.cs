@@ -108,7 +108,7 @@ namespace TerryBros.Levels
             CreateBlock(position);
         }
 
-        public static AnimEntity CreateBlock(Vector3 position)
+        public static ModelEntity CreateBlock(Vector3 position)
         {
             VertexBuffer vb = new VertexBuffer();
             vb.Init(true);
@@ -123,11 +123,17 @@ namespace TerryBros.Levels
                 .AddCollisionBox(Vector3.One * 25.0f)
                 .Create();
 
-            AnimEntity entity = new AnimEntity();
+            ModelEntity entity = WorldEntity.Create<ModelEntity>();
             entity.SetModel(model);
-            entity.SetupPhysicsFromModel(PhysicsMotionType.Static);
-            entity.RenderColor = Color.Random;
             entity.Position = position;
+            entity.Transmit = TransmitType.Always;
+
+            entity.SetupPhysicsFromModel(PhysicsMotionType.Static);
+            entity.CollisionGroup = CollisionGroup.Always;
+            entity.EnableAllCollisions = true;
+            entity.EnableHitboxes = true;
+            entity.RenderColor = Color.Random;
+
             entity.Spawn();
 
             if (Host.IsClient)

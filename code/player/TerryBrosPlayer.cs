@@ -3,6 +3,7 @@ using Sandbox;
 namespace TerryBros.Player
 {
     using Camera;
+
     using Controller;
 
     partial class TerryBrosPlayer : Sandbox.Player
@@ -48,6 +49,25 @@ namespace TerryBros.Player
             base.Simulate(cl);
 
             SimulateActiveChild(cl, ActiveChild);
+        }
+
+        [Event.Physics.PostStep]
+        public void OnPhysicsPostStep()
+        {
+            if (!Host.IsServer || Controller is not MovementController movementController || !movementController.IsJumpAttacking)
+            {
+                return;
+            }
+
+            if (movementController.JumpAttackStarted < 0.8f)
+            {
+                Velocity = Vector3.Zero;
+                Position = movementController.JumpAttackPosition;
+
+                return;
+            }
+
+            Velocity = Vector3.Down * 800f;
         }
 
         public override void OnKilled()
