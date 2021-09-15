@@ -48,11 +48,15 @@ namespace TerryBros.Levels
             light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), globalSettings.upwardDir);
             light.Brightness = 2f;
 
-            CreateFloor();
+            CreateWallFromTo(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
+            CreateWallFromTo(-6, -globalSettings.visibleGroundBlocks + 1, 20, 0);
+            CreateWallFromTo(24, -globalSettings.visibleGroundBlocks + 1, globalSettings.worldBoundsBlocks.Maxs.x, 0);
             CreateStair(5, 1, 6, true);
             CreateStair(11, 1, 5, false);
-            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 1, 5, 2);
-            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 5, 2);
+            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 1, 2, 3);
+            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 9, 2, 4);
+            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 2, 3);
+            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);
         }
 
         private ModelEntity CreateBox(int GridX, int GridY)
@@ -75,20 +79,17 @@ namespace TerryBros.Levels
                 }
             }
         }
-
-        private void CreateFloor()
+        private void CreateWallFromTo(int StartGridX, int StartGridY, int EndGridX, int EndGridY)
         {
-            for (int x = globalSettings.worldBoundsBlocks.Mins.x; x <= globalSettings.worldBoundsBlocks.Maxs.x; x++)
+            for (int x = StartGridX; x <= EndGridX; x++)
             {
-                for (int j = 0; j < globalSettings.visibleGroundBlocks; j++)
+                for (int y = StartGridY; y <= EndGridY; y++)
                 {
-                    int y = -j;
                     CreateBox(x, y);
                 }
             }
         }
-
-        private void CreateWall(int GridX, int GridY, int height, int width)
+        private void CreateWall(int GridX, int GridY, int width, int height)
         {
             for (int x = GridX; x < GridX + width; x++)
             {
