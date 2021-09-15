@@ -11,11 +11,14 @@ namespace TerryBros.Levels
 {
     public partial class DefaultLevel : Level
     {
-
+        private intVector3 minBound = new intVector3(-30, -3, -1);
+        private intVector3 maxBound = new intVector3(40, 10, 1);
         public DefaultLevel()
         {
-            bool isNewSpawnSet = false;
             Transform newSpawn = new Transform(new Vector3(0, 0, 40));
+            globalSettings.worldBoundsBlocks = new intBBox(minBound, maxBound);
+
+            bool isNewSpawnSet = false;
 
             foreach (SpawnPoint spawn in All.OfType<SpawnPoint>())
             {
@@ -48,8 +51,8 @@ namespace TerryBros.Levels
             CreateFloor();
             CreateStair(5, 1, 6, true);
             CreateStair(11, 1, 5, false);
-            CreateWall(globalSettings.WorldBoundMin, 1, 5, 2);
-            CreateWall(globalSettings.WorldBoundMax - 1, 1, 5, 2);
+            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 1, 5, 2);
+            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 5, 2);
         }
 
         private ModelEntity CreateBox(int GridX, int GridY)
@@ -75,7 +78,7 @@ namespace TerryBros.Levels
 
         private void CreateFloor()
         {
-            for (int x = globalSettings.WorldBoundMin; x <= globalSettings.WorldBoundMax; x++)
+            for (int x = globalSettings.worldBoundsBlocks.Mins.x; x <= globalSettings.worldBoundsBlocks.Maxs.x; x++)
             {
                 for (int j = 0; j < globalSettings.visibleGroundBlocks; j++)
                 {
