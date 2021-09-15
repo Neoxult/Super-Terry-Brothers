@@ -114,7 +114,7 @@ namespace TerryBros.Levels
             vb.Init(true);
             vb.AddCube(Vector3.Zero, Vector3.One * 50.0f, Rotation.Identity);
 
-            Mesh mesh = new Mesh(Material.Load("materials/default/vertex_color.vmat"));
+            Mesh mesh = new Mesh();
             mesh.CreateBuffers(vb);
             mesh.SetBounds(Vector3.One * -25, Vector3.One * 25);
 
@@ -141,6 +141,10 @@ namespace TerryBros.Levels
                 DebugOverlay.Box(position - 25f, position + 25f, Color.FromBytes(255, 0, 0), 2000f);
             }
 
+            // The real Block Renderer for now:
+            // TODO: Switch to real interchangeable Sprites instead of creating a particle for every goddamn block
+            Particles blockParticle = Particles.Create("materials/blocks/stair_block_particle.vpcf", position);
+            
             return entity;
         }
     }

@@ -20,7 +20,8 @@ namespace TerryBros.Player.Controller
                 return;
             }
 
-            SprintSpeed = DefaultSpeed;
+            //TODO: Find out if the game is really lagging with sprinting
+            //SprintSpeed = DefaultSpeed;
 
             if (Input.Left != 0f)
             {
