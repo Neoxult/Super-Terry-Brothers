@@ -48,11 +48,13 @@ namespace TerryBros.Levels
             CreateFloor();
             CreateStair(5, 1, 6, true);
             CreateStair(11, 1, 5, false);
+            CreateWall(globalSettings.WorldBoundMin, 1, 5, 2);
+            CreateWall(globalSettings.WorldBoundMax - 1, 1, 5, 2);
         }
 
         private ModelEntity CreateBox(int GridX, int GridY)
         {
-            return CreateBlock(globalSettings.groundPos - globalSettings.upwardDir * globalSettings.blockSize / 2 + GridX * globalSettings.forwardDir * globalSettings.blockSize + GridY * globalSettings.upwardDir * globalSettings.blockSize);
+            return CreateBlock(globalSettings.GetBlockPosForGridCoordinates(GridX,GridY));
         }
 
         private void CreateStair(int GridX, int GridY, int height, bool upward = true)
@@ -73,11 +75,22 @@ namespace TerryBros.Levels
 
         private void CreateFloor()
         {
-            for (int x = -100; x < 100; x++)
+            for (int x = globalSettings.WorldBoundMin; x <= globalSettings.WorldBoundMax; x++)
             {
                 for (int j = 0; j < globalSettings.visibleGroundBlocks; j++)
                 {
                     int y = -j;
+                    CreateBox(x, y);
+                }
+            }
+        }
+
+        private void CreateWall(int GridX, int GridY, int height, int width)
+        {
+            for (int x = GridX; x < GridX + width; x++)
+            {
+                for (int y = GridY; y < GridY + height; y++)
+                {
                     CreateBox(x, y);
                 }
             }

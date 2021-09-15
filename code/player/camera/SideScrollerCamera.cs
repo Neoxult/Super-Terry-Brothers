@@ -24,6 +24,14 @@ namespace TerryBros.Player.Camera
             Pos += globalSettings.upwardDir * Screen.Height / 2 * orthoSize;
             Pos -= globalSettings.lookDir * distance;
 
+            if (Pos.x < globalSettings.GetBlockPosForGridCoordinates(globalSettings.WorldBoundMin, 0).x + Screen.Width/2 * orthoSize)
+            {
+                Pos = new Vector3( globalSettings.GetBlockPosForGridCoordinates(globalSettings.WorldBoundMin, 0).x + Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
+            } else if (Pos.x > globalSettings.GetBlockPosForGridCoordinates(globalSettings.WorldBoundMax, 0).x - Screen.Width / 2 * orthoSize)
+            {
+                Pos = new Vector3(globalSettings.GetBlockPosForGridCoordinates(globalSettings.WorldBoundMax, 0).x - Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
+            }
+
             Rot = Rotation.LookAt(globalSettings.lookDir, globalSettings.upwardDir);
 
             Ortho = true;
