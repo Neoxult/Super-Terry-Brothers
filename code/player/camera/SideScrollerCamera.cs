@@ -9,6 +9,7 @@ namespace TerryBros.Player.Camera
         private float distance = 1500;
         private float viewHeightScale = 0.3f;
         private float orthoSize = 0.3f;
+        private int visibleGroundBlocks = 4;
 
         public override void Update()
         {
@@ -19,9 +20,13 @@ namespace TerryBros.Player.Camera
                 return;
             }
 
-            Pos = player.Position;
-            Pos += Vector3.Up * Screen.Height * orthoSize * viewHeightScale;
+            orthoSize = 0.3f;
+            visibleGroundBlocks = 3;
+            Pos = globalSettings.groundPos;
+            Pos -= globalSettings.upwardDir * globalSettings.blockSize * visibleGroundBlocks;
+            Pos += globalSettings.upwardDir * Screen.Height / 2 * orthoSize;
             Pos -= globalSettings.lookDir * distance;
+            Pos = new Vector3(player.Position.x, Pos.y, Pos.z);
 
             Rot = Rotation.LookAt(globalSettings.lookDir, globalSettings.upwardDir);
 

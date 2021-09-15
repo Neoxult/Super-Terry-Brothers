@@ -11,16 +11,9 @@ namespace TerryBros.Levels
 {
     public partial class DefaultLevel : Level
     {
-        private Vector3 groundPos = Vector3.Zero;
-        private Vector3 forward = Vector3.Forward;
-        private Vector3 up = Vector3.Up;
 
         public DefaultLevel()
         {
-            globalSettings.forwardDir = forward;
-            globalSettings.upwardDir = up;
-            globalSettings.lookDir = Vector3.Cross(up, forward);
-
             bool isNewSpawnSet = false;
             Transform newSpawn = new Transform(new Vector3(0, 0, 40));
 
@@ -45,21 +38,21 @@ namespace TerryBros.Levels
             var sky = Create<defaultSky>();
 
             var light = Entity.Create<EnvironmentLightEntity>();
-            light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), up);
+            light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), globalSettings.upwardDir);
             light.Brightness = 2f;
 
             light = Entity.Create<EnvironmentLightEntity>();
-            light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), up);
+            light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), globalSettings.upwardDir);
             light.Brightness = 2f;
 
             CreateFloor();
-            CreateStair(5, 1, 3, true);
-            CreateStair(8, 1, 3, false);
+            CreateStair(5, 1, 6, true);
+            CreateStair(11, 1, 5, false);
         }
 
         private ModelEntity CreateBox(int GridX, int GridY)
         {
-            return CreateBlock(groundPos + GridX * forward * 50f + GridY * up * 50f);
+            return CreateBlock(globalSettings.groundPos - globalSettings.upwardDir * globalSettings.blockSize / 2 + GridX * globalSettings.forwardDir * globalSettings.blockSize + GridY * globalSettings.upwardDir * globalSettings.blockSize);
         }
 
         private void CreateStair(int GridX, int GridY, int height, bool upward = true)
@@ -80,11 +73,12 @@ namespace TerryBros.Levels
 
         private void CreateFloor()
         {
-            for (int i = -100; i < 100; i++)
+            for (int x = -100; x < 100; x++)
             {
-                for (int j = 0; j > -3; j--)
+                for (int j = 0; j < globalSettings.visibleGroundBlocks; j++)
                 {
-                    CreateBox(i, j);
+                    int y = -j;
+                    CreateBox(x, y);
                 }
             }
         }
@@ -112,15 +106,19 @@ namespace TerryBros.Levels
         {
             VertexBuffer vb = new VertexBuffer();
             vb.Init(true);
-            vb.AddCube(Vector3.Zero, Vector3.One * 50.0f, Rotation.Identity);
+
+            //TODO: Make an Issue to fix Cubes being orientated the right way.
+            //For now its rotated around the forward axis for 180 degrees
+            //Otherwise textures arent correct
+            vb.AddCube(Vector3.Zero, Vector3.One * globalSettings.blockSize, Rotation.FromAxis(globalSettings.forwardDir,180f));
 
             Mesh mesh = new Mesh(Material.Load("materials/blocks/stair_block.vmat"));
             mesh.CreateBuffers(vb);
-            mesh.SetBounds(Vector3.One * -25, Vector3.One * 25);
+            mesh.SetBounds(Vector3.One * -globalSettings.blockSize / 2, Vector3.One * globalSettings.blockSize / 2);
 
             Model model = new ModelBuilder()
                 .AddMesh(mesh)
-                .AddCollisionBox(Vector3.One * 25.0f)
+                .AddCollisionBox(Vector3.One * globalSettings.blockSize / 2)
                 .Create();
 
             ModelEntity entity = WorldEntity.Create<ModelEntity>();
@@ -137,7 +135,7 @@ namespace TerryBros.Levels
 
             if (Host.IsClient)
             {
-                DebugOverlay.Box(position - 25f, position + 25f, Color.FromBytes(255, 0, 0), 2000f);
+                //DebugOverlay.Box(position - globalSettings.blockSize / 2, position + globalSettings.blockSize / 2, Color.FromBytes(255, 0, 0), 2000f);
             }
 
             return entity;

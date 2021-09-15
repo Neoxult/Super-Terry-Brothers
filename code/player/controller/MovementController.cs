@@ -48,10 +48,7 @@ namespace TerryBros.Player.Controller
                         .Radius(0f)
                         .Run();
 
-                    if (tr.EndPos != null)
-                    {
-                        DebugOverlay.Line(tr.StartPos, tr.EndPos, Color.Red, 10f);
-                    }
+                    DebugOverlay.Line(tr.StartPos, tr.EndPos, Color.Red, 10f);
                 }
                 else if (player.GroundEntity != null)
                 {
