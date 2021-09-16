@@ -2,19 +2,31 @@ using Sandbox;
 
 using TerryBros.Player;
 using TerryBros.Settings;
+using TerryBros.Levels;
 
 namespace TerryBros.Gamemode
 {
-    public partial class Game
+    public partial class STBGame
     {
         public override void Simulate(Client cl)
         {
             base.Simulate(cl);
             clientOutOfBounds(cl);
         }
+
+        //TODO: Proper Winning with Endscreen
+        public static void LevelFinished(TerryBrosPlayer player)
+        {
+            if (Host.IsClient)
+            {
+                return;
+            }
+            Level.currentLevel?.Restart();
+            player.Respawn();
+        }
         private void clientOutOfBounds(Client cl)
         {
-            if (!Host.IsServer)
+            if (Host.IsClient)
             {
                 return;
             }

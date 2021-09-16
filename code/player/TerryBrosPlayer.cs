@@ -6,7 +6,7 @@ namespace TerryBros.Player
 
     using Controller;
 
-    partial class TerryBrosPlayer : Sandbox.Player
+    public partial class TerryBrosPlayer : Sandbox.Player
     {
         /// <summary>
         /// The clothing container is what dresses the citizen
@@ -26,7 +26,7 @@ namespace TerryBros.Player
         public override void Respawn()
         {
             SetModel("models/citizen/citizen.vmdl");
-
+            
             Controller = new MovementController();
             Animator = new StandardPlayerAnimator();
             Camera = new SideScrollerCamera();

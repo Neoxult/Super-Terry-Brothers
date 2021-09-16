@@ -3,14 +3,15 @@ using Sandbox;
 using TerryBros.Player;
 using TerryBros.UI;
 using TerryBros.Levels;
+using TerryBros.LevelElements;
 
 namespace TerryBros.Gamemode
 {
     [Library("STB", Title = "Super Terry Brothers")]
-    public partial class Game : Sandbox.Game
+    public partial class STBGame : Sandbox.Game
     {
         private Level currentLevel = null;
-        public Game()
+        public STBGame()
         {
             if (IsServer)
             {
@@ -32,7 +33,21 @@ namespace TerryBros.Gamemode
             var player = new TerryBrosPlayer(client);
             client.Pawn = player;
 
+            //TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
             player.Respawn();
+        }
+
+		public override void MoveToSpawnpoint(Entity pawn)
+        {
+            STBSpawn spawnPoint = Level.currentLevel?.GetLastCheckPoint();
+
+            if (spawnPoint == null)
+            {
+                Log.Warning($"Couldn't find spawnpoint for {pawn}!");
+                return;
+            }
+
+            spawnPoint.MoveToSpawn(pawn);
         }
     }
 }

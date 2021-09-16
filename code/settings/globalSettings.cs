@@ -38,6 +38,8 @@ namespace TerryBros.Settings
         public int y;
         public int z;
     }
+
+    //TODO: Move to a proper File
     public class intBBox
     {
         public intBBox(BBox bbox)
@@ -63,9 +65,11 @@ namespace TerryBros.Settings
 
     public static partial class globalSettings
     {
-
         public static float blockSize = 20f;
         public static int visibleGroundBlocks = 3;
+
+        //TODO: Get the real Height of the playermodel;
+        public static float figureHeight = 80;
 
         /// <summary>
         /// World Bound given in number of Blocks
@@ -90,7 +94,6 @@ namespace TerryBros.Settings
                 _worldBounds = value;
             }
         }
-
         public static Vector3 groundPos = Vector3.Zero;
         public static Vector3 forwardDir {
             get => _forwardDir;
@@ -114,6 +117,13 @@ namespace TerryBros.Settings
             get => _lookDir;
             set { throw new System.InvalidOperationException("You cant set globalSettings.lookDir manually. It is calculated!"); }
         }
+
+        private static intBBox _worldBoundsBlocks;
+        private static BBox _worldBounds;
+
+        private static Vector3 _forwardDir = Vector3.Forward;
+        private static Vector3 _upwardDir = Vector3.Up;
+        private static Vector3 _lookDir = Vector3.Cross(Vector3.Up, Vector3.Forward);
 
         /// <summary>
         /// 0, 0 is the first ground block.
@@ -164,14 +174,6 @@ namespace TerryBros.Settings
         {
             Sandbox.Log.Info($"IsClient? {Sandbox.Host.IsClient}, IsServer? {Sandbox.Host.IsServer}");
         }
-
-        //Private Fields
-        private static intBBox _worldBoundsBlocks;
-        private static BBox _worldBounds;
-
-        private static Vector3 _forwardDir = Vector3.Forward;
-        private static Vector3 _upwardDir = Vector3.Up;
-        private static Vector3 _lookDir = Vector3.Cross(Vector3.Up, Vector3.Forward);
 
         private static void updateLookDir()
         {

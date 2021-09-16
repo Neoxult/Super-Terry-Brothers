@@ -6,7 +6,7 @@ namespace TerryBros.Player.Camera
 {
     public partial class SideScrollerCamera : Sandbox.Camera
     {
-        private float distance = 1500;
+        private int distanceInBlocks = 10;
         private float orthoSize = 0.3f;
         private int visibleGroundBlocks = 3;
 
@@ -22,7 +22,7 @@ namespace TerryBros.Player.Camera
             Pos = new Vector3(player.Position.x, globalSettings.groundPos.y, globalSettings.groundPos.z);
             Pos -= globalSettings.upwardDir * globalSettings.blockSize * visibleGroundBlocks;
             Pos += globalSettings.upwardDir * Screen.Height / 2 * orthoSize;
-            Pos -= globalSettings.lookDir * globalSettings.blockSize * 3;//distance;
+            Pos -= globalSettings.lookDir * globalSettings.blockSize * distanceInBlocks;
 
             if (Pos.x < globalSettings.worldBounds.Mins.x + Screen.Width/2 * orthoSize)
             {

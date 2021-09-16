@@ -5,17 +5,58 @@ using TerryBros.LevelElements;
 
 namespace TerryBros.Levels
 {
+    public delegate void resetCheckPoints();
+
     public partial class Level : Entity
     {
-        public Level() { }
+        public static Level lastLevel { get; private set; }
+        public static Level currentLevel { get; private set; }
 
+        protected STBSpawn restartSpawn;
+        protected STBSpawn checkPointSpawn;
+
+        /// <summary>
+        /// As a delegate cant be instantiated without a function, use this dummy here.
+        /// </summary>
+        private void dummyReset() { }
+        private resetCheckPoints onResetCheckPoints;
+
+        public Level()
+        {
+            lastLevel = currentLevel;
+            currentLevel = this;
+            onResetCheckPoints = dummyReset;
+        }
+        public STBSpawn GetRestartPoint()
+        {
+            return restartSpawn;
+        }
+        public STBSpawn GetLastCheckPoint()
+        {
+            if(checkPointSpawn != null)
+            {
+                return checkPointSpawn;
+            } else
+            {
+                return GetRestartPoint();
+            }
+        }
+        public void SetCheckPoint(Checkpoint checkPoint)
+        {
+            checkPointSpawn = checkPoint.spawnPoint;
+            checkPoint.RegisterReset(ref onResetCheckPoints);
+        }
+        public void Restart()
+        {
+            checkPointSpawn = null;
+            onResetCheckPoints();
+            onResetCheckPoints = dummyReset;
+        }
+    
         //Note: Can't use parameters in generic constraints
         protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
         {
-            globalSettings.LogClientOrServer();
             T block = new T();
-            Log.Info($"Set Position {globalSettings.GetBlockPosForGridCoordinates(GridX, GridY)}");
-            //block.gridPosition = globalSettings.GetBlockPosForGridCoordinates(GridX, GridY);
             block.Position = globalSettings.GetBlockPosForGridCoordinates(GridX, GridY);
             return block;
         }
@@ -58,8 +99,12 @@ namespace TerryBros.Levels
 
         protected void CreateCheckPoint(int GridX, int GridY)
         {
-            Log.Info("Creating Checkpoint.");
             var point = CreateBox<Checkpoint>(GridX, GridY);
         }
+        protected void CreateGoal(int GridX, int GridY)
+        {
+            var point = CreateBox<Goal>(GridX, GridY);
+        }
+
     }
 }
