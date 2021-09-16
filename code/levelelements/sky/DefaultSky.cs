@@ -1,11 +1,11 @@
 using Sandbox;
-namespace TerryBros.Objects
+namespace TerryBros.LevelElements
 {
     /// <summary>
 	/// Skybox
 	/// </summary>
     [Library("env_sky_sidescroller")]
-    public partial class defaultSky : Sky
+    public partial class DefaultSky : Sky
     {
         public override Material FetchSkyMaterial()
         {

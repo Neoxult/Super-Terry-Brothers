@@ -2,7 +2,7 @@ using System.Linq;
 
 using Sandbox;
 
-using TerryBros.Objects;
+using TerryBros.LevelElements;
 using TerryBros.Player;
 using TerryBros.Player.Controller;
 using TerryBros.Settings;
@@ -38,7 +38,7 @@ namespace TerryBros.Levels
                 spawn.Transform = newSpawn;
             }
 
-            var sky = Create<defaultSky>();
+            var sky = Create<DefaultSky>();
 
             var light = Entity.Create<EnvironmentLightEntity>();
             light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), globalSettings.upwardDir);
@@ -48,6 +48,8 @@ namespace TerryBros.Levels
             light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), globalSettings.upwardDir);
             light.Brightness = 2f;
 
+            CreateBox(0, 0);
+            /*
             CreateWallFromTo(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
             CreateWallFromTo(-6, -globalSettings.visibleGroundBlocks + 1, 20, 0);
             CreateWallFromTo(24, -globalSettings.visibleGroundBlocks + 1, globalSettings.worldBoundsBlocks.Maxs.x, 0);
@@ -57,11 +59,13 @@ namespace TerryBros.Levels
             CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 9, 2, 4);
             CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 2, 3);
             CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);
+            */
         }
 
-        private ModelEntity CreateBox(int GridX, int GridY)
+        private Brick CreateBox(int GridX, int GridY)
         {
-            return CreateBlock(globalSettings.GetBlockPosForGridCoordinates(GridX,GridY));
+            Log.Info($"IsClient: {Host.IsClient}, IsServer: {Host.IsServer}");
+            return new Brick(globalSettings.GetBlockPosForGridCoordinates(GridX, GridY));
         }
 
         private void CreateStair(int GridX, int GridY, int height, bool upward = true)
@@ -121,41 +125,7 @@ namespace TerryBros.Levels
 
         public static ModelEntity CreateBlock(Vector3 position)
         {
-            VertexBuffer vb = new VertexBuffer();
-            vb.Init(true);
-
-            //TODO: Make an Issue to fix Cubes being orientated the right way.
-            //For now its rotated around the forward axis for 180 degrees
-            //Otherwise textures arent correct
-            vb.AddCube(Vector3.Zero, Vector3.One * globalSettings.blockSize, Rotation.FromAxis(globalSettings.forwardDir,180f));
-
-            Mesh mesh = new Mesh(Material.Load("materials/blocks/stair_block.vmat"));
-            mesh.CreateBuffers(vb);
-            mesh.SetBounds(Vector3.One * -globalSettings.blockSize / 2, Vector3.One * globalSettings.blockSize / 2);
-
-            Model model = new ModelBuilder()
-                .AddMesh(mesh)
-                .AddCollisionBox(Vector3.One * globalSettings.blockSize / 2)
-                .Create();
-
-            ModelEntity entity = WorldEntity.Create<ModelEntity>();
-            entity.SetModel(model);
-            entity.Position = position;
-            entity.Transmit = TransmitType.Always;
-
-            entity.SetupPhysicsFromModel(PhysicsMotionType.Static);
-            entity.CollisionGroup = CollisionGroup.Always;
-            entity.EnableAllCollisions = true;
-            entity.EnableHitboxes = true;
-            
-            entity.Spawn();
-
-            if (Host.IsClient)
-            {
-                //DebugOverlay.Box(position - globalSettings.blockSize / 2, position + globalSettings.blockSize / 2, Color.FromBytes(255, 0, 0), 2000f);
-            }
-
-            return entity;
+            return new Brick(position);
         }
     }
 }
