@@ -38,70 +38,25 @@ namespace TerryBros.Levels
                 spawn.Transform = newSpawn;
             }
 
-            var sky = Create<DefaultSky>();
+            Create<DefaultSky>();
 
-            var light = Entity.Create<EnvironmentLightEntity>();
+            var light = Create<EnvironmentLightEntity>();
             light.Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), globalSettings.upwardDir);
             light.Brightness = 2f;
 
-            light = Entity.Create<EnvironmentLightEntity>();
+            light = Create<EnvironmentLightEntity>();
             light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), globalSettings.upwardDir);
             light.Brightness = 2f;
 
-            CreateBox(0, 0);
-            /*
-            CreateWallFromTo(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
-            CreateWallFromTo(-6, -globalSettings.visibleGroundBlocks + 1, 20, 0);
-            CreateWallFromTo(24, -globalSettings.visibleGroundBlocks + 1, globalSettings.worldBoundsBlocks.Maxs.x, 0);
-            CreateStair(5, 1, 6, true);
-            CreateStair(11, 1, 5, false);
-            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 1, 2, 3);
-            CreateWall(globalSettings.worldBoundsBlocks.Mins.x, 9, 2, 4);
-            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 2, 3);
-            CreateWall(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);
-            */
-        }
-
-        private Brick CreateBox(int GridX, int GridY)
-        {
-            Log.Info($"IsClient: {Host.IsClient}, IsServer: {Host.IsServer}");
-            return new Brick(globalSettings.GetBlockPosForGridCoordinates(GridX, GridY));
-        }
-
-        private void CreateStair(int GridX, int GridY, int height, bool upward = true)
-        {
-            for (int i = 0; i < height; i++)
-            {
-                int x = GridX + i;
-                int maxHeight = upward ? i + 1 : height - i;
-
-                for (int j = 0; j < maxHeight; j++)
-                {
-                    int y = GridY + j;
-
-                    CreateBox(x, y);
-                }
-            }
-        }
-        private void CreateWallFromTo(int StartGridX, int StartGridY, int EndGridX, int EndGridY)
-        {
-            for (int x = StartGridX; x <= EndGridX; x++)
-            {
-                for (int y = StartGridY; y <= EndGridY; y++)
-                {
-                    CreateBox(x, y);
-                }
-            }
-        }
-        private void CreateWall(int GridX, int GridY, int width, int height)
-        {
-            for (int x = GridX; x < GridX + width; x++)
-            {
-                for (int y = GridY; y < GridY + height; y++)
-                {
-                    CreateBox(x, y);
-                }
-            }
+            CreateWallFromTo<Brick>(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
+            CreateWallFromTo<Brick>(-6, -globalSettings.visibleGroundBlocks + 1, 20, 0);
+            CreateWallFromTo<Brick>(24, -globalSettings.visibleGroundBlocks + 1, globalSettings.worldBoundsBlocks.Maxs.x, 0);
+            CreateStair<Brick>(5, 1, 6, true);
+            CreateStair<Brick>(11, 1, 5, false);
+            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Mins.x, 1, 2, 3);
+            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Mins.x, 9, 2, 4);
+            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 2, 3);
+            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);
         }
 
         // Just some testing, to create blocks dynamically

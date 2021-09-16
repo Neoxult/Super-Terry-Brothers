@@ -22,7 +22,7 @@ namespace TerryBros.Player.Camera
             Pos = new Vector3(player.Position.x, globalSettings.groundPos.y, globalSettings.groundPos.z);
             Pos -= globalSettings.upwardDir * globalSettings.blockSize * visibleGroundBlocks;
             Pos += globalSettings.upwardDir * Screen.Height / 2 * orthoSize;
-            Pos -= globalSettings.lookDir * distance;
+            Pos -= globalSettings.lookDir * globalSettings.blockSize * 3;//distance;
 
             if (Pos.x < globalSettings.worldBounds.Mins.x + Screen.Width/2 * orthoSize)
             {
@@ -33,6 +33,13 @@ namespace TerryBros.Player.Camera
             }
 
             Rot = Rotation.LookAt(globalSettings.lookDir, globalSettings.upwardDir);
+
+            //TODO: Experiment with other perspectives
+            //Rot = Rot.RotateAroundAxis(globalSettings.upwardDir, -30);
+
+            //TODO: Check weird behaviour of RotateAroundAxis
+            //Why is a rotation around the lookDir a rotation around the forwardDir?
+            //Rot = Rot.RotateAroundAxis(globalSettings.lookDir, 30);
 
             Ortho = true;
             OrthoSize = orthoSize;
