@@ -7,15 +7,15 @@ namespace TerryBros.Levels
 {
     public partial class Level : Entity
     {
-        public Level()
-        {
-
-        }
+        public Level() { }
 
         //Note: Can't use parameters in generic constraints
         protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
         {
+            globalSettings.LogClientOrServer();
             T block = new T();
+            Log.Info($"Set Position {globalSettings.GetBlockPosForGridCoordinates(GridX, GridY)}");
+            //block.gridPosition = globalSettings.GetBlockPosForGridCoordinates(GridX, GridY);
             block.Position = globalSettings.GetBlockPosForGridCoordinates(GridX, GridY);
             return block;
         }
@@ -54,6 +54,12 @@ namespace TerryBros.Levels
                     CreateBox<T>(x, y);
                 }
             }
+        }
+
+        protected void CreateCheckPoint(int GridX, int GridY)
+        {
+            Log.Info("Creating Checkpoint.");
+            var point = CreateBox<Checkpoint>(GridX, GridY);
         }
     }
 }

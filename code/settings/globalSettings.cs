@@ -137,6 +137,34 @@ namespace TerryBros.Settings
             return GetBlockPosForGridCoordinates(coordinate.x, coordinate.y, coordinate.z);
         }
 
+        /// <summary>
+        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
+        /// Use this function to convert local to the actual used global coordinate system
+        /// </summary>
+        /// <param name="local">The local coordinates</param>
+        /// <returns></returns>
+        public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
+        {
+            return new Vector3(local.x * _forwardDir + local.y * _upwardDir + local.z * _lookDir);
+        }
+
+        /// <summary>
+        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
+        /// Use this function to convert local to the actual used global coordinate system
+        /// </summary>
+        /// <param name="local">The local coordinates</param>
+        /// <returns></returns>
+        public static Vector3 ConvertLocalToGlobalCoordinates(intVector3 local)
+        {
+            return ConvertLocalToGlobalCoordinates(new Vector3(local.x, local.y, local.z));
+        }
+
+        //TODO: Move to a proper Location
+        public static void LogClientOrServer()
+        {
+            Sandbox.Log.Info($"IsClient? {Sandbox.Host.IsClient}, IsServer? {Sandbox.Host.IsServer}");
+        }
+
         //Private Fields
         private static intBBox _worldBoundsBlocks;
         private static BBox _worldBounds;

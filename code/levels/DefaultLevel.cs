@@ -48,7 +48,8 @@ namespace TerryBros.Levels
             light.Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), globalSettings.upwardDir);
             light.Brightness = 2f;
 
-            CreateWallFromTo<Brick>(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
+            CreateBox<Brick>(0, 0);
+            /*CreateWallFromTo<Brick>(globalSettings.worldBoundsBlocks.Mins.x, -globalSettings.visibleGroundBlocks + 1, -10, 0);
             CreateWallFromTo<Brick>(-6, -globalSettings.visibleGroundBlocks + 1, 20, 0);
             CreateWallFromTo<Brick>(24, -globalSettings.visibleGroundBlocks + 1, globalSettings.worldBoundsBlocks.Maxs.x, 0);
             CreateStair<Brick>(5, 1, 6, true);
@@ -56,7 +57,8 @@ namespace TerryBros.Levels
             CreateWall<Brick>(globalSettings.worldBoundsBlocks.Mins.x, 1, 2, 3);
             CreateWall<Brick>(globalSettings.worldBoundsBlocks.Mins.x, 9, 2, 4);
             CreateWall<Brick>(globalSettings.worldBoundsBlocks.Maxs.x - 1, 1, 2, 3);
-            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);
+            CreateWall<Brick>(globalSettings.worldBoundsBlocks.Maxs.x - 1, 9, 2, 4);*/
+            CreateCheckPoint(-5, 1);
         }
 
         // Just some testing, to create blocks dynamically

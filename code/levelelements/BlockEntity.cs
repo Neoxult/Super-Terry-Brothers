@@ -9,9 +9,16 @@ namespace TerryBros.LevelElements
     {
         public BlockEntity() { }
 
-        public BlockEntity(Vector3 position) : this()
+        public BlockEntity(Vector3 gridPosition) : this()
         {
-            Position = position;
+            Log.Info("Set to Constructor 0,0,0");
+            //Note: Setting the Position in a constructor as client leads to a Non-Authority error.
+            //But if you dont set the position later, you can't see this entity,
+            //which seems to correlate with the modelbuilder entities on the server not fully syncing to the client.
+            if (Host.IsServer)
+            {
+                Position = gridPosition;
+            }
         }
 
         //TODO: Check for a direct Facepunch fix
@@ -20,14 +27,9 @@ namespace TerryBros.LevelElements
         // Note: Spawn gets called before the constructor
         public override void Spawn()
         {
-            Log.Info("Spawn Block.");
             VertexBuffer vb = new VertexBuffer();
             vb.Init(true);
-
-            //TODO: Make an Issue to fix Cubes being orientated the right way.
-            //For now its rotated around the forward axis for 180 degrees
-            //Otherwise textures arent correct
-            vb.AddCube(Vector3.Zero, myBlockSizeFloat * globalSettings.blockSize, Rotation.FromAxis(globalSettings.forwardDir, 180f));
+            vb.AddCube(Vector3.Zero, myBlockSizeFloat * globalSettings.blockSize, Rotation.LookAt(globalSettings.forwardDir, -globalSettings.upwardDir));
 
             Mesh mesh = new Mesh(Material.Load(materialName));
             mesh.CreateBuffers(vb);
@@ -52,7 +54,7 @@ namespace TerryBros.LevelElements
             set { _myBlockSize = value; }
         }
         public Vector3 myBlockSizeFloat {
-            get { return new Vector3(myBlockSize.x, myBlockSize.y, myBlockSize.z); }
+            get { return globalSettings.ConvertLocalToGlobalCoordinates(myBlockSize); }
             set { throw new InvalidOperationException("You cant set this value directly. Use myBlockSize for it."); }
         }
         public virtual PhysicsMotionType physicsMotionType
@@ -62,6 +64,21 @@ namespace TerryBros.LevelElements
             {
                 _physicsMotionType = value;
                 SetupPhysicsFromModel(value);
+            }
+        }
+        /// <summary>
+        /// Offsets the Position for Blockentities, so that their first block is directly on the grid.
+        /// Normally this is the center, but we use the most nearest (z), lowest (y), left (x) corner.
+        /// </summary>
+        public override Vector3 Position
+        {
+            get
+            {
+                return base.Position - (myBlockSizeFloat - new Vector3(1, 1, 1)) * globalSettings.blockSize / 2;
+            }
+            set
+            {
+                base.Position = value + (myBlockSizeFloat - new Vector3(1, 1, 1)) * globalSettings.blockSize / 2;
             }
         }
 

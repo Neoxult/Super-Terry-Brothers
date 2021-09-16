@@ -4,9 +4,6 @@ using TerryBros.Player;
 using TerryBros.UI;
 using TerryBros.Levels;
 
-//
-// You don't need to put things in a namespace, but it doesn't hurt.
-//
 namespace TerryBros.Gamemode
 {
     [Library("STB", Title = "Super Terry Brothers")]
