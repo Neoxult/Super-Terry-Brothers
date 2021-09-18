@@ -1,5 +1,9 @@
 using Sandbox;
 
+using TerryBros.Settings;
+using TerryBros.UI;
+using TerryBros.Utils;
+
 namespace TerryBros.Player
 {
     using Camera;
@@ -58,6 +62,34 @@ namespace TerryBros.Player
             base.Simulate(cl);
 
             SimulateActiveChild(cl, ActiveChild);
+
+            if (!IsClient || !IsInLevelBuilder)
+            {
+                return;
+            }
+
+            SideScrollerCamera sideScrollerCamera = Camera as SideScrollerCamera;
+
+            Vector3 cameraPos = sideScrollerCamera.Pos;
+            cameraPos.x -= Screen.Width * (sideScrollerCamera.OrthoSize / 2f);
+            cameraPos.z += Screen.Height * (sideScrollerCamera.OrthoSize / 2f);
+
+            Vector2 mousePosition = Mouse.Position / (3f + 1f / 3f);
+            Vector3 mousePos = new Vector3(mousePosition.x + cameraPos.x, 0, cameraPos.z - mousePosition.y);
+
+            IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(mousePos);
+            Vector3 vector3 = GlobalSettings.GetBlockPosForGridCoordinates(intVector3);
+            Vector3 BlockSize = GlobalSettings.BlockSize / 2f;
+
+            DebugOverlay.Box(vector3 - BlockSize, vector3 + BlockSize, Color.Red, 0.1f);
+            DebugOverlay.Box(mousePos - BlockSize, mousePos + BlockSize, Color.Orange, 0.1f);
+
+            DebugOverlay.Box(cameraPos.WithY(0f) + new Vector3(0, -10, 0), cameraPos.WithY(0f) + new Vector3(Screen.Width * sideScrollerCamera.OrthoSize, 10, -Screen.Height * sideScrollerCamera.OrthoSize), Color.Green, 0.1f);
+
+            if (Input.Pressed(InputButton.Menu))
+            {
+                ServerCreateBlock(vector3);
+            }
         }
 
         public override void OnKilled()
@@ -67,11 +99,10 @@ namespace TerryBros.Player
 
         // Just some testing, to create blocks dynamically
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player's")]
-        public static void ServerCreateBlock()
+        public static void ServerCreateBlock(Vector3 position)
         {
             TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
             MovementController movementController = player.Controller as MovementController;
-            Vector3 position = player.Position + Settings.GlobalSettings.ForwardDir * 100f + new Vector3(0, 0, 25f);
 
             CreateBlock(position);
             ClientCreateBlock(position);
@@ -85,7 +116,10 @@ namespace TerryBros.Player
 
         public static ModelEntity CreateBlock(Vector3 position)
         {
-            return new LevelElements.Brick(position);
+            ModelEntity modelEntity = new LevelElements.Brick();
+            modelEntity.Position = position;
+
+            return modelEntity;
         }
 
         [ClientCmd("stb_editor")]
@@ -97,6 +131,8 @@ namespace TerryBros.Player
             }
 
             player.IsInLevelBuilder = !player.IsInLevelBuilder;
+
+            LevelBuilder.Instance.Toggle(player.IsInLevelBuilder);
         }
     }
 }
