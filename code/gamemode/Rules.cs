@@ -1,8 +1,6 @@
 using Sandbox;
 
 using TerryBros.Player;
-using TerryBros.Settings;
-using TerryBros.Levels;
 
 namespace TerryBros.Gamemode
 {
@@ -11,7 +9,8 @@ namespace TerryBros.Gamemode
         public override void Simulate(Client cl)
         {
             base.Simulate(cl);
-            clientOutOfBounds(cl);
+
+            ClientOutOfBounds(cl);
         }
 
         //TODO: Proper Winning with Endscreen
@@ -21,27 +20,25 @@ namespace TerryBros.Gamemode
             {
                 return;
             }
-            Level.currentLevel?.Restart();
+
+            CurrentLevel?.Restart();
             player.Respawn();
         }
-        private void clientOutOfBounds(Client cl)
+        private void ClientOutOfBounds(Client cl)
         {
-            if (Host.IsClient)
+            if (Host.IsClient || cl.Pawn is not TerryBrosPlayer player)
             {
                 return;
             }
 
-            if(cl.Pawn is not TerryBrosPlayer player)
-            {
-                return;
-            }
+            BBox bBox = STBGame.CurrentLevel.LevelBounds;
 
-            if (player.Position.x <= globalSettings.worldBounds.Mins.x
-                || player.Position.x >= globalSettings.worldBounds.Maxs.x
-                || player.Position.y <= globalSettings.worldBounds.Mins.y
-                || player.Position.y >= globalSettings.worldBounds.Maxs.y
-                || player.Position.z <= globalSettings.worldBounds.Mins.z
-                || player.Position.z >= globalSettings.worldBounds.Maxs.z
+            if (player.Position.x < bBox.Mins.x
+                || player.Position.x > bBox.Maxs.x
+                || player.Position.y < bBox.Mins.y
+                || player.Position.y > bBox.Maxs.y
+                || player.Position.z < bBox.Mins.z
+                || player.Position.z > bBox.Maxs.z
                 )
             {
                 player.Respawn();

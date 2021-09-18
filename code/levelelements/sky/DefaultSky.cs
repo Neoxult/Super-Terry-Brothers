@@ -7,9 +7,6 @@ namespace TerryBros.LevelElements
     [Library("env_sky_sidescroller")]
     public partial class DefaultSky : Sky
     {
-        public override Material FetchSkyMaterial()
-        {
-            return Material.Load("materials/sky/default_sky.vmat");
-        }
+        public override Material FetchSkyMaterial() => Material.Load("materials/sky/default_sky.vmat");
     }
 }

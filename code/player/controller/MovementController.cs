@@ -15,7 +15,6 @@ namespace TerryBros.Player.Controller
             {
                 if (_forward != value)
                 {
-                    OldMoveDirectionTime = -MovedirectionChanged;
                     MovedirectionChanged = 0f;
 
                     _forward = value;
@@ -23,7 +22,6 @@ namespace TerryBros.Player.Controller
             }
         }
         private bool _forward = true;
-        public float OldMoveDirectionTime = 0f;
 
         public TimeSince MovedirectionChanged = 1f;
 
@@ -48,7 +46,7 @@ namespace TerryBros.Player.Controller
                 Input.Left = 0f;
             }
 
-            Input.Rotation = Rotation.LookAt(Forward ? globalSettings.forwardDir : -globalSettings.forwardDir, globalSettings.upwardDir);
+            Input.Rotation = Rotation.LookAt(Forward ? GlobalSettings.ForwardDir : -GlobalSettings.ForwardDir, GlobalSettings.UpwardDir);
 
             CalculateSimulation();
         }

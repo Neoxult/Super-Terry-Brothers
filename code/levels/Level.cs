@@ -1,64 +1,75 @@
+using System;
+
 using Sandbox;
 
-using TerryBros.Settings;
 using TerryBros.LevelElements;
+using TerryBros.Settings;
+using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public delegate void resetCheckPoints();
-
-    public partial class Level : Entity
+    public abstract partial class Level : Entity
     {
-        public static Level lastLevel { get; private set; }
-        public static Level currentLevel { get; private set; }
-
-        protected STBSpawn restartSpawn;
-        protected STBSpawn checkPointSpawn;
+        public BBox LevelBounds { get; private set; }
 
         /// <summary>
-        /// As a delegate cant be instantiated without a function, use this dummy here.
+        /// World Bound given in number of Blocks
         /// </summary>
-        private void dummyReset() { }
-        private resetCheckPoints onResetCheckPoints;
+        public IntBBox LevelBoundsBlocks
+        {
+            get => _levelBoundsBlocks;
+            set
+            {
+                _levelBoundsBlocks = value;
+
+                LevelBounds = new BBox(
+                    GlobalSettings.GetBlockPosForGridCoordinates(value.Mins) - (GlobalSettings.ForwardDir + 2 * GlobalSettings.UpwardDir + GlobalSettings.LookDir) * GlobalSettings.BlockSize / 2,
+                    GlobalSettings.GetBlockPosForGridCoordinates(value.Maxs) + (GlobalSettings.ForwardDir + GlobalSettings.LookDir) * GlobalSettings.BlockSize / 2
+                );
+            }
+        }
+        private static IntBBox _levelBoundsBlocks = IntBBox.Zero;
+
+        protected STBSpawn RestartSpawn;
+        protected STBSpawn CheckPointSpawn;
+
+        private Action _onResetCheckPoints = null;
 
         public Level()
         {
-            lastLevel = currentLevel;
-            currentLevel = this;
-            onResetCheckPoints = dummyReset;
+
         }
+
+        public abstract void Build();
+
         public STBSpawn GetRestartPoint()
         {
-            return restartSpawn;
+            return RestartSpawn;
         }
+
         public STBSpawn GetLastCheckPoint()
         {
-            if(checkPointSpawn != null)
-            {
-                return checkPointSpawn;
-            } else
-            {
-                return GetRestartPoint();
-            }
+            return CheckPointSpawn ?? GetRestartPoint();
         }
         public void SetCheckPoint(Checkpoint checkPoint)
         {
-            checkPointSpawn = checkPoint.spawnPoint;
-            checkPoint.RegisterReset(ref onResetCheckPoints);
+            CheckPointSpawn = checkPoint.spawnPoint;
+
+            checkPoint.RegisterReset(_onResetCheckPoints);
         }
         public void Restart()
         {
-            checkPointSpawn = null;
-            onResetCheckPoints();
-            onResetCheckPoints = dummyReset;
+            CheckPointSpawn = null;
+
+            _onResetCheckPoints?.Invoke();
         }
-    
-        //Note: Can't use parameters in generic constraints
+
         protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
         {
-            T block = new T();
-            block.Position = globalSettings.GetBlockPosForGridCoordinates(GridX, GridY);
-            return block;
+            return new T()
+            {
+                Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
+            };
         }
 
         protected void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
@@ -76,6 +87,7 @@ namespace TerryBros.Levels
                 }
             }
         }
+
         protected void CreateWallFromTo<T>(int StartGridX, int StartGridY, int EndGridX, int EndGridY) where T : BlockEntity, new()
         {
             for (int x = StartGridX; x <= EndGridX; x++)
@@ -86,6 +98,7 @@ namespace TerryBros.Levels
                 }
             }
         }
+
         protected void CreateWall<T>(int GridX, int GridY, int width, int height) where T : BlockEntity, new()
         {
             for (int x = GridX; x < GridX + width; x++)
@@ -97,14 +110,14 @@ namespace TerryBros.Levels
             }
         }
 
-        protected void CreateCheckPoint(int GridX, int GridY)
+        protected Checkpoint CreateCheckPoint(int GridX, int GridY)
         {
-            var point = CreateBox<Checkpoint>(GridX, GridY);
-        }
-        protected void CreateGoal(int GridX, int GridY)
-        {
-            var point = CreateBox<Goal>(GridX, GridY);
+            return CreateBox<Checkpoint>(GridX, GridY);
         }
 
+        protected Goal CreateGoal(int GridX, int GridY)
+        {
+            return CreateBox<Goal>(GridX, GridY);
+        }
     }
 }

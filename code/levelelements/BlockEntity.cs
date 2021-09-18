@@ -1,35 +1,42 @@
-using System;
 using Sandbox;
 
+using TerryBros.Gamemode;
 using TerryBros.Settings;
+using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
     public partial class BlockEntity : ModelEntity
     {
-        public virtual string materialName
+        public virtual string MaterialName
         {
-            get { return _materialName; }
+            get => _materialName;
             set { _materialName = value; }
         }
-        public virtual intVector3 myBlockSize
+        private string _materialName = "materials/blocks/stair_block.vmat";
+
+        public virtual IntVector3 BlockSize
         {
-            get { return _myBlockSize; }
-            set { _myBlockSize = value; }
+            get => _blockSize;
+            set { _blockSize = value; }
         }
-        public Vector3 myBlockSizeFloat
+        private IntVector3 _blockSize = new(1, 1, 1);
+
+        public virtual PhysicsMotionType PhysicsMotionType
         {
-            get { return globalSettings.ConvertLocalToGlobalCoordinates(myBlockSize); }
-            set { throw new InvalidOperationException("You cant set this value directly. Use myBlockSize for it."); }
-        }
-        public virtual PhysicsMotionType physicsMotionType
-        {
-            get { return _physicsMotionType; }
+            get => _physicsMotionType;
             set
             {
                 _physicsMotionType = value;
+
                 SetupPhysicsFromModel(value);
             }
+        }
+        private PhysicsMotionType _physicsMotionType = PhysicsMotionType.Static;
+
+        public Vector3 BlockSizeFloat
+        {
+            get => GlobalSettings.ConvertLocalToGlobalCoordinates(BlockSize);
         }
 
         /// <summary>
@@ -38,21 +45,62 @@ namespace TerryBros.LevelElements
         /// </summary>
         public override Vector3 Position
         {
-            get
-            {
-                return base.Position - (myBlockSizeFloat - new Vector3(1, 1, 1)) * globalSettings.blockSize / 2;
-            }
+            get => base.Position - (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
             set
             {
-                base.Position = value + (myBlockSizeFloat - new Vector3(1, 1, 1)) * globalSettings.blockSize / 2;
+                base.Position = value + (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
+
+                IntBBox intBBox = STBGame.CurrentLevel.LevelBoundsBlocks;
+
+                int x = GridX;
+                int y = GridY;
+                int z = GridZ;
+
+                if (x < intBBox.Mins.x)
+                {
+                    intBBox.Mins.x = x;
+                }
+
+                if (x > intBBox.Maxs.x)
+                {
+                    intBBox.Maxs.x = x;
+                }
+
+                if (y < intBBox.Mins.y)
+                {
+                    intBBox.Mins.y = y;
+                }
+
+                if (y > intBBox.Maxs.y)
+                {
+                    intBBox.Maxs.y = y;
+                }
+
+                if (z < intBBox.Mins.z)
+                {
+                    intBBox.Mins.z = z;
+                }
+
+                if (z > intBBox.Maxs.z)
+                {
+                    intBBox.Maxs.z = z;
+                }
+
+                STBGame.CurrentLevel.LevelBoundsBlocks = intBBox;
             }
         }
 
-        private intVector3 _myBlockSize = new intVector3(1, 1, 1);
-        private PhysicsMotionType _physicsMotionType = PhysicsMotionType.Static;
-        private string _materialName = "materials/blocks/stair_block.vmat";
+        public Vector3 Mins => Position - GlobalSettings.BlockSize / 2;
+        public Vector3 Maxs => Mins + BlockSizeFloat * GlobalSettings.BlockSize;
 
-        public BlockEntity() { }
+        public int GridX => GlobalSettings.GetGridCoordinatesForBlockPos(Position).x;
+        public int GridY => GlobalSettings.GetGridCoordinatesForBlockPos(Position).y;
+        public int GridZ => GlobalSettings.GetGridCoordinatesForBlockPos(Position).z;
+
+        public BlockEntity() : base()
+        {
+
+        }
 
         public BlockEntity(Vector3 gridPosition) : this()
         {
@@ -71,24 +119,23 @@ namespace TerryBros.LevelElements
         // Note: Spawn gets called before the constructor
         public override void Spawn()
         {
-            VertexBuffer vb = new VertexBuffer();
+            VertexBuffer vb = new();
             vb.Init(true);
-            vb.AddCube(Vector3.Zero, myBlockSizeFloat * globalSettings.blockSize, Rotation.LookAt(globalSettings.forwardDir, -globalSettings.upwardDir));
+            vb.AddCube(Vector3.Zero, BlockSizeFloat * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
 
-            Mesh mesh = new Mesh(Material.Load(materialName));
+            Mesh mesh = new(Material.Load(MaterialName));
             mesh.CreateBuffers(vb);
-            mesh.SetBounds(myBlockSizeFloat * -globalSettings.blockSize / 2, myBlockSizeFloat * globalSettings.blockSize / 2);
+            mesh.SetBounds(BlockSizeFloat * -GlobalSettings.BlockSize / 2, BlockSizeFloat * GlobalSettings.BlockSize / 2);
 
             Model model = new ModelBuilder()
                 .AddMesh(mesh)
-                .AddCollisionBox(myBlockSizeFloat * globalSettings.blockSize / 2)
+                .AddCollisionBox(BlockSizeFloat * GlobalSettings.BlockSize / 2)
                 .Create();
 
             SetModel(model);
-            SetupPhysicsFromModel(physicsMotionType);
+            SetupPhysicsFromModel(PhysicsMotionType);
 
             base.Spawn();
         }
-
     }
 }

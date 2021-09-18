@@ -59,5 +59,28 @@ namespace TerryBros.Player
         {
             base.OnKilled();
         }
+
+        // Just some testing, to create blocks dynamically
+        [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player's")]
+        public static void ServerCreateBlock()
+        {
+            TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
+            MovementController movementController = player.Controller as MovementController;
+            Vector3 position = player.Position + Settings.GlobalSettings.ForwardDir * 100f + new Vector3(0, 0, 25f);
+
+            CreateBlock(position);
+            ClientCreateBlock(position);
+        }
+
+        [ClientRpc]
+        public static void ClientCreateBlock(Vector3 position)
+        {
+            CreateBlock(position);
+        }
+
+        public static ModelEntity CreateBlock(Vector3 position)
+        {
+            return new LevelElements.Brick(position);
+        }
     }
 }

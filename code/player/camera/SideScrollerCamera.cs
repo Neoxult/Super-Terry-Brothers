@@ -2,7 +2,9 @@ using System;
 
 using Sandbox;
 
+using TerryBros.Gamemode;
 using TerryBros.Settings;
+using TerryBros.Utils;
 
 namespace TerryBros.Player.Camera
 {
@@ -25,27 +27,28 @@ namespace TerryBros.Player.Camera
                 return;
             }
 
-            Pos = new(player.Position.x, globalSettings.groundPos.y, globalSettings.groundPos.z);
-            Pos -= globalSettings.upwardDir * globalSettings.blockSize * visibleGroundBlocks;
-            Pos += globalSettings.upwardDir * Screen.Height / 2 * orthoSize;
-            Pos -= globalSettings.lookDir * globalSettings.blockSize * distanceInBlocks;
+            Pos = new(player.Position.x, GlobalSettings.GroundPos.y, GlobalSettings.GroundPos.z);
+            Pos -= GlobalSettings.UpwardDir * GlobalSettings.BlockSize * visibleGroundBlocks;
+            Pos += GlobalSettings.UpwardDir * Screen.Height / 2 * orthoSize;
+            Pos -= GlobalSettings.LookDir * GlobalSettings.BlockSize * distanceInBlocks;
 
-            if (Pos.x < globalSettings.worldBounds.Mins.x + Screen.Width / 2 * orthoSize)
+            BBox bBox = STBGame.CurrentLevel.LevelBounds;
+
+            if (Pos.x < bBox.Mins.x + Screen.Width / 2 * orthoSize)
             {
-                Pos = new(globalSettings.worldBounds.Mins.x + Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
+                Pos = new(bBox.Mins.x + Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
             }
-            else if (Pos.x > globalSettings.worldBounds.Maxs.x - Screen.Width / 2 * orthoSize)
+            else if (Pos.x > bBox.Maxs.x - Screen.Width / 2 * orthoSize)
             {
-                Pos = new(globalSettings.worldBounds.Maxs.x - Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
+                Pos = new(bBox.Maxs.x - Screen.Width / 2 * orthoSize, Pos.y, Pos.z);
             }
 
-            Rot = Rotation.LookAt(globalSettings.lookDir, globalSettings.upwardDir);
+            Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
             Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 
             if (player.Controller is Controller.MovementController movementController)
             {
                 float moveDirectionFactor = Math.Clamp(movementController.MovedirectionChanged * 2f, 0f, 1f);
-                float oldMoveDirectionTime = Math.Clamp(movementController.OldMoveDirectionTime, -1f, 0f);
 
                 if (movementController.Forward != wasForward)
                 {
@@ -60,9 +63,7 @@ namespace TerryBros.Player.Camera
                 rotationFactor = Math.Clamp(moveDirectionFactor, -1f, 1f);
                 rotationFactor -= oldFactor;
 
-                Rot = Rot.RotateAroundAxis(globalSettings.upwardDir,
-                    rotationFactor * (wasForward ? -10f : 10f)
-                );
+                Rot = Rot.RotateAroundAxis(GlobalSettings.UpwardDir, rotationFactor * (wasForward ? -10f : 10f));
             }
 
             Ortho = true;
