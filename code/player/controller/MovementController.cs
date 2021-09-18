@@ -29,6 +29,8 @@ namespace TerryBros.Player.Controller
         public TimeSince JumpAttackStarted = 0f;
         public Vector3 JumpAttackPosition;
 
+        public bool IsJumping = false;
+
         public override void Simulate()
         {
             if (Pawn is not TerryBrosPlayer player)
@@ -66,6 +68,7 @@ namespace TerryBros.Player.Controller
 
             if (GroundEntity != null)
             {
+                IsJumping = false;
                 IsJumpAttacking = false;
             }
 
@@ -315,7 +318,7 @@ namespace TerryBros.Player.Controller
 
             if (GroundEntity == null)
             {
-                if (!IsJumpAttacking)
+                if (!IsJumpAttacking && IsJumping)
                 {
                     IsJumpAttacking = true;
                     JumpAttackStarted = 0f;
@@ -331,6 +334,8 @@ namespace TerryBros.Player.Controller
 
                 return;
             }
+
+            IsJumping = true;
 
             ClearGroundEntity();
 
