@@ -16,12 +16,14 @@ namespace TerryBros.Player.Controller
                 if (_forward != value)
                 {
                     MovedirectionChanged = 0f;
-
+                    _wasMovedirectionChanged = true;
                     _forward = value;
                 }
             }
         }
         private bool _forward = true;
+
+        private bool _wasMovedirectionChanged = false;
 
         public TimeSince MovedirectionChanged = 1f;
 
@@ -41,14 +43,17 @@ namespace TerryBros.Player.Controller
             //TODO: Find out if the game is really lagging with sprinting
             //SprintSpeed = DefaultSpeed;
 
-            if (Input.Left != 0f)
+            if (!IsJumpAttacking)
             {
-                Forward = Input.Left <= 0f;
-                Input.Forward = Math.Abs(Input.Left);
-                Input.Left = 0f;
-            }
+                if (Input.Left != 0f)
+                {
+                    Forward = Input.Left <= 0f;
+                    Input.Forward = Math.Abs(Input.Left);
+                    Input.Left = 0f;
+                }
 
-            Input.Rotation = Rotation.LookAt(Forward ? GlobalSettings.ForwardDir : -GlobalSettings.ForwardDir, GlobalSettings.UpwardDir);
+                Input.Rotation = Rotation.LookAt(Forward ? GlobalSettings.ForwardDir : -GlobalSettings.ForwardDir, GlobalSettings.UpwardDir);
+            }
 
             CalculateSimulation();
         }
@@ -60,7 +65,13 @@ namespace TerryBros.Player.Controller
 
             EyePosLocal += TraceOffset;
             EyeRot = Input.Rotation;
-            Rotation = Input.Rotation;
+
+            if (_wasMovedirectionChanged)
+            {
+                Rotation = Input.Rotation;
+
+                _wasMovedirectionChanged = false;
+            }
 
             if (Unstuck.TestAndFix())
             {
@@ -78,6 +89,8 @@ namespace TerryBros.Player.Controller
                 if (JumpAttackStarted < 0.8f)
                 {
                     Velocity = Vector3.Zero;
+
+                    (Pawn as TerryBrosPlayer).Animator.SetParam("jumpattack", 0.8f);
                 }
                 else if (GroundEntity == null)
                 {
@@ -225,10 +238,10 @@ namespace TerryBros.Player.Controller
             }
 
             const float ladderDistance = 1.0f;
-            var start = Position;
+            Vector3 start = Position;
             Vector3 end = start + (IsTouchingLadder ? (LadderNormal * -1.0f) : WishVelocity.Normal) * ladderDistance;
 
-            var pm = Trace.Ray(start, end)
+            TraceResult pm = Trace.Ray(start, end)
                 .Size(mins, maxs)
                 .HitLayer(CollisionLayer.All, false)
                 .HitLayer(CollisionLayer.LADDER, true)
@@ -323,6 +336,8 @@ namespace TerryBros.Player.Controller
                 {
                     IsJumpAttacking = true;
                     JumpAttackStarted = 0f;
+
+                    AddEvent("jumpattack");
                 }
 
                 return;
