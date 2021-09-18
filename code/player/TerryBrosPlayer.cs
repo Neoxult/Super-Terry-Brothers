@@ -25,6 +25,8 @@ namespace TerryBros.Player
 
         public override void Respawn()
         {
+            base.Respawn();
+
             SetModel("models/citizen/citizen.vmdl");
 
             Controller = new MovementController();
@@ -38,7 +40,9 @@ namespace TerryBros.Player
 
             Clothing.DressEntity(this);
 
-            base.Respawn();
+            Scale = 0.34f;
+            PhysicsGroup?.RebuildMass();
+            PhysicsGroup?.Wake();
         }
 
         /// <summary>
