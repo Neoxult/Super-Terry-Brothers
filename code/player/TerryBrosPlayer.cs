@@ -13,6 +13,11 @@ namespace TerryBros.Player
         /// </summary>
         public Clothing.Container Clothing = new();
 
+        [ClientVar]
+        public static bool stb_2D { get; set; } = false;
+
+        public bool IsInLevelBuilder = false;
+
         public TerryBrosPlayer()
         {
 
@@ -81,6 +86,17 @@ namespace TerryBros.Player
         public static ModelEntity CreateBlock(Vector3 position)
         {
             return new LevelElements.Brick(position);
+        }
+
+        [ClientCmd("stb_editor")]
+        public static void ToggleLevelEditor()
+        {
+            if (Local.Pawn is not TerryBrosPlayer player)
+            {
+                return;
+            }
+
+            player.IsInLevelBuilder = !player.IsInLevelBuilder;
         }
     }
 }

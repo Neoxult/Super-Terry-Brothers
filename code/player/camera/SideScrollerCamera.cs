@@ -62,26 +62,30 @@ namespace TerryBros.Player.Camera
             // Camera 3d effect
 
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
-            Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 
-            if (player.Controller is Controller.MovementController movementController)
+            if (!player.IsInLevelBuilder && !TerryBrosPlayer.stb_2D)
             {
-                float moveDirectionFactor = Math.Clamp(movementController.MovedirectionChanged * 2f, 0f, 1f);
+                Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 
-                if (movementController.Forward != _wasForward)
+                if (player.Controller is Controller.MovementController movementController)
                 {
-                    _wasForward = movementController.Forward;
-                    _oldFactor += _rotationFactor;
-                }
-                else if (_oldFactor > 0f)
-                {
-                    _oldFactor = Math.Max(_oldFactor - moveDirectionFactor, 0f);
-                }
+                    float moveDirectionFactor = Math.Clamp(movementController.MovedirectionChanged * 2f, 0f, 1f);
 
-                _rotationFactor = Math.Clamp(moveDirectionFactor, -1f, 1f);
-                _rotationFactor -= _oldFactor;
+                    if (movementController.Forward != _wasForward)
+                    {
+                        _wasForward = movementController.Forward;
+                        _oldFactor += _rotationFactor;
+                    }
+                    else if (_oldFactor > 0f)
+                    {
+                        _oldFactor = Math.Max(_oldFactor - moveDirectionFactor, 0f);
+                    }
 
-                Rot = Rot.RotateAroundAxis(GlobalSettings.UpwardDir, _rotationFactor * (_wasForward ? -10f : 10f));
+                    _rotationFactor = Math.Clamp(moveDirectionFactor, -1f, 1f);
+                    _rotationFactor -= _oldFactor;
+
+                    Rot = Rot.RotateAroundAxis(GlobalSettings.UpwardDir, _rotationFactor * (_wasForward ? -10f : 10f));
+                }
             }
 
             Ortho = true;
