@@ -35,7 +35,7 @@ namespace TerryBros.Player.Camera
 
             // horizontal camera movement
 
-            float val = 1.15f;
+            float val = TerryBrosPlayer.stb_2D ? 1f : 1.15f;
 
             if (Pos.x < bBox.Mins.x + Screen.Width / 2 * _orthoSize * val)
             {
@@ -48,7 +48,7 @@ namespace TerryBros.Player.Camera
 
             // vertical camera movement
 
-            val = 1.3f;
+            val = TerryBrosPlayer.stb_2D ? 1f : 1.3f;
 
             if (Pos.z < bBox.Mins.z + Screen.Height / 2 * _orthoSize * val)
             {
