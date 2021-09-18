@@ -71,9 +71,9 @@ namespace TerryBros.LevelElements
                     intBBox.Mins.y = y;
                 }
 
-                if (y > intBBox.Maxs.y)
+                if (y + 5 > intBBox.Maxs.y)
                 {
-                    intBBox.Maxs.y = y;
+                    intBBox.Maxs.y = y + 5;
                 }
 
                 if (z < intBBox.Mins.z)
