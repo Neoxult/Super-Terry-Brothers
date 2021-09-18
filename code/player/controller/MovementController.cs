@@ -60,6 +60,7 @@ namespace TerryBros.Player.Controller
 
             EyePosLocal += TraceOffset;
             EyeRot = Input.Rotation;
+            Rotation = Input.Rotation;
 
             if (Unstuck.TestAndFix())
             {
@@ -322,14 +323,6 @@ namespace TerryBros.Player.Controller
                 {
                     IsJumpAttacking = true;
                     JumpAttackStarted = 0f;
-
-                    TraceResult tr = Trace.Ray(Position, Position + Vector3.Down * 5000f)
-                        .Ignore(Pawn)
-                        .HitLayer(CollisionLayer.All)
-                        .Radius(0f)
-                        .Run();
-
-                    DebugOverlay.Line(tr.StartPos, tr.EndPos, Color.Red, 10f);
                 }
 
                 return;
