@@ -1,0 +1,47 @@
+Editor {
+    position: absolute;
+    bottom: -74px;
+    flex-direction: column;
+    transition: all 0.1s linear;
+
+    &.opened {
+        bottom: 0px;
+    }
+
+    Label.openlabel {
+        color: white;
+        background-color: gray;
+        text-align: center;
+        border-radius: 8px 8px 0px 0px;
+        padding: 4px;
+        width: 50px;
+
+        cursor: pointer;
+    }
+
+    .blocks {
+        background-color: gray;
+        color: white;
+        justify-items: center;
+        justify-content: space-between;
+        height: 74px;
+        padding: 5px;
+
+        Block {
+            &:not(:last-child) {
+                margin-right: 5px;
+            }
+
+            cursor: pointer;
+
+            height: 64px;
+            width: 64px;
+
+            background-color: red;
+
+            &.selected {
+                background-color: green;
+            }
+        }
+    }
+}

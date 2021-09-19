@@ -1,3 +1,4 @@
+using Sandbox;
 using Sandbox.UI;
 
 //
@@ -22,7 +23,18 @@ namespace TerryBros.UI
 
             Instance = this;
 
-            RootPanel.AddChild<LevelBuilder>();
+            RootPanel.AddChild<LevelBuilder.Builder>();
+        }
+
+        [Event.Hotload]
+        public static void OnHotReloaded()
+        {
+            if (Host.IsClient)
+            {
+                Local.Hud?.Delete();
+
+                Hud hud = new();
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Levels;
 using TerryBros.Settings;
-using TerryBros.UI;
+using TerryBros.UI.LevelBuilder;
 using TerryBros.Utils;
 
 namespace TerryBros.Player
@@ -28,6 +28,7 @@ namespace TerryBros.Player
         public bool IsInLevelBuilder = false;
 
         private IntVector3 _oldGrid = IntVector3.Zero;
+        private bool _isDrawing = false;
 
         public TerryBrosPlayer()
         {
@@ -94,15 +95,24 @@ namespace TerryBros.Player
 
             DebugOverlay.Box(cameraPos.WithY(0f) + new Vector3(0, -10, 0), cameraPos.WithY(0f) + new Vector3(Screen.Width * sideScrollerCamera.OrthoSize, 10, -Screen.Height * sideScrollerCamera.OrthoSize), Color.Green, 0.1f);
 
-            if (Input.Down(InputButton.Menu) && !_oldGrid.Equals(intVector3))
+            if (Builder.Instance.IsMouseDown && !_oldGrid.Equals(intVector3))
             {
                 _oldGrid = intVector3;
+                _isDrawing = true;
 
-                ServerCreateBlock(vector3);
+                if (Builder.Instance.IsLeftMouseButtonDown)
+                {
+                    ServerCreateBlock(vector3);
+                }
+                else if (Builder.Instance.IsRightMouseButtonDown)
+                {
+                    ServerDeleteBlock(vector3);
+                }
             }
-            else if (Input.Released(InputButton.Menu))
+            else if (_isDrawing && !Builder.Instance.IsMouseDown)
             {
                 _oldGrid = IntVector3.Zero;
+                _isDrawing = false;
             }
         }
 
@@ -112,7 +122,7 @@ namespace TerryBros.Player
         }
 
         // Just some testing, to create blocks dynamically
-        [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player's")]
+        [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
         public static void ServerCreateBlock(Vector3 position)
         {
             TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
@@ -122,13 +132,59 @@ namespace TerryBros.Player
             ClientCreateBlock(position);
         }
 
+        // Just some testing, to create blocks dynamically
+        [ServerCmd(Name = "stb_block_delete", Help = "Removes a block in front of the player")]
+        public static void ServerDeleteBlock(Vector3 position)
+        {
+            TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
+            MovementController movementController = player.Controller as MovementController;
+
+            DeleteBlock(position);
+            ClientDeleteBlock(position);
+        }
+
         [ClientRpc]
         public static void ClientCreateBlock(Vector3 position)
         {
             CreateBlock(position);
         }
 
+        [ClientRpc]
+        public static void ClientDeleteBlock(Vector3 position)
+        {
+            DeleteBlock(position);
+        }
+
         public static ModelEntity CreateBlock(Vector3 position)
+        {
+            Level level = STBGame.CurrentLevel;
+            IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
+
+            level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
+
+            if (dict == null)
+            {
+                dict = new();
+
+                level.GridBlocks.Add(intVector3.x, dict);
+            }
+
+            dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
+
+            if (blockEntity == null)
+            {
+                blockEntity = new LevelElements.Brick();
+                blockEntity.Position = position;
+
+                dict[intVector3.y] = blockEntity;
+
+                return blockEntity;
+            }
+
+            return blockEntity;
+        }
+
+        public static void DeleteBlock(Vector3 position)
         {
             Level level = STBGame.CurrentLevel;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
@@ -148,17 +204,6 @@ namespace TerryBros.Player
             {
                 dict.Remove(intVector3.y);
                 blockEntity.Delete();
-
-                return null;
-            }
-            else
-            {
-                blockEntity = new LevelElements.Brick();
-                blockEntity.Position = position;
-
-                dict[intVector3.y] = blockEntity;
-
-                return blockEntity;
             }
         }
 
@@ -172,7 +217,7 @@ namespace TerryBros.Player
 
             player.IsInLevelBuilder = !player.IsInLevelBuilder;
 
-            LevelBuilder.Instance.Toggle(player.IsInLevelBuilder);
+            Builder.Instance.Toggle(player.IsInLevelBuilder);
         }
     }
 }
