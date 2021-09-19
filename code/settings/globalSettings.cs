@@ -75,9 +75,9 @@ namespace TerryBros.Settings
             gridPos += UpwardDir * BlockSize / 2;
 
             IntVector3 gridCoordinate = new IntVector3(
-                (int) (gridPos.x / BlockSize),
-                (int) (gridPos.z / BlockSize),
-                (int) (gridPos.y / BlockSize)
+                (int) Math.Round(gridPos.x / BlockSize),
+                (int) Math.Round(gridPos.z / BlockSize),
+                (int) Math.Round(gridPos.y / BlockSize)
             );
 
             return gridCoordinate;

@@ -74,15 +74,16 @@ namespace TerryBros.Player
             cameraPos.x -= Screen.Width * (sideScrollerCamera.OrthoSize / 2f);
             cameraPos.z += Screen.Height * (sideScrollerCamera.OrthoSize / 2f);
 
-            Vector2 mousePosition = Mouse.Position / (3f + 1f / 3f);
+            Vector2 mousePosition = Mouse.Position * sideScrollerCamera.OrthoSize;
             Vector3 mousePos = new Vector3(mousePosition.x + cameraPos.x, 0, cameraPos.z - mousePosition.y);
 
+            Vector3 BlockSize = GlobalSettings.BlockSize / 2f;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(mousePos);
             Vector3 vector3 = GlobalSettings.GetBlockPosForGridCoordinates(intVector3);
-            Vector3 BlockSize = GlobalSettings.BlockSize / 2f;
 
             DebugOverlay.Box(vector3 - BlockSize, vector3 + BlockSize, Color.Red, 0.1f);
             DebugOverlay.Box(mousePos - BlockSize, mousePos + BlockSize, Color.Orange, 0.1f);
+            DebugOverlay.Box(mousePos - new Vector3(2f, 10f, 2f), mousePos + new Vector3(2f, 10f, 2f), Color.Blue, 0.1f);
 
             DebugOverlay.Box(cameraPos.WithY(0f) + new Vector3(0, -10, 0), cameraPos.WithY(0f) + new Vector3(Screen.Width * sideScrollerCamera.OrthoSize, 10, -Screen.Height * sideScrollerCamera.OrthoSize), Color.Green, 0.1f);
 
