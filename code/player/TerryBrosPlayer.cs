@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Sandbox;
@@ -102,7 +103,7 @@ namespace TerryBros.Player
 
                 if (Builder.Instance.IsLeftMouseButtonDown)
                 {
-                    ServerCreateBlock(vector3);
+                    ServerCreateBlock(vector3, Builder.Instance.SelectedBlockData.Name);
                 }
                 else if (Builder.Instance.IsRightMouseButtonDown)
                 {
@@ -123,13 +124,13 @@ namespace TerryBros.Player
 
         // Just some testing, to create blocks dynamically
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
-        public static void ServerCreateBlock(Vector3 position)
+        public static void ServerCreateBlock(Vector3 position, string blockTypeName)
         {
             TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
             MovementController movementController = player.Controller as MovementController;
 
-            CreateBlock(position);
-            ClientCreateBlock(position);
+            CreateBlock(position, blockTypeName);
+            ClientCreateBlock(position, blockTypeName);
         }
 
         // Just some testing, to create blocks dynamically
@@ -144,9 +145,9 @@ namespace TerryBros.Player
         }
 
         [ClientRpc]
-        public static void ClientCreateBlock(Vector3 position)
+        public static void ClientCreateBlock(Vector3 position, string blockTypeName)
         {
-            CreateBlock(position);
+            CreateBlock(position, blockTypeName);
         }
 
         [ClientRpc]
@@ -155,7 +156,7 @@ namespace TerryBros.Player
             DeleteBlock(position);
         }
 
-        public static ModelEntity CreateBlock(Vector3 position)
+        public static ModelEntity CreateBlock(Vector3 position, string blockTypeName)
         {
             Level level = STBGame.CurrentLevel;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
@@ -173,12 +174,30 @@ namespace TerryBros.Player
 
             if (blockEntity == null)
             {
-                blockEntity = new LevelElements.Brick();
-                blockEntity.Position = position;
+                Type type = null;
 
-                dict[intVector3.y] = blockEntity;
+                foreach (Type t in Library.GetAll<BlockEntity>())
+                {
+                    if (!t.IsAbstract && !t.ContainsGenericParameters)
+                    {
+                        if (t.FullName.Replace(t.Namespace, "").TrimStart('.') == blockTypeName)
+                        {
+                            type = t;
 
-                return blockEntity;
+                            break;
+                        }
+                    }
+                }
+
+                if (type != null)
+                {
+                    blockEntity = Library.Create<BlockEntity>(type);
+                    blockEntity.Position = position;
+
+                    dict[intVector3.y] = blockEntity;
+
+                    return blockEntity;
+                }
             }
 
             return blockEntity;

@@ -1,5 +1,7 @@
 using Sandbox.UI;
 
+using TerryBros.LevelElements;
+
 namespace TerryBros.UI.LevelBuilder
 {
     public class Builder : Panel
@@ -8,8 +10,9 @@ namespace TerryBros.UI.LevelBuilder
         public bool IsMouseDown { get; private set; } = false;
         public bool IsLeftMouseButtonDown { get; private set; } = false;
         public bool IsRightMouseButtonDown { get; private set; } = false;
+        public BlockData SelectedBlockData;
 
-        public Editor LevelEditor;
+        public Editor Editor;
 
         public Builder() : base()
         {
@@ -17,7 +20,7 @@ namespace TerryBros.UI.LevelBuilder
 
             StyleSheet.Load("/ui/levelbuider/Builder.scss");
 
-            LevelEditor = new Editor(this);
+            Editor = new Editor(this);
 
             Toggle(false);
         }

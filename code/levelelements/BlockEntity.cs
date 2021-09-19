@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Sandbox;
@@ -9,7 +10,14 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class BlockEntity : ModelEntity
+    public partial class BlockData
+    {
+        public string Name { get; set; }
+        public string MaterialName { get; set; }
+        public Type Type { get; set; }
+    }
+
+    public abstract class BlockEntity : ModelEntity
     {
         public virtual string MaterialName
         {
@@ -133,6 +141,18 @@ namespace TerryBros.LevelElements
             {
                 Position = gridPosition;
             }
+        }
+
+        public BlockData GetBlockData()
+        {
+            Type type = GetType();
+
+            return new BlockData
+            {
+                Type = type,
+                Name = type.FullName.Replace(type.Namespace, "").TrimStart('.'),
+                MaterialName = MaterialName
+            };
         }
 
         //TODO: Check for a direct Facepunch fix

@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+
+using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder
 {
@@ -21,6 +27,8 @@ namespace TerryBros.UI.LevelBuilder
 
         public Label OpenLabel;
 
+        public List<Block> BlockList = new();
+
         public Editor(Panel parent = null) : base()
         {
             Parent = parent ?? Parent;
@@ -40,9 +48,41 @@ namespace TerryBros.UI.LevelBuilder
 
         private void AddBlocks(Panel parent)
         {
-            Block block = new Block(parent);
-            block.TextLabel.Text = "Brick";
-            block.SetClass("selected", true);
+            int count = 0;
+
+            foreach (Type type in Library.GetAll<BlockEntity>())
+            {
+                if (!type.IsAbstract && !type.ContainsGenericParameters)
+                {
+                    count++;
+
+                    BlockEntity blockEntity = Library.Create<BlockEntity>(type);
+                    BlockData blockData = blockEntity.GetBlockData();
+
+                    blockEntity.Delete();
+                    BlockList.Add(new Block(parent, blockData));
+
+                    if (count == 1)
+                    {
+                        Select(type);
+                    }
+                }
+            }
+        }
+
+        public void Select(Type type)
+        {
+            foreach (Block block in BlockList)
+            {
+                bool selected = block.BlockData.Type == type;
+
+                block.SetClass("selected", selected);
+
+                if (selected)
+                {
+                    Builder.Instance.SelectedBlockData = block.BlockData;
+                }
+            }
         }
     }
 }
