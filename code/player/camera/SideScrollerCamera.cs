@@ -92,8 +92,6 @@ namespace TerryBros.Player.Camera
             OrthoSize = _orthoSize;
 
             Viewer = null;
-
-            DebugOverlay.Box(bBox.Mins, bBox.Maxs, Color.Red, 1000f);
         }
     }
 }
