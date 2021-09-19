@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+
 using Sandbox;
 
+using TerryBros.Gamemode;
+using TerryBros.LevelElements;
+using TerryBros.Levels;
 using TerryBros.Settings;
 using TerryBros.UI;
 using TerryBros.Utils;
@@ -21,6 +26,8 @@ namespace TerryBros.Player
         public static bool stb_2D { get; set; } = false;
 
         public bool IsInLevelBuilder = false;
+
+        private IntVector3 _oldGrid;
 
         public TerryBrosPlayer()
         {
@@ -87,9 +94,32 @@ namespace TerryBros.Player
 
             DebugOverlay.Box(cameraPos.WithY(0f) + new Vector3(0, -10, 0), cameraPos.WithY(0f) + new Vector3(Screen.Width * sideScrollerCamera.OrthoSize, 10, -Screen.Height * sideScrollerCamera.OrthoSize), Color.Green, 0.1f);
 
-            if (Input.Pressed(InputButton.Menu))
+            if (Input.Down(InputButton.Menu) && !_oldGrid.Equals(intVector3))
             {
-                ServerCreateBlock(vector3);
+                _oldGrid = intVector3;
+
+                Level level = STBGame.CurrentLevel;
+
+                level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
+
+                if (dict == null)
+                {
+                    dict = new();
+
+                    level.GridBlocks.Add(intVector3.x, dict);
+                }
+
+                dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
+
+                if (blockEntity != null)
+                {
+                    dict.Remove(intVector3.y);
+                    blockEntity.Delete();
+                }
+                else
+                {
+                    ServerCreateBlock(vector3);
+                }
             }
         }
 

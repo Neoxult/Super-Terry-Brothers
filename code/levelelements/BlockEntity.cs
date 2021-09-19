@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+
 using Sandbox;
 
 using TerryBros.Gamemode;
+using TerryBros.Levels;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
@@ -50,7 +53,8 @@ namespace TerryBros.LevelElements
             {
                 base.Position = value + (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
 
-                IntBBox intBBox = STBGame.CurrentLevel.LevelBoundsBlocks;
+                Level level = STBGame.CurrentLevel;
+                IntBBox intBBox = level.LevelBoundsBlocks;
 
                 int x = GridX;
                 int y = GridY;
@@ -86,7 +90,26 @@ namespace TerryBros.LevelElements
                     intBBox.Maxs.z = z;
                 }
 
-                STBGame.CurrentLevel.LevelBoundsBlocks = intBBox;
+                level.LevelBoundsBlocks = intBBox;
+
+                level.GridBlocks.TryGetValue(x, out Dictionary<int, BlockEntity> dict);
+
+                if (dict == null)
+                {
+                    dict = new();
+
+                    level.GridBlocks.Add(x, dict);
+                }
+
+                dict.TryGetValue(y, out BlockEntity blockEntity);
+
+                if (blockEntity != null)
+                {
+                    dict.Remove(y);
+                    blockEntity.Delete();
+                }
+
+                dict.Add(y, this);
             }
         }
 

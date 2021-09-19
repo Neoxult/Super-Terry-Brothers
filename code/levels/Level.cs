@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Sandbox;
 
@@ -29,6 +30,8 @@ namespace TerryBros.Levels
             }
         }
         private static IntBBox _levelBoundsBlocks = IntBBox.Zero;
+
+        public Dictionary<int, Dictionary<int, BlockEntity>> GridBlocks = new();
 
         protected STBSpawn RestartSpawn;
         protected STBSpawn CheckPointSpawn;

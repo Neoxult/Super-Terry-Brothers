@@ -51,5 +51,15 @@ namespace TerryBros.Utils
         {
             return new Vector3(x, y, z);
         }
+
+        public bool Equals(IntVector3 intVector3)
+        {
+            if (x == intVector3.x && y == intVector3.y && z == intVector3.z)
+            {
+                return true;
+            }
+
+            return base.Equals(intVector3);
+        }
     }
 }
