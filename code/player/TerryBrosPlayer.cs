@@ -27,7 +27,7 @@ namespace TerryBros.Player
 
         public bool IsInLevelBuilder = false;
 
-        private IntVector3 _oldGrid;
+        private IntVector3 _oldGrid = IntVector3.Zero;
 
         public TerryBrosPlayer()
         {
@@ -98,28 +98,11 @@ namespace TerryBros.Player
             {
                 _oldGrid = intVector3;
 
-                Level level = STBGame.CurrentLevel;
-
-                level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
-
-                if (dict == null)
-                {
-                    dict = new();
-
-                    level.GridBlocks.Add(intVector3.x, dict);
-                }
-
-                dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
-
-                if (blockEntity != null)
-                {
-                    dict.Remove(intVector3.y);
-                    blockEntity.Delete();
-                }
-                else
-                {
-                    ServerCreateBlock(vector3);
-                }
+                ServerCreateBlock(vector3);
+            }
+            else if (Input.Released(InputButton.Menu))
+            {
+                _oldGrid = IntVector3.Zero;
             }
         }
 
@@ -147,10 +130,36 @@ namespace TerryBros.Player
 
         public static ModelEntity CreateBlock(Vector3 position)
         {
-            ModelEntity modelEntity = new LevelElements.Brick();
-            modelEntity.Position = position;
+            Level level = STBGame.CurrentLevel;
+            IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
 
-            return modelEntity;
+            level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
+
+            if (dict == null)
+            {
+                dict = new();
+
+                level.GridBlocks.Add(intVector3.x, dict);
+            }
+
+            dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
+
+            if (blockEntity != null)
+            {
+                dict.Remove(intVector3.y);
+                blockEntity.Delete();
+
+                return null;
+            }
+            else
+            {
+                blockEntity = new LevelElements.Brick();
+                blockEntity.Position = position;
+
+                dict[intVector3.y] = blockEntity;
+
+                return blockEntity;
+            }
         }
 
         [ClientCmd("stb_editor")]

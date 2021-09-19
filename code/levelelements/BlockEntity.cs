@@ -106,10 +106,9 @@ namespace TerryBros.LevelElements
                 if (blockEntity != null)
                 {
                     dict.Remove(y);
-                    blockEntity.Delete();
                 }
 
-                dict.Add(y, this);
+                dict[y] = this;
             }
         }
 
