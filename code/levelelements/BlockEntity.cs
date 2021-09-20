@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using Sandbox;
 
@@ -19,20 +20,16 @@ namespace TerryBros.LevelElements
 
     public abstract class BlockEntity : ModelEntity
     {
-        public virtual string MaterialName
-        {
-            get => _materialName;
-            set { _materialName = value; }
-        }
-        private string _materialName = "materials/blocks/stair_block.vmat";
+        public virtual string MaterialName => "materials/blocks/stair_block.vmat";
 
-        public virtual IntVector3 BlockSize
-        {
-            get => _blockSize;
-            set { _blockSize = value; }
-        }
-        private IntVector3 _blockSize = new(1, 1, 1);
+        public virtual IntVector3 BlockSize => new(1, 1, 1);
 
+        public string Name
+        {
+            get => GetType().FullName.Replace(GetType().Namespace, "").TrimStart('.');
+        }
+
+        [JsonIgnore]
         public virtual PhysicsMotionType PhysicsMotionType
         {
             get => _physicsMotionType;
@@ -45,6 +42,7 @@ namespace TerryBros.LevelElements
         }
         private PhysicsMotionType _physicsMotionType = PhysicsMotionType.Static;
 
+        [JsonIgnore]
         public Vector3 BlockSizeFloat
         {
             get => GlobalSettings.ConvertLocalToGlobalCoordinates(BlockSize);
@@ -54,6 +52,7 @@ namespace TerryBros.LevelElements
         /// Offsets the Position for Blockentities, so that their first block is directly on the grid.
         /// Normally this is the center, but we use the most nearest (z), lowest (y), left (x) corner.
         /// </summary>
+        [JsonIgnore]
         public override Vector3 Position
         {
             get => base.Position - (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;

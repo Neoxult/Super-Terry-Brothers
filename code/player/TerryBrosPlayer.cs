@@ -122,6 +122,12 @@ namespace TerryBros.Player
             base.OnKilled();
         }
 
+        [ClientCmd(Name = "stb_export")]
+        public static void ExportLevel()
+        {
+            FileSystem.Data.WriteAllText("level.json", STBGame.CurrentLevel.Export());
+        }
+
         // Just some testing, to create blocks dynamically
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
         public static void ServerCreateBlock(Vector3 position, string blockTypeName)

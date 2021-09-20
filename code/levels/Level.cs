@@ -122,5 +122,24 @@ namespace TerryBros.Levels
         {
             return CreateBox<Goal>(GridX, GridY);
         }
+
+        public string Export()
+        {
+            string export = "{";
+
+            foreach (KeyValuePair<int, Dictionary<int, BlockEntity>> y in GridBlocks)
+            {
+                export += y.Key + ":[";
+
+                foreach (KeyValuePair<int, BlockEntity> x in y.Value)
+                {
+                    export += "[" + x.Key + "," + x.Value.Name + "],";
+                }
+
+                export = export.TrimEnd(',') + "],";
+            }
+
+            return export.TrimEnd(',') + "}";
+        }
     }
 }
