@@ -1,6 +1,6 @@
 Editor {
     position: absolute;
-    bottom: -74px;
+    bottom: -78px;
     flex-direction: column;
     transition: all 0.1s linear;
 
@@ -23,7 +23,7 @@ Editor {
         background-color: gray;
         color: white;
         justify-content: space-between;
-        height: 74px;
+        height: 78px;
         padding: 5px;
 
         Block {
@@ -33,13 +33,25 @@ Editor {
 
             cursor: pointer;
 
-            height: 64px;
-            width: 64px;
+            height: 68px;
+            width: 68px;
 
-            background-color: red;
+            border: 2px transparent solid;
 
             &.selected {
-                background-color: green;
+                border: 2px white solid;
+            }
+
+            .name {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translateX(-50%) translateY(-50%);
+            }
+
+            .image {
+                width: 64px;
+                height: 64px;
             }
         }
     }

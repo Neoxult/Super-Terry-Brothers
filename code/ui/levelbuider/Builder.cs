@@ -40,6 +40,13 @@ namespace TerryBros.UI.LevelBuilder
 
         protected override void OnMouseDown(MousePanelEvent e)
         {
+            base.OnMouseDown(e);
+
+            if (e.Target is not Builder)
+            {
+                return;
+            }
+
             IsMouseDown = true;
 
             if (e.Button.Equals("mouseleft"))
@@ -54,6 +61,8 @@ namespace TerryBros.UI.LevelBuilder
 
         protected override void OnMouseUp(MousePanelEvent e)
         {
+            base.OnMouseUp(e);
+
             IsMouseDown = false;
             IsLeftMouseButtonDown = false;
             IsRightMouseButtonDown = false;

@@ -1,3 +1,4 @@
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
@@ -8,6 +9,7 @@ namespace TerryBros.UI.LevelBuilder
     public class Block : Panel
     {
         public Label TextLabel;
+        public Image Image;
 
         public BlockData BlockData { get; set; }
 
@@ -15,8 +17,10 @@ namespace TerryBros.UI.LevelBuilder
         {
             Parent = parent ?? Parent;
 
-            TextLabel = Add.Label(blockData.Name, "name");
             BlockData = blockData;
+
+            Image = Add.Image(blockData.MaterialName.Replace(".vmat", ".png"), "image");
+            TextLabel = Add.Label(blockData.Name, "name");
 
             AddEventListener("onclick", (e) =>
             {
