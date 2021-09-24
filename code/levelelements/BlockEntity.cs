@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 using Sandbox;
 
@@ -11,25 +10,26 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class BlockData
+    public class BlockData
     {
         public string Name { get; set; }
-        public string MaterialName { get; set; }
-        public Type Type { get; set; }
+        public string MaterialName;
+        public Type Type;
     }
 
     public abstract class BlockEntity : ModelEntity
     {
+        public static List<BlockEntity> List = new();
+
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
 
         public virtual IntVector3 BlockSize => new(1, 1, 1);
 
-        public string Name
+        public string TypeName
         {
             get => GetType().FullName.Replace(GetType().Namespace, "").TrimStart('.');
         }
 
-        [JsonIgnore]
         public virtual PhysicsMotionType PhysicsMotionType
         {
             get => _physicsMotionType;
@@ -42,7 +42,6 @@ namespace TerryBros.LevelElements
         }
         private PhysicsMotionType _physicsMotionType = PhysicsMotionType.Static;
 
-        [JsonIgnore]
         public Vector3 BlockSizeFloat
         {
             get => GlobalSettings.ConvertLocalToGlobalCoordinates(BlockSize);
@@ -52,7 +51,6 @@ namespace TerryBros.LevelElements
         /// Offsets the Position for Blockentities, so that their first block is directly on the grid.
         /// Normally this is the center, but we use the most nearest (z), lowest (y), left (x) corner.
         /// </summary>
-        [JsonIgnore]
         public override Vector3 Position
         {
             get => base.Position - (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
@@ -128,7 +126,7 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
-
+            List.Add(this);
         }
 
         public BlockEntity(Vector3 gridPosition) : this()
@@ -142,6 +140,11 @@ namespace TerryBros.LevelElements
             }
         }
 
+        protected override void OnDestroy()
+        {
+            List.Remove(this);
+        }
+
         public BlockData GetBlockData()
         {
             Type type = GetType();
@@ -149,9 +152,25 @@ namespace TerryBros.LevelElements
             return new BlockData
             {
                 Type = type,
-                Name = type.FullName.Replace(type.Namespace, "").TrimStart('.'),
+                Name = TypeName,
                 MaterialName = MaterialName
             };
+        }
+
+        public static Type GetByName(string name)
+        {
+            foreach (Type t in Library.GetAll<BlockEntity>())
+            {
+                if (!t.IsAbstract && !t.ContainsGenericParameters)
+                {
+                    if (t.FullName.Replace(t.Namespace, "").TrimStart('.') == name)
+                    {
+                        return t;
+                    }
+                }
+            }
+
+            return null;
         }
 
         //TODO: Check for a direct Facepunch fix

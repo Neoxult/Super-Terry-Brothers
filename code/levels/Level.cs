@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 using Sandbox;
 
 using TerryBros.LevelElements;
+using TerryBros.Player;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
@@ -125,21 +127,91 @@ namespace TerryBros.Levels
 
         public string Export()
         {
-            string export = "{";
+            Dictionary<string, List<Vector2>> dict = new();
 
             foreach (KeyValuePair<int, Dictionary<int, BlockEntity>> y in GridBlocks)
             {
-                export += y.Key + ":[";
-
                 foreach (KeyValuePair<int, BlockEntity> x in y.Value)
                 {
-                    export += "[" + x.Key + "," + x.Value.Name + "],";
-                }
+                    dict.TryGetValue(x.Value.TypeName, out List<Vector2> blockList);
 
-                export = export.TrimEnd(',') + "],";
+                    if (blockList == null)
+                    {
+                        blockList = new();
+
+                        dict.Add(x.Value.TypeName, blockList);
+                    }
+
+                    blockList.Add(new Vector2(x.Key, y.Key));
+                }
             }
 
-            return export.TrimEnd(',') + "}";
+            return JsonSerializer.Serialize(dict);
+        }
+
+        public static void Import(string data)
+        {
+            Clear();
+
+            Dictionary<string, List<Vector2>> dict = null;
+
+            try
+            {
+                dict = JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(data);
+            }
+            catch (Exception) { }
+
+            if (dict == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, List<Vector2>> blockVectorList in dict)
+            {
+                Type blockType = BlockEntity.GetByName(blockVectorList.Key);
+
+                if (blockType != null)
+                {
+                    foreach (Vector2 vector2 in blockVectorList.Value)
+                    {
+                        BlockEntity blockEntity = Library.Create<BlockEntity>(blockType);
+                        blockEntity.Position = new Vector3(vector2.x, 0, vector2.y);
+                    }
+                }
+            }
+        }
+
+        [ServerCmd(Name = "stb_import_serveronly")]
+        public static void ServerImportData(string data)
+        {
+            if ((!ConsoleSystem.Caller?.HasPermission("import") ?? false))
+            {
+                return;
+            }
+
+            Import(data);
+            ClientImport(data);
+
+            foreach (Client client in Client.All)
+            {
+                client.Pawn.Spawn();
+            }
+        }
+
+        [ClientRpc]
+        public static void ClientImport(string data)
+        {
+            Import(data);
+        }
+
+        public static void Clear()
+        {
+            foreach (BlockEntity entity in BlockEntity.List)
+            {
+                entity.Delete();
+            }
+
+            BlockEntity.List.Clear();
         }
     }
 }

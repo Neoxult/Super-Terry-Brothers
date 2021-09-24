@@ -122,10 +122,23 @@ namespace TerryBros.Player
             base.OnKilled();
         }
 
-        [ClientCmd(Name = "stb_export")]
-        public static void ExportLevel()
+        [ClientCmd(Name = "stb_save")]
+        public static void SaveLevel(string fileName)
         {
-            FileSystem.Data.WriteAllText("level.json", STBGame.CurrentLevel.Export());
+            FileSystem.Data.WriteAllText(fileName.Split('.')[0] + ".json", STBGame.CurrentLevel.Export());
+        }
+
+        [ClientCmd(Name = "stb_load")]
+        public static void LoadLevel(string fileName)
+        {
+            string file = fileName.Split('.')[0] + ".json";
+
+            if (!FileSystem.Data.FileExists(file))
+            {
+                return;
+            }
+
+            Level.ServerImportData(FileSystem.Data.ReadAllText(file));
         }
 
         // Just some testing, to create blocks dynamically
@@ -180,20 +193,7 @@ namespace TerryBros.Player
 
             if (blockEntity == null)
             {
-                Type type = null;
-
-                foreach (Type t in Library.GetAll<BlockEntity>())
-                {
-                    if (!t.IsAbstract && !t.ContainsGenericParameters)
-                    {
-                        if (t.FullName.Replace(t.Namespace, "").TrimStart('.') == blockTypeName)
-                        {
-                            type = t;
-
-                            break;
-                        }
-                    }
-                }
+                Type type = BlockEntity.GetByName(blockTypeName);
 
                 if (type != null)
                 {
