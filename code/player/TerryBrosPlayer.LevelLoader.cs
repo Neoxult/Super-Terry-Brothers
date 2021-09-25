@@ -31,38 +31,16 @@ namespace TerryBros.Player
                 return;
             }
 
-            Dictionary<string, List<Vector2>> dict = null;
-
             try
             {
-                dict = JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file));
+                ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
             }
             catch (Exception) { }
-
-            if (dict == null)
-            {
-                return;
-            }
-
-            int count = 0;
-
-            string[] blockTypes = new string[dict.Count];
-            Vector2[][] positions = new Vector2[dict.Count][];
-
-            foreach (KeyValuePair<string, List<Vector2>> keyValuePair in dict)
-            {
-                blockTypes[count] = keyValuePair.Key;
-                positions[count] = keyValuePair.Value.ToArray();
-
-                count++;
-            }
-
-            ServerSendLevelData(new LevelData(blockTypes, positions));
         }
 
-        public static void ServerSendLevelData(LevelData levelData)
+        public static void ServerSendLevelData(Dictionary<string, List<Vector2>> dict)
         {
-            string levelDataJson = JsonSerializer.Serialize(levelData);
+            string levelDataJson = JsonSerializer.Serialize(dict);
             int splitLength = 150;
             int splitCount = (int) MathF.Ceiling((float) levelDataJson.Length / splitLength);
 
@@ -117,7 +95,7 @@ namespace TerryBros.Player
                 }
 
                 Level.Clear();
-                Level.Import(JsonSerializer.Deserialize<LevelData>(fullData));
+                Level.Import(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(fullData));
 
                 if (Host.IsServer)
                 {

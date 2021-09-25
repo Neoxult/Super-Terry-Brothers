@@ -150,18 +150,18 @@ namespace TerryBros.Levels
             return JsonSerializer.Serialize(dict);
         }
 
-        public static void Import(LevelData levelData)
+        public static void Import(Dictionary<string, List<Vector2>> dict)
         {
-            for (int i = 0; i < levelData.BlockTypes.Length; i++)
+            foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
             {
-                Type blockType = BlockEntity.GetByName(levelData.BlockTypes[i]);
+                Type blockType = BlockEntity.GetByName(blockList.Key);
 
                 if (blockType != null)
                 {
-                    foreach (Vector2 vector2 in levelData.Positions[i])
+                    foreach (Vector2 position in blockList.Value)
                     {
                         BlockEntity blockEntity = Library.Create<BlockEntity>(blockType);
-                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) vector2.x, (int) vector2.y);
+                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
                     }
                 }
             }
@@ -180,18 +180,6 @@ namespace TerryBros.Levels
                     catch (Exception) { }
                 }
             }
-        }
-    }
-
-    public class LevelData
-    {
-        public string[] BlockTypes { get; set; }
-        public Vector2[][] Positions { get; set; }
-
-        public LevelData(string[] blockTypes, Vector2[][] positions)
-        {
-            BlockTypes = blockTypes;
-            Positions = positions;
         }
     }
 }
