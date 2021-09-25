@@ -82,7 +82,7 @@ namespace TerryBros.Player
                     playerPos.x -= 5f;
                     playerPos.y = -10f;
 
-                    DebugOverlay.Box(playerPos, playerPos + new Vector3(10f, 10f, 30f), Color.Black);
+                    DebugOverlay.Box(playerPos, playerPos + new Vector3(10f, 10f, Input.Down(InputButton.Duck) ? 20f : 30f), Color.Black);
                 }
 
                 STBSpawn spawnpoint = STBGame.CurrentLevel?.GetLastCheckPoint();

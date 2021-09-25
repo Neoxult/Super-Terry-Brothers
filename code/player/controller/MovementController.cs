@@ -127,6 +127,16 @@ namespace TerryBros.Player.Controller
 
                 ApplyFriction(GroundFriction * SurfaceFriction);
             }
+            else if (Input.Pressed(InputButton.Duck))
+            {
+                if (!IsJumpAttacking && IsJumping)
+                {
+                    IsJumpAttacking = true;
+                    JumpAttackStarted = 0f;
+
+                    AddEvent("jumpattack");
+                }
+            }
 
             if (!IsJumpAttacking)
             {
@@ -332,14 +342,6 @@ namespace TerryBros.Player.Controller
 
             if (GroundEntity == null)
             {
-                if (!IsJumpAttacking && IsJumping)
-                {
-                    IsJumpAttacking = true;
-                    JumpAttackStarted = 0f;
-
-                    AddEvent("jumpattack");
-                }
-
                 return;
             }
 
