@@ -1,0 +1,23 @@
+Loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    padding: 20px;
+    background-color: gray;
+    border-radius: 8px;
+
+    flex-direction: column;
+
+    Label {
+        background-color: orange;
+        border-radius: 8px;
+        padding: 5px;
+        margin: 2px;
+
+        &:hover {
+            background-color: green;
+        }
+    }
+}

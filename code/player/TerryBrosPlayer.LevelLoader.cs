@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Levels;
+using TerryBros.UI.LevelLoader;
 
 namespace TerryBros.Player
 {
@@ -18,24 +20,49 @@ namespace TerryBros.Player
         [ClientCmd(Name = "stb_save")]
         public static void SaveLevel(string fileName)
         {
-            FileSystem.Data.WriteAllText(fileName.Split('.')[0] + ".json", STBGame.CurrentLevel.Export());
+            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            {
+                FileSystem.Data.CreateDirectory("custom_levels");
+            }
+
+            FileSystem.Data.WriteAllText($"custom_levels/{fileName.Split('.')[0]}.json", STBGame.CurrentLevel.Export());
         }
 
         [ClientCmd(Name = "stb_load")]
-        public static void LoadLevel(string fileName)
+        public static void LoadLevel(string fileName = null)
         {
-            string file = fileName.Split('.')[0] + ".json";
-
-            if (!FileSystem.Data.FileExists(file))
+            if (fileName == null)
             {
-                return;
+                Loader.Instance.SetLevels(GetLevels());
+                Loader.Instance.Display = true;
+            }
+            else
+            {
+                string file = $"custom_levels/{fileName.Split('.')[0]}.json";
+
+                if (!FileSystem.Data.FileExists(file))
+                {
+                    return;
+                }
+
+                try
+                {
+                    ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
+                }
+                catch (Exception) { }
+            }
+        }
+
+        public static List<string> GetLevels()
+        {
+            Assert.True(Host.IsClient);
+
+            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            {
+                return new();
             }
 
-            try
-            {
-                ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
-            }
-            catch (Exception) { }
+            return FileSystem.Data.FindFile("custom_levels", "*.json").ToList();
         }
 
         public static void ServerSendLevelData(Dictionary<string, List<Vector2>> dict)
@@ -90,6 +117,9 @@ namespace TerryBros.Player
 
                 if (Host.IsServer)
                 {
+                    STBGame.CurrentLevel?.Restart();
+                    STBGame.ClientRestartLevel();
+
                     foreach (Client client in Client.All)
                     {
                         if (client.Pawn is TerryBrosPlayer player)
