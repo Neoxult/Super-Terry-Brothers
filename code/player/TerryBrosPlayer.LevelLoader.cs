@@ -13,7 +13,7 @@ namespace TerryBros.Player
     {
         private static int _currentPacketHash = -1;
         private static int _packetCount;
-        private static Dictionary<int, string> _packetData = new();
+        private static string[] _packetData;
 
         [ClientCmd(Name = "stb_save")]
         public static void SaveLevel(string fileName)
@@ -73,29 +73,20 @@ namespace TerryBros.Player
             if (_currentPacketHash != packetHash)
             {
                 _packetCount = 0;
-                _packetData.Clear();
+                _packetData = new string[maxPackets];
 
                 _currentPacketHash = packetHash;
             }
 
-            _packetData.Add(packetNum, partialLevelData);
+            _packetData[packetNum] = partialLevelData;
             _packetCount++;
 
             if (_packetCount == maxPackets)
             {
                 _currentPacketHash = -1;
 
-                string fullData = "";
-
-                for (int i = 0; i < maxPackets; i++)
-                {
-                    _packetData.TryGetValue(i, out string partialData);
-
-                    fullData += partialData;
-                }
-
                 Level.Clear();
-                Level.Import(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(fullData));
+                Level.Import(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(string.Join("", _packetData)));
 
                 if (Host.IsServer)
                 {
