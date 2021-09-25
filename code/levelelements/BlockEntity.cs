@@ -58,69 +58,70 @@ namespace TerryBros.LevelElements
 
                 Level level = STBGame.CurrentLevel;
                 IntBBox intBBox = level.LevelBoundsBlocks;
+                IntVector3 blockPosition = GlobalSettings.GetGridCoordinatesForBlockPos(Position);
 
-                int x = GridX;
-                int y = GridY;
-                int z = GridZ;
+                GridX = blockPosition.x;
+                GridY = blockPosition.y;
+                GridZ = blockPosition.z;
 
-                if (x < intBBox.Mins.x)
+                if (GridX < intBBox.Mins.x)
                 {
-                    intBBox.Mins.x = x;
+                    intBBox.Mins.x = GridX;
                 }
 
-                if (x > intBBox.Maxs.x)
+                if (GridX > intBBox.Maxs.x)
                 {
-                    intBBox.Maxs.x = x;
+                    intBBox.Maxs.x = GridX;
                 }
 
-                if (y < intBBox.Mins.y)
+                if (GridY < intBBox.Mins.y)
                 {
-                    intBBox.Mins.y = y;
+                    intBBox.Mins.y = GridY;
                 }
 
-                if (y + 5 > intBBox.Maxs.y)
+                if (GridY + 5 > intBBox.Maxs.y)
                 {
-                    intBBox.Maxs.y = y + 5;
+                    intBBox.Maxs.y = GridY + 5;
                 }
 
-                if (z < intBBox.Mins.z)
+                if (GridZ < intBBox.Mins.z)
                 {
-                    intBBox.Mins.z = z;
+                    intBBox.Mins.z = GridZ;
                 }
 
-                if (z > intBBox.Maxs.z)
+                if (GridZ > intBBox.Maxs.z)
                 {
-                    intBBox.Maxs.z = z;
+                    intBBox.Maxs.z = GridZ;
                 }
 
                 level.LevelBoundsBlocks = intBBox;
 
-                level.GridBlocks.TryGetValue(x, out Dictionary<int, BlockEntity> dict);
+                level.GridBlocks.TryGetValue(GridX, out Dictionary<int, BlockEntity> dict);
 
                 if (dict == null)
                 {
                     dict = new();
 
-                    level.GridBlocks.Add(x, dict);
+                    level.GridBlocks.Add(GridX, dict);
                 }
 
-                dict.TryGetValue(y, out BlockEntity blockEntity);
+                dict.TryGetValue(GridY, out BlockEntity blockEntity);
 
                 if (blockEntity != null)
                 {
-                    dict.Remove(y);
+                    dict.Remove(GridY);
                 }
 
-                dict[y] = this;
+                dict[GridY] = this;
             }
         }
 
         public Vector3 Mins => Position - GlobalSettings.BlockSize / 2;
         public Vector3 Maxs => Mins + BlockSizeFloat * GlobalSettings.BlockSize;
 
-        public int GridX => GlobalSettings.GetGridCoordinatesForBlockPos(Position).x;
-        public int GridY => GlobalSettings.GetGridCoordinatesForBlockPos(Position).y;
-        public int GridZ => GlobalSettings.GetGridCoordinatesForBlockPos(Position).z;
+        public int GridX = 0;
+        public int GridY = 0;
+        public int GridZ = 0;
 
         public BlockEntity() : base()
         {

@@ -4,6 +4,7 @@ using System.Text.Json;
 
 using Sandbox;
 
+using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
@@ -180,6 +181,8 @@ namespace TerryBros.Levels
                     catch (Exception) { }
                 }
             }
+
+            STBGame.CurrentLevel.GridBlocks = new();
         }
     }
 }
