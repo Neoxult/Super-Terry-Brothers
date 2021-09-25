@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 using Sandbox;
 
@@ -72,6 +74,30 @@ namespace TerryBros.Player
 
             SimulateActiveChild(cl, ActiveChild);
 
+            if (IsClient)
+            {
+                if (cl.Pawn != null)
+                {
+                    Vector3 playerPos = new Vector3(cl.Pawn.Position);
+                    playerPos.x -= 5f;
+                    playerPos.y = -10f;
+
+                    DebugOverlay.Box(playerPos, playerPos + new Vector3(10f, 10f, 30f), Color.Black);
+                }
+
+                STBSpawn spawnpoint = STBGame.CurrentLevel?.GetLastCheckPoint();
+
+                if (spawnpoint != null)
+                {
+                    Vector3 spawnPos = new Vector3(spawnpoint.Position);
+                    spawnPos.x -= 5f;
+                    spawnPos.y = -10f;
+                    spawnPos.z -= 10f;
+
+                    DebugOverlay.Box(spawnPos, spawnPos + new Vector3(10f, 10f, 10f), Color.Blue);
+                }
+            }
+
             if (!IsClient || !IsInLevelBuilder)
             {
                 return;
@@ -120,25 +146,6 @@ namespace TerryBros.Player
         public override void OnKilled()
         {
             base.OnKilled();
-        }
-
-        [ClientCmd(Name = "stb_save")]
-        public static void SaveLevel(string fileName)
-        {
-            FileSystem.Data.WriteAllText(fileName.Split('.')[0] + ".json", STBGame.CurrentLevel.Export());
-        }
-
-        [ClientCmd(Name = "stb_load")]
-        public static void LoadLevel(string fileName)
-        {
-            string file = fileName.Split('.')[0] + ".json";
-
-            if (!FileSystem.Data.FileExists(file))
-            {
-                return;
-            }
-
-            Level.ServerImportData(FileSystem.Data.ReadAllText(file));
         }
 
         // Just some testing, to create blocks dynamically

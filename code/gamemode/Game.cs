@@ -47,10 +47,10 @@ namespace TerryBros.Gamemode
         {
             base.ClientJoined(client);
 
-            var player = new TerryBrosPlayer(client);
+            TerryBrosPlayer player = new(client);
             client.Pawn = player;
 
-            //TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
+            // TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
             player.Respawn();
         }
 

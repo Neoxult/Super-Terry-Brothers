@@ -30,7 +30,7 @@ namespace TerryBros.LevelElements
         {
             base.Touch(other);
 
-            if (other is not TerryBrosPlayer player)
+            if (!Host.IsServer || other is not TerryBrosPlayer player)
             {
                 return;
             }

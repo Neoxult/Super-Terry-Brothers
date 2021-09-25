@@ -13,7 +13,7 @@ namespace TerryBros.Gamemode
             ClientOutOfBounds(cl);
         }
 
-        //TODO: Proper Winning with Endscreen
+        // server-side only
         public static void LevelFinished(TerryBrosPlayer player)
         {
             if (Host.IsClient)
@@ -22,8 +22,17 @@ namespace TerryBros.Gamemode
             }
 
             CurrentLevel?.Restart();
+            ClientRestartLevel();
+
             player.Respawn();
         }
+
+        [ClientRpc]
+        public static void ClientRestartLevel()
+        {
+            CurrentLevel?.Restart();
+        }
+
         private void ClientOutOfBounds(Client cl)
         {
             if (Host.IsClient || cl.Pawn is not TerryBrosPlayer player)

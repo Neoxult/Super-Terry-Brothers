@@ -5,7 +5,6 @@ using System.Text.Json;
 using Sandbox;
 
 using TerryBros.LevelElements;
-using TerryBros.Player;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
@@ -56,12 +55,14 @@ namespace TerryBros.Levels
         {
             return CheckPointSpawn ?? GetRestartPoint();
         }
+
         public void SetCheckPoint(Checkpoint checkPoint)
         {
-            CheckPointSpawn = checkPoint.spawnPoint;
+            CheckPointSpawn = checkPoint.SpawnPoint;
 
-            checkPoint.RegisterReset(_onResetCheckPoints);
+            checkPoint.RegisterReset(ref _onResetCheckPoints);
         }
+
         public void Restart()
         {
             CheckPointSpawn = null;
@@ -129,17 +130,17 @@ namespace TerryBros.Levels
         {
             Dictionary<string, List<Vector2>> dict = new();
 
-            foreach (KeyValuePair<int, Dictionary<int, BlockEntity>> y in GridBlocks)
+            foreach (KeyValuePair<int, Dictionary<int, BlockEntity>> x in GridBlocks)
             {
-                foreach (KeyValuePair<int, BlockEntity> x in y.Value)
+                foreach (KeyValuePair<int, BlockEntity> y in x.Value)
                 {
-                    dict.TryGetValue(x.Value.TypeName, out List<Vector2> blockList);
+                    dict.TryGetValue(y.Value.TypeName, out List<Vector2> blockList);
 
                     if (blockList == null)
                     {
                         blockList = new();
 
-                        dict.Add(x.Value.TypeName, blockList);
+                        dict.Add(y.Value.TypeName, blockList);
                     }
 
                     blockList.Add(new Vector2(x.Key, y.Key));
@@ -149,69 +150,48 @@ namespace TerryBros.Levels
             return JsonSerializer.Serialize(dict);
         }
 
-        public static void Import(string data)
+        public static void Import(LevelData levelData)
         {
-            Clear();
-
-            Dictionary<string, List<Vector2>> dict = null;
-
-            try
+            for (int i = 0; i < levelData.BlockTypes.Length; i++)
             {
-                dict = JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(data);
-            }
-            catch (Exception) { }
-
-            if (dict == null)
-            {
-                return;
-            }
-
-            foreach (KeyValuePair<string, List<Vector2>> blockVectorList in dict)
-            {
-                Type blockType = BlockEntity.GetByName(blockVectorList.Key);
+                Type blockType = BlockEntity.GetByName(levelData.BlockTypes[i]);
 
                 if (blockType != null)
                 {
-                    foreach (Vector2 vector2 in blockVectorList.Value)
+                    foreach (Vector2 vector2 in levelData.Positions[i])
                     {
                         BlockEntity blockEntity = Library.Create<BlockEntity>(blockType);
-                        blockEntity.Position = new Vector3(vector2.x, 0, vector2.y);
+                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) vector2.x, (int) vector2.y);
                     }
                 }
             }
         }
 
-        [ServerCmd(Name = "stb_import_serveronly")]
-        public static void ServerImportData(string data)
-        {
-            if ((!ConsoleSystem.Caller?.HasPermission("import") ?? false))
-            {
-                return;
-            }
-
-            Import(data);
-            ClientImport(data);
-
-            foreach (Client client in Client.All)
-            {
-                client.Pawn.Spawn();
-            }
-        }
-
-        [ClientRpc]
-        public static void ClientImport(string data)
-        {
-            Import(data);
-        }
-
         public static void Clear()
         {
-            foreach (BlockEntity entity in BlockEntity.List)
+            foreach (Entity entity in Entity.All)
             {
-                entity.Delete();
+                if (entity is BlockEntity blockEntity)
+                {
+                    try
+                    {
+                        blockEntity.Delete();
+                    }
+                    catch (Exception) { }
+                }
             }
+        }
+    }
 
-            BlockEntity.List.Clear();
+    public class LevelData
+    {
+        public string[] BlockTypes { get; set; }
+        public Vector2[][] Positions { get; set; }
+
+        public LevelData(string[] blockTypes, Vector2[][] positions)
+        {
+            BlockTypes = blockTypes;
+            Positions = positions;
         }
     }
 }

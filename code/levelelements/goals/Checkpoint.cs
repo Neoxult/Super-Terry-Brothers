@@ -11,7 +11,7 @@ namespace TerryBros.LevelElements
 {
     public partial class Checkpoint : BlockEntity
     {
-        public STBSpawn spawnPoint { get; private set; }
+        public STBSpawn SpawnPoint { get; private set; }
         public override string MaterialName => "materials/blocks/stair_block.vmat";
         public override IntVector3 BlockSize => new(1, 3, 1);
         public override Vector3 Position
@@ -21,13 +21,13 @@ namespace TerryBros.LevelElements
             {
                 base.Position = value;
 
-                if (spawnPoint != null)
+                if (SpawnPoint != null)
                 {
-                    spawnPoint.Position = value;
+                    SpawnPoint.Position = value;
                 }
             }
         }
-        private bool wasTouched = false;
+        private bool _wasTouched = false;
 
         public Checkpoint() : this(GlobalSettings.GetBlockPosForGridCoordinates(0, 0))
         {
@@ -42,10 +42,10 @@ namespace TerryBros.LevelElements
             EnableHitboxes = true;
             RenderColor = Color.Blue;
 
-            spawnPoint = new STBSpawn(position + GlobalSettings.UpwardDir * (GlobalSettings.FigureHeight - GlobalSettings.BlockSize / 2) / 2);
+            SpawnPoint = new STBSpawn(position + GlobalSettings.UpwardDir * (GlobalSettings.FigureHeight - GlobalSettings.BlockSize / 2) / 2);
         }
 
-        public void RegisterReset(Action resetDelegate)
+        public void RegisterReset(ref Action resetDelegate)
         {
             if (resetDelegate != null)
             {
@@ -61,23 +61,22 @@ namespace TerryBros.LevelElements
         {
             base.Touch(other);
 
-            if (wasTouched || other is not TerryBrosPlayer)
+            if (_wasTouched || other is not TerryBrosPlayer)
             {
                 return;
             }
 
             if (STBGame.CurrentLevel != null)
             {
-                wasTouched = true;
+                _wasTouched = true;
 
                 STBGame.CurrentLevel.SetCheckPoint(this);
             }
-
         }
 
-        private void ResetCheckPoint()
+        public void ResetCheckPoint()
         {
-            wasTouched = false;
+            _wasTouched = false;
         }
     }
 }

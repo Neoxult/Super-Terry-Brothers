@@ -19,8 +19,6 @@ namespace TerryBros.LevelElements
 
     public abstract class BlockEntity : ModelEntity
     {
-        public static List<BlockEntity> List = new();
-
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
 
         public virtual IntVector3 BlockSize => new(1, 1, 1);
@@ -126,7 +124,7 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
-            List.Add(this);
+
         }
 
         public BlockEntity(Vector3 gridPosition) : this()
@@ -138,11 +136,6 @@ namespace TerryBros.LevelElements
             {
                 Position = gridPosition;
             }
-        }
-
-        protected override void OnDestroy()
-        {
-            List.Remove(this);
         }
 
         public BlockData GetBlockData()
