@@ -8,6 +8,11 @@ namespace TerryBros.Gamemode
     {
         public override void Simulate(Client cl)
         {
+            if (cl.Pawn is TerryBrosPlayer player)
+            {
+                player.Position = player.Position.WithY(0);
+            }
+
             base.Simulate(cl);
 
             ClientOutOfBounds(cl);

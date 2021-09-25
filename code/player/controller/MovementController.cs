@@ -30,6 +30,7 @@ namespace TerryBros.Player.Controller
         public bool IsJumpAttacking = false;
         public TimeSince JumpAttackStarted = 0f;
         public Vector3 JumpAttackPosition;
+        public bool IsJumpAttackTriggered = false;
 
         public bool IsJumping = false;
 
@@ -80,11 +81,14 @@ namespace TerryBros.Player.Controller
 
             if (GroundEntity != null)
             {
-                IsJumping = false;
-                IsJumpAttacking = false;
+                if (IsJumpAttacking)
+                {
+                    IsJumping = false;
+                    IsJumpAttacking = false;
+                    IsJumpAttackTriggered = false;
+                }
             }
-
-            if (IsJumpAttacking)
+            else if (IsJumpAttacking)
             {
                 if (JumpAttackStarted < 0.8f)
                 {
@@ -92,8 +96,10 @@ namespace TerryBros.Player.Controller
 
                     (Pawn as TerryBrosPlayer).Animator.SetParam("jumpattack", 0.8f);
                 }
-                else if (GroundEntity == null)
+                else if (GroundEntity == null && !IsJumpAttackTriggered)
                 {
+                    IsJumpAttackTriggered = true;
+
                     Velocity = Vector3.Down * 800f;
                 }
             }
