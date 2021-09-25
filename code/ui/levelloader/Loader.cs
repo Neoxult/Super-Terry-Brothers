@@ -19,6 +19,8 @@ namespace TerryBros.UI.LevelLoader
             {
                 _display = value;
 
+                SetClass("display", _display);
+
                 Style.Display = _display ? DisplayMode.Flex : DisplayMode.None;
                 Style.Dirty();
             }

@@ -240,7 +240,7 @@ namespace TerryBros.Player
         }
 
         [ClientCmd("stb_editor")]
-        public static void ToggleLevelEditor()
+        public static void ClientToggleLevelEditor()
         {
             if (Local.Pawn is not TerryBrosPlayer player)
             {
@@ -249,7 +249,20 @@ namespace TerryBros.Player
 
             player.IsInLevelBuilder = !player.IsInLevelBuilder;
 
+            ServerToggleLevelEditor(player.IsInLevelBuilder);
+
             Builder.Instance.Toggle(player.IsInLevelBuilder);
+        }
+
+        [ServerCmd]
+        public static void ServerToggleLevelEditor(bool toggle)
+        {
+            if (ConsoleSystem.Caller?.Pawn is not TerryBrosPlayer player)
+            {
+                return;
+            }
+
+            player.IsInLevelBuilder = toggle;
         }
     }
 }

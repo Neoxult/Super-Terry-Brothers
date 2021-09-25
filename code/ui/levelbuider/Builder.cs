@@ -30,6 +30,8 @@ namespace TerryBros.UI.LevelBuilder
             Style.Display = toggle ? DisplayMode.Flex : DisplayMode.None;
             Style.Dirty();
 
+            SetClass("display", toggle);
+
             if (!toggle)
             {
                 IsMouseDown = false;

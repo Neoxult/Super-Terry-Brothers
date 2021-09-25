@@ -26,43 +26,45 @@ namespace TerryBros.Player.Camera
                 return;
             }
 
-            Pos = new(player.Position.x, GlobalSettings.GroundPos.y, player.Position.z);
-            Pos -= GlobalSettings.UpwardDir * GlobalSettings.BlockSize * _visibleGroundBlocks;
-            Pos += GlobalSettings.UpwardDir * Screen.Height / 2 * _orthoSize;
-            Pos -= GlobalSettings.LookDir * GlobalSettings.BlockSize * _distanceInBlocks;
-
-            BBox bBox = STBGame.CurrentLevel.LevelBounds;
-
-            // horizontal camera movement
-
-            float val = TerryBrosPlayer.stb_2D ? 1f : 1.15f;
-
-            if (Pos.x < bBox.Mins.x + Screen.Width / 2 * _orthoSize * val)
+            if (!player.IsInLevelBuilder)
             {
-                Pos = new(bBox.Mins.x + Screen.Width / 2 * _orthoSize * val, Pos.y, Pos.z);
-            }
-            else if (Pos.x > bBox.Maxs.x - Screen.Width / 2 * _orthoSize * val)
-            {
-                Pos = new(bBox.Maxs.x - Screen.Width / 2 * _orthoSize * val, Pos.y, Pos.z);
-            }
+                Pos = new(player.Position.x, GlobalSettings.GroundPos.y, player.Position.z);
+                Pos -= GlobalSettings.UpwardDir * GlobalSettings.BlockSize * _visibleGroundBlocks;
+                Pos += GlobalSettings.UpwardDir * Screen.Height / 2 * _orthoSize;
+                Pos -= GlobalSettings.LookDir * GlobalSettings.BlockSize * _distanceInBlocks;
 
-            // vertical camera movement
+                BBox bBox = STBGame.CurrentLevel.LevelBounds;
 
-            val = TerryBrosPlayer.stb_2D ? 1f : 1.3f;
+                // horizontal camera movement
 
-            if (Pos.z < bBox.Mins.z + Screen.Height / 2 * _orthoSize * val)
-            {
-                Pos = new(Pos.x, Pos.y, bBox.Mins.z + Screen.Height / 2 * _orthoSize * val);
+                float val = TerryBrosPlayer.stb_2D ? 1f : 1.15f;
+
+                if (Pos.x < bBox.Mins.x + Screen.Width / 2 * _orthoSize * val)
+                {
+                    Pos = new(bBox.Mins.x + Screen.Width / 2 * _orthoSize * val, Pos.y, Pos.z);
+                }
+                else if (Pos.x > bBox.Maxs.x - Screen.Width / 2 * _orthoSize * val)
+                {
+                    Pos = new(bBox.Maxs.x - Screen.Width / 2 * _orthoSize * val, Pos.y, Pos.z);
+                }
+
+                // vertical camera movement
+
+                val = TerryBrosPlayer.stb_2D ? 1f : 1.3f;
+
+                if (Pos.z < bBox.Mins.z + Screen.Height / 2 * _orthoSize * val)
+                {
+                    Pos = new(Pos.x, Pos.y, bBox.Mins.z + Screen.Height / 2 * _orthoSize * val);
+                }
+                else if (Pos.z > bBox.Maxs.z - Screen.Height / 2 * _orthoSize)
+                {
+                    Pos = new(Pos.x, Pos.y, bBox.Maxs.z - Screen.Height / 2 * _orthoSize);
+                }
             }
-            else if (Pos.z > bBox.Maxs.z - Screen.Height / 2 * _orthoSize)
-            {
-                Pos = new(Pos.x, Pos.y, bBox.Maxs.z - Screen.Height / 2 * _orthoSize);
-            }
-
-            // Camera 3d effect
 
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 
+            // Camera 3d effect
             if (!player.IsInLevelBuilder && !TerryBrosPlayer.stb_2D)
             {
                 Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);

@@ -1,6 +1,4 @@
 Loader {
-    pointer-events: all;
-
     position: absolute;
     left: 50%;
     top: 50%;
@@ -11,6 +9,10 @@ Loader {
     border-radius: 8px;
 
     flex-direction: column;
+
+    &.display {
+        pointer-events: all;
+    }
 
     Label {
         background-color: orange;
