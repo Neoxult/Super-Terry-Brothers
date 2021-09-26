@@ -182,7 +182,10 @@ namespace TerryBros.Levels
                 }
             }
 
-            STBGame.CurrentLevel.GridBlocks = new();
+            Level level = STBGame.CurrentLevel;
+
+            level.GridBlocks = new();
+            level.LevelBoundsBlocks = IntBBox.Zero;
         }
     }
 }
