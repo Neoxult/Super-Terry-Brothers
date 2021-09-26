@@ -29,6 +29,7 @@ namespace TerryBros.Player
         public static bool stb_2D { get; set; } = false;
 
         public bool IsInLevelBuilder = false;
+        public bool IsInMenu = false;
 
         private IntVector3 _oldGrid = IntVector3.Zero;
         private bool _isDrawing = false;
@@ -263,6 +264,17 @@ namespace TerryBros.Player
             }
 
             player.IsInLevelBuilder = toggle;
+        }
+
+        [ServerCmd]
+        public static void ServerToggleMenu(bool toggle)
+        {
+            if (ConsoleSystem.Caller?.Pawn is not TerryBrosPlayer player)
+            {
+                return;
+            }
+
+            player.IsInMenu = toggle;
         }
     }
 }

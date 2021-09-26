@@ -25,6 +25,7 @@ namespace TerryBros.UI
 
             RootPanel.AddChild<LevelBuilder.Builder>();
             RootPanel.AddChild<LevelLoader.Loader>();
+            RootPanel.AddChild<Menu.Menu>();
         }
 
         [Event.Hotload]

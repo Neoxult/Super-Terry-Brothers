@@ -37,7 +37,7 @@ namespace TerryBros.Player.Controller
 
         public override void Simulate()
         {
-            if (Pawn is not TerryBrosPlayer player)
+            if (Pawn is not TerryBrosPlayer player || player.IsInMenu)
             {
                 return;
             }
