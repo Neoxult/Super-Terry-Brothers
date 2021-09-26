@@ -24,7 +24,6 @@ namespace TerryBros.UI
             Instance = this;
 
             RootPanel.AddChild<LevelBuilder.Builder>();
-            RootPanel.AddChild<LevelLoader.Loader>();
             RootPanel.AddChild<Menu.Menu>();
         }
 

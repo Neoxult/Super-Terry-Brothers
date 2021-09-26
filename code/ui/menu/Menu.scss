@@ -22,7 +22,7 @@ Menu {
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
 
-        padding: 20px;
+        padding: 20px 60px;
         background-color: rgb(221, 181, 128);
 
         box-shadow: 2px 2px 2.5px rgba(0, 0, 0, 0.5);
@@ -41,10 +41,25 @@ Menu {
             }
         }
 
-        .options {
+        Button.back {
+            position: absolute;
+            left: 10px;
+            top: 20px;
+
+            font-size: 42px;
+            font-family: MaterialIcons;
+            color: black;
+            display: none;
+
+            &.display {
+                display: flex;
+            }
+        }
+
+        .wrapper {
             flex-direction: column;
 
-            Label {
+            .entry {
                 padding: 5px 10px;
                 margin: 5px;
 
@@ -54,11 +69,19 @@ Menu {
 
                 transition: background-color 0.1s linear;
 
-                text-align: center;
+                Label {
+                    width: 100%;
 
-                &:hover {
+                    text-align: center;
+                }
+
+                &:not(.disabled):hover {
                     background-color: rgb(255, 223, 181);
                     cursor: pointer;
+                }
+
+                &.disabled {
+                    background-color: rgb(161, 127, 82);
                 }
             }
         }

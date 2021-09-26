@@ -7,7 +7,6 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Levels;
-using TerryBros.UI.LevelLoader;
 
 namespace TerryBros.Player
 {
@@ -29,28 +28,20 @@ namespace TerryBros.Player
         }
 
         [ClientCmd(Name = "stb_load")]
-        public static void LoadLevel(string fileName = null)
+        public static void LoadLevel(string fileName)
         {
-            if (fileName == null)
-            {
-                Loader.Instance.SetLevels(GetLevels());
-                Loader.Instance.Display = true;
-            }
-            else
-            {
-                string file = $"custom_levels/{fileName.Split('.')[0]}.json";
+            string file = $"custom_levels/{fileName.Split('.')[0]}.json";
 
-                if (!FileSystem.Data.FileExists(file))
-                {
-                    return;
-                }
-
-                try
-                {
-                    ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
-                }
-                catch (Exception) { }
+            if (!FileSystem.Data.FileExists(file))
+            {
+                return;
             }
+
+            try
+            {
+                ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
+            }
+            catch (Exception) { }
         }
 
         public static List<string> GetLevels()
