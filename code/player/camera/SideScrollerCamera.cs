@@ -21,9 +21,7 @@ namespace TerryBros.Player.Camera
 
         public override void Update()
         {
-            TerryBrosPlayer player = Local.Pawn as TerryBrosPlayer;
-
-            if (player == null)
+            if (Local.Pawn is not TerryBrosPlayer player)
             {
                 return;
             }
@@ -39,7 +37,12 @@ namespace TerryBros.Player.Camera
 
                 // horizontal camera movement
 
-                float val = TerryBrosPlayer.stb_2D ? 1f : 1.15f;
+                float val = 1f;
+
+                if (!TerryBrosPlayer.stb_2D)
+                {
+                    val += _orthoSize / 2;
+                }
 
                 if (Pos.x < bBox.Mins.x + Screen.Width / 2 * _orthoSize * val)
                 {
@@ -52,7 +55,12 @@ namespace TerryBros.Player.Camera
 
                 // vertical camera movement
 
-                val = TerryBrosPlayer.stb_2D ? 1f : 1.3f;
+                val = 1f;
+
+                if (!TerryBrosPlayer.stb_2D)
+                {
+                    val += _orthoSize;
+                }
 
                 if (Pos.z < bBox.Mins.z + Screen.Height / 2 * _orthoSize * val)
                 {
