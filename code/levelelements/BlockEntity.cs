@@ -20,6 +20,8 @@ namespace TerryBros.LevelElements
     public abstract class BlockEntity : ModelEntity
     {
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
+        public virtual string ModelName => "models/blocks/block.vmdl";
+        public virtual bool UseModel => false;
 
         public virtual IntVector3 BlockSize => new(1, 1, 1);
 
@@ -125,6 +127,10 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
+            if (Host.IsClient && UseModel && material != null)
+            {
+                SceneObject.SetMaterialOverride(material);
+            }
 
         }
 
@@ -173,23 +179,34 @@ namespace TerryBros.LevelElements
         // Note: Spawn gets called before the constructor
         public override void Spawn()
         {
-            VertexBuffer vb = new();
-            vb.Init(true);
-            vb.AddCube(Vector3.Zero, BlockSizeFloat * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
+            Model model;
+            material = Material.Load(MaterialName);
 
-            Mesh mesh = new(Material.Load(MaterialName));
-            mesh.CreateBuffers(vb);
-            mesh.SetBounds(BlockSizeFloat * -GlobalSettings.BlockSize / 2, BlockSizeFloat * GlobalSettings.BlockSize / 2);
+            if (UseModel)
+            {
+                model = Model.Load(ModelName);
+            }
+            else
+            {
+                VertexBuffer vb = new();
+                vb.Init(true);
+                vb.AddCube(Vector3.Zero, BlockSizeFloat * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
 
-            Model model = new ModelBuilder()
-                .AddMesh(mesh)
-                .AddCollisionBox(BlockSizeFloat * GlobalSettings.BlockSize / 2)
-                .Create();
+                Mesh mesh = new(material);
+                mesh.CreateBuffers(vb);
+                mesh.SetBounds(BlockSizeFloat * -GlobalSettings.BlockSize / 2, BlockSizeFloat * GlobalSettings.BlockSize / 2);
 
+                model = new ModelBuilder()
+                    .AddMesh(mesh)
+                    .AddCollisionBox(BlockSizeFloat * GlobalSettings.BlockSize / 2)
+                    .Create();
+            }
             SetModel(model);
             SetupPhysicsFromModel(PhysicsMotionType);
 
             base.Spawn();
         }
+
+        private Material material;
     }
 }
