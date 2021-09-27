@@ -9,6 +9,8 @@ namespace TerryBros.Player.Camera
 {
     public partial class SideScrollerCamera : Sandbox.Camera
     {
+        public float FreeCameraSpeed = 500f;
+
         private int _distanceInBlocks = 10;
         private float _orthoSize = 0.3f;
         private int _visibleGroundBlocks = 3;

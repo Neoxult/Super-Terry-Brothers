@@ -53,19 +53,19 @@ namespace TerryBros.Player.Controller
 
                 if (Input.Down(InputButton.Left))
                 {
-                    newPos.x += -10f;
+                    newPos.x -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
                 }
                 if (Input.Down(InputButton.Right))
                 {
-                    newPos.x += 10f;
+                    newPos.x += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
                 }
                 if (Input.Down(InputButton.Forward))
                 {
-                    newPos.z += 10f;
+                    newPos.z += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
                 }
                 if (Input.Down(InputButton.Back))
                 {
-                    newPos.z -= 10f;
+                    newPos.z -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
                 }
 
                 sideScrollerCamera.Pos = newPos;

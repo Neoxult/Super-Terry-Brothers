@@ -27,6 +27,11 @@ namespace TerryBros.UI.Menu
 
                     TerryBrosPlayer.ServerToggleMenu(_display);
                 }
+
+                if (!_display)
+                {
+                    MenuContent.OnClickHome();
+                }
             }
         }
         private bool _display = false;
@@ -39,7 +44,7 @@ namespace TerryBros.UI.Menu
 
             MenuContent = new(this);
 
-            Display = true;
+            Display = false;
         }
 
         public override void Tick()

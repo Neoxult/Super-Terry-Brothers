@@ -64,6 +64,23 @@ namespace TerryBros.Player
             Scale = 0.34f;
             PhysicsGroup?.RebuildMass();
             PhysicsGroup?.Wake();
+
+            ClientRespawn(this);
+        }
+
+        [ClientRpc]
+        public static void ClientRespawn(TerryBrosPlayer player)
+        {
+            if (player == null || !player.IsValid)
+            {
+                return;
+            }
+
+            // sbox weirdness, controller is reset on serverside, but stays with same vars on clientside
+            if (player.Controller is MovementController movementController)
+            {
+                movementController.Forward = true;
+            }
         }
 
         /// <summary>

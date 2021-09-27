@@ -12,7 +12,7 @@ namespace TerryBros.UI.Menu
         {
             foreach (string level in TerryBrosPlayer.GetLevels())
             {
-                wrapperPanel.Add.Button(level, "entry", () =>
+                wrapperPanel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
                     TerryBros.Player.TerryBrosPlayer.LoadLevel(level);
 
