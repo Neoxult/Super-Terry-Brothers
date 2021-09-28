@@ -7,9 +7,10 @@ namespace TerryBros.LevelElements
 {
     public partial class SpikesWood : BlockEntity
     {
-        public override string MaterialName => "materials/blocks/spikes_wood.vmat";
-        public override string ModelName => "models/blocks/decorative_block.vmdl";
+        public override string MaterialName => "materials/blocks/spikes_wood_4k.vmat";
+        public override string ModelName => "models/blocks/spikes_wood.vmdl";
         public override bool UseModel => true;
+        public override bool OverrideMaterial => false;
         public override IntVector3 BlockSize => new(1, 1, 1);
         public override Vector3 Position
         {
@@ -18,7 +19,7 @@ namespace TerryBros.LevelElements
         }
         public SpikesWood() : base()
         {
-            Scale = GlobalSettings.BlockSize / WorldSpaceBounds.Size.z;
+            Scale = GlobalSettings.BlockSize / WorldSpaceBounds.Size.y;
         }
 
         public SpikesWood(Vector3 position) : base(position)

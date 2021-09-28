@@ -15,7 +15,7 @@
 						[
 							{
 								from = ""
-								to = "materials/blocks/sampletexture.vmat"
+								to = "materials/blocks/translucent_block.vmat"
 							},
 						]
 						use_global_default = false

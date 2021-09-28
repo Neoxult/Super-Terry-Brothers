@@ -7,9 +7,10 @@ namespace TerryBros.LevelElements
 {
     public partial class LeavesBlooming : BlockEntity
     {
-        public override string MaterialName => "materials/blocks/leaves_blooming.vmat";
-        public override string ModelName => "models/blocks/decorative_block.vmdl";
+        public override string MaterialName => "materials/blocks/leaves_blooming_4k.vmat";
+        public override string ModelName => "models/blocks/leaves_blooming.vmdl";
         public override bool UseModel => true;
+        public override bool OverrideMaterial => false;
         public override IntVector3 BlockSize => new(1, 1, 1);
         public override Vector3 Position
         {

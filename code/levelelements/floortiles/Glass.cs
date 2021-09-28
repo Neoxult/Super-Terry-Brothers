@@ -8,7 +8,7 @@ namespace TerryBros.LevelElements
     public partial class Glass : BlockEntity
     {
         public override string MaterialName => "materials/blocks/glass.vmat";
-        public override string ModelName => "models/blocks/decorative_block.vmdl";
+        public override string ModelName => "models/blocks/layered_block.vmdl";
         public override bool UseModel => true;
         public override IntVector3 BlockSize => new(1, 1, 1);
         public override Vector3 Position

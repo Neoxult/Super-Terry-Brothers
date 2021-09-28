@@ -7,9 +7,10 @@ namespace TerryBros.LevelElements
 {
     public partial class LogTop : BlockEntity
     {
-        public override string MaterialName => "materials/blocks/log_top.vmat";
-        public override string ModelName => "models/blocks/decorative_block.vmdl";
+        public override string MaterialName => "materials/blocks/log_top_4k.vmat";
+        public override string ModelName => "models/blocks/log_top.vmdl";
         public override bool UseModel => true;
+        public override bool OverrideMaterial => false;
         public override IntVector3 BlockSize => new(1, 1, 1);
         public override Vector3 Position
         {

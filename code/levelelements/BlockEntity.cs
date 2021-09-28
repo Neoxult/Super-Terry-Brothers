@@ -22,6 +22,7 @@ namespace TerryBros.LevelElements
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
         public virtual string ModelName => "models/blocks/block.vmdl";
         public virtual bool UseModel => false;
+        public virtual bool OverrideMaterial => true;
 
         public virtual IntVector3 BlockSize => new(1, 1, 1);
 
@@ -127,7 +128,7 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
-            if (Host.IsClient && UseModel && material != null)
+            if (Host.IsClient && OverrideMaterial && UseModel && material != null)
             {
                 SceneObject.SetMaterialOverride(material);
             }

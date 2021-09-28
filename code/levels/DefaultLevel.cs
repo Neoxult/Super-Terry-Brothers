@@ -28,7 +28,7 @@ namespace TerryBros.Levels
             CreateWallFromTo<Brick>(-30, -2, -10, 0);
             CreateWallFromTo<Brick>(-6, -2, 20, 0);
             CreateWallFromTo<Brick>(24, -2, 40, 0);
-            CreateStair<Brick>(5, 1, 14, true);
+            CreateStair<LogTop>(5, 1, 14, true);
             CreateStair<Brick>(19, 1, 13, false);
             CreateWall<Brick>(-30, 1, 2, 3);
             CreateWall<Brick>(-30, 9, 2, 4);
