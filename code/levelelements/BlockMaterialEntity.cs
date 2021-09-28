@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-
 using Sandbox;
 
-using TerryBros.Gamemode;
-using TerryBros.Levels;
 using TerryBros.Settings;
-using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public abstract class BlockTextureEntity : BlockEntity
+    public abstract class BlockMaterialEntity : BlockEntity
     {
-        public BlockTextureEntity() : base()
+        public BlockMaterialEntity() : base()
         {
         }
         public override void Spawn()

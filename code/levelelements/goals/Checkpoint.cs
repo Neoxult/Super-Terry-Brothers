@@ -4,12 +4,11 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Player;
-using TerryBros.Settings;
 using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Checkpoint : BlockTextureEntity
+    public partial class Checkpoint : BlockMaterialEntity
     {
         public STBSpawn SpawnPoint { get; private set; }
         public override string MaterialName => "materials/blocks/stair_block.vmat";
@@ -61,7 +60,6 @@ namespace TerryBros.LevelElements
             if (STBGame.CurrentLevel != null)
             {
                 _wasTouched = true;
-                Log.Info("Set Checkpoint");
                 STBGame.CurrentLevel.SetCheckPoint(this);
             }
         }

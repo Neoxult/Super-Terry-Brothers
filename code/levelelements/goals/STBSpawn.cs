@@ -9,6 +9,7 @@ namespace TerryBros.LevelElements
         public STBSpawn() : base()
         {
         }
+
         /// <summary>
         /// Make sure the Player can spawn here properly.
         /// TODO: Check for exact figureHeight

@@ -7,7 +7,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Goal : BlockTextureEntity
+    public partial class Goal : BlockMaterialEntity
     {
         public override string MaterialName => "materials/blocks/stair_block.vmat";
         public override IntVector3 BlockSize => new(1, 8, 1);

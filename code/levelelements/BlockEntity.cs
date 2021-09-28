@@ -27,17 +27,7 @@ namespace TerryBros.LevelElements
             get => GetType().FullName.Replace(GetType().Namespace, "").TrimStart('.');
         }
 
-        public virtual PhysicsMotionType PhysicsMotionType
-        {
-            get => _physicsMotionType;
-            set
-            {
-                _physicsMotionType = value;
-
-                SetupPhysicsFromModel(value);
-            }
-        }
-        private PhysicsMotionType _physicsMotionType = PhysicsMotionType.Static;
+        public virtual PhysicsMotionType PhysicsMotionType => PhysicsMotionType.Static;
 
         public Vector3 BlockSizeFloat
         {
