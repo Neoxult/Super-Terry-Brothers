@@ -12,12 +12,7 @@ namespace TerryBros.LevelElements
         public override string MaterialName => "materials/blocks/stair_block.vmat";
         public override IntVector3 BlockSize => new(1, 8, 1);
 
-        public Goal() : this(GlobalSettings.GetBlockPosForGridCoordinates(0, 0))
-        {
-
-        }
-
-        public Goal(Vector3 position) : base()
+        public Goal() : base()
         {
             Transmit = TransmitType.Always;
             CollisionGroup = CollisionGroup.Trigger;

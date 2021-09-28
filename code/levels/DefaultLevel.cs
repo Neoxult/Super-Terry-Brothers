@@ -9,7 +9,9 @@ namespace TerryBros.Levels
     {
         public DefaultLevel() : base()
         {
-            RestartSpawn = new STBSpawn(new Vector3(0, 0, 40));
+            RestartSpawn = new STBSpawn {
+                Position = GlobalSettings.GetBlockPosForGridCoordinates(0, 1)
+            };
 
             Create<DefaultSky>();
 

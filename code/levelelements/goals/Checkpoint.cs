@@ -29,20 +29,12 @@ namespace TerryBros.LevelElements
         }
         private bool _wasTouched = false;
 
-        public Checkpoint() : this(GlobalSettings.GetBlockPosForGridCoordinates(0, 0))
+        public Checkpoint() : base()
         {
-
-        }
-
-        public Checkpoint(Vector3 position) : base()
-        {
-            Transmit = TransmitType.Always;
             CollisionGroup = CollisionGroup.Trigger;
-            EnableAllCollisions = true;
-            EnableHitboxes = true;
             RenderColor = Color.Blue;
 
-            SpawnPoint = new STBSpawn(position + GlobalSettings.UpwardDir * (GlobalSettings.FigureHeight - GlobalSettings.BlockSize / 2) / 2);
+            SpawnPoint = new STBSpawn();
         }
 
         public void RegisterReset(ref Action resetDelegate)
@@ -69,7 +61,7 @@ namespace TerryBros.LevelElements
             if (STBGame.CurrentLevel != null)
             {
                 _wasTouched = true;
-
+                Log.Info("Set Checkpoint");
                 STBGame.CurrentLevel.SetCheckPoint(this);
             }
         }

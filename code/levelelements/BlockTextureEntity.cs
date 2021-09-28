@@ -14,12 +14,7 @@ namespace TerryBros.LevelElements
     {
         public BlockTextureEntity() : base()
         {
-
         }
-        //TODO: Check for a direct Facepunch fix
-        // Currently a Workaround because SetModel cant be called in the constructor
-        // See issue: https://github.com/Facepunch/sbox-issues/issues/219
-        // Note: Spawn gets called before the constructor
         public override void Spawn()
         {
             VertexBuffer vb = new();
