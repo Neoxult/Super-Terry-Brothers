@@ -45,78 +45,25 @@ namespace TerryBros.LevelElements
             {
                 base.Position = value + (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
 
-                Level level = STBGame.CurrentLevel;
-                IntBBox intBBox = level.LevelBoundsBlocks;
-                IntVector3 blockPosition = GlobalSettings.GetGridCoordinatesForBlockPos(Position);
+                _gridPosition = GlobalSettings.GetGridCoordinatesForBlockPos(Position);
 
-                GridX = blockPosition.x;
-                GridY = blockPosition.y;
-                GridZ = blockPosition.z;
-
-                if (GridX < intBBox.Mins.x)
-                {
-                    intBBox.Mins.x = GridX;
-                }
-
-                if (GridX > intBBox.Maxs.x)
-                {
-                    intBBox.Maxs.x = GridX;
-                }
-
-                if (GridY < intBBox.Mins.y)
-                {
-                    intBBox.Mins.y = GridY;
-                }
-
-                if (GridY + 5 > intBBox.Maxs.y)
-                {
-                    intBBox.Maxs.y = GridY + 5;
-                }
-
-                if (GridZ < intBBox.Mins.z)
-                {
-                    intBBox.Mins.z = GridZ;
-                }
-
-                if (GridZ > intBBox.Maxs.z)
-                {
-                    intBBox.Maxs.z = GridZ;
-                }
-
-                level.LevelBoundsBlocks = intBBox;
-
-                level.GridBlocks.TryGetValue(GridX, out Dictionary<int, BlockEntity> dict);
-
-                if (dict == null)
-                {
-                    dict = new();
-
-                    level.GridBlocks.Add(GridX, dict);
-                }
-
-                dict.TryGetValue(GridY, out BlockEntity blockEntity);
-
-                if (blockEntity != null)
-                {
-                    dict.Remove(GridY);
-                }
-
-                dict[GridY] = this;
+                STBGame.CurrentLevel?.RegisterBlock(this);
             }
         }
 
         public Vector3 Mins => Position - GlobalSettings.BlockSize / 2;
         public Vector3 Maxs => Mins + BlockSizeFloat * GlobalSettings.BlockSize;
 
-        public int GridX = 0;
-        public int GridY = 0;
-        public int GridZ = 0;
+        public IntVector3 GridPosition
+        {
+            get => _gridPosition;
+        }
 
+        private IntVector3 _gridPosition = new IntVector3(0, 0, 0);
         public BlockEntity() : base()
         {
 
         }
-
         public BlockData GetBlockData()
         {
             Type type = GetType();

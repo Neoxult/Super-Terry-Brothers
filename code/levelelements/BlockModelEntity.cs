@@ -20,6 +20,8 @@ namespace TerryBros.LevelElements
         }
         public BlockModelEntity() : base()
         {
+            //TODO: Check why SceneObject is sometimes not instantiated
+            // or do it in a later call to be sure
             if (Host.IsClient && UseMaterial)
             {
                 SceneObject.SetMaterialOverride(Material.Load(MaterialName));

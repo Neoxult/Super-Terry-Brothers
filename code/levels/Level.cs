@@ -46,7 +46,65 @@ namespace TerryBros.Levels
         }
 
         public abstract void Build();
+        public void RegisterBlock(BlockEntity block)
+        {
+            IntBBox intBBox = LevelBoundsBlocks;
 
+            int GridX = block.GridPosition.x;
+            int GridY = block.GridPosition.y;
+            int GridZ = block.GridPosition.z;
+
+            if (GridX < intBBox.Mins.x)
+            {
+                intBBox.Mins.x = GridX;
+            }
+
+            if (GridX > intBBox.Maxs.x)
+            {
+                intBBox.Maxs.x = GridX;
+            }
+
+            if (GridY < intBBox.Mins.y)
+            {
+                intBBox.Mins.y = GridY;
+            }
+
+            if (GridY + 5 > intBBox.Maxs.y)
+            {
+                intBBox.Maxs.y = GridY + 5;
+            }
+
+            if (GridZ < intBBox.Mins.z)
+            {
+                intBBox.Mins.z = GridZ;
+            }
+
+            if (GridZ > intBBox.Maxs.z)
+            {
+                intBBox.Maxs.z = GridZ;
+            }
+
+            LevelBoundsBlocks = intBBox;
+
+            GridBlocks.TryGetValue(GridX, out Dictionary<int, BlockEntity> dict);
+
+            if (dict == null)
+            {
+                dict = new();
+
+                GridBlocks.Add(GridX, dict);
+            }
+
+            dict.TryGetValue(GridY, out BlockEntity blockEntity);
+
+            if (blockEntity != null)
+            {
+                dict.Remove(GridY);
+            }
+
+            dict[GridY] = block;
+
+        }
         public STBSpawn GetRestartPoint()
         {
             return RestartSpawn;
