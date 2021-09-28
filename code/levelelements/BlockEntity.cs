@@ -20,10 +20,6 @@ namespace TerryBros.LevelElements
     public abstract class BlockEntity : ModelEntity
     {
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
-        public virtual string ModelName => "models/blocks/block.vmdl";
-        public virtual bool UseModel => false;
-        public virtual bool OverrideMaterial => true;
-
         public virtual IntVector3 BlockSize => new(1, 1, 1);
 
         public string TypeName
@@ -128,22 +124,7 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
-            if (Host.IsClient && OverrideMaterial && UseModel && material != null)
-            {
-                SceneObject.SetMaterialOverride(material);
-            }
 
-        }
-
-        public BlockEntity(Vector3 gridPosition) : this()
-        {
-            //Note: Setting the Position in a constructor as client leads to a Non-Authority error.
-            //But if you dont set the position later, you can't see this entity,
-            //which seems to correlate with the modelbuilder entities on the server not fully syncing to the client.
-            if (Host.IsServer)
-            {
-                Position = gridPosition;
-            }
         }
 
         public BlockData GetBlockData()
@@ -173,41 +154,5 @@ namespace TerryBros.LevelElements
 
             return null;
         }
-
-        //TODO: Check for a direct Facepunch fix
-        // Currently a Workaround because SetModel cant be called in the constructor
-        // See issue: https://github.com/Facepunch/sbox-issues/issues/219
-        // Note: Spawn gets called before the constructor
-        public override void Spawn()
-        {
-            Model model;
-            material = Material.Load(MaterialName);
-
-            if (UseModel)
-            {
-                model = Model.Load(ModelName);
-            }
-            else
-            {
-                VertexBuffer vb = new();
-                vb.Init(true);
-                vb.AddCube(Vector3.Zero, BlockSizeFloat * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
-
-                Mesh mesh = new(material);
-                mesh.CreateBuffers(vb);
-                mesh.SetBounds(BlockSizeFloat * -GlobalSettings.BlockSize / 2, BlockSizeFloat * GlobalSettings.BlockSize / 2);
-
-                model = new ModelBuilder()
-                    .AddMesh(mesh)
-                    .AddCollisionBox(BlockSizeFloat * GlobalSettings.BlockSize / 2)
-                    .Create();
-            }
-            SetModel(model);
-            SetupPhysicsFromModel(PhysicsMotionType);
-
-            base.Spawn();
-        }
-
-        private Material material;
     }
 }

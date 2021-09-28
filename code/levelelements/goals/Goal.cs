@@ -7,7 +7,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Goal : BlockEntity
+    public partial class Goal : BlockTextureEntity
     {
         public override string MaterialName => "materials/blocks/stair_block.vmat";
         public override IntVector3 BlockSize => new(1, 8, 1);
@@ -17,7 +17,7 @@ namespace TerryBros.LevelElements
 
         }
 
-        public Goal(Vector3 position) : base(position)
+        public Goal(Vector3 position) : base()
         {
             Transmit = TransmitType.Always;
             CollisionGroup = CollisionGroup.Trigger;

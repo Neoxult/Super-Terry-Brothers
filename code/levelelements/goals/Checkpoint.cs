@@ -9,7 +9,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Checkpoint : BlockEntity
+    public partial class Checkpoint : BlockTextureEntity
     {
         public STBSpawn SpawnPoint { get; private set; }
         public override string MaterialName => "materials/blocks/stair_block.vmat";
@@ -34,7 +34,7 @@ namespace TerryBros.LevelElements
 
         }
 
-        public Checkpoint(Vector3 position) : base(position)
+        public Checkpoint(Vector3 position) : base()
         {
             Transmit = TransmitType.Always;
             CollisionGroup = CollisionGroup.Trigger;
