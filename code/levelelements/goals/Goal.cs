@@ -1,8 +1,8 @@
 using Sandbox;
 
+using TerryBros.Events;
 using TerryBros.Gamemode;
 using TerryBros.Player;
-using TerryBros.Settings;
 using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
@@ -30,7 +30,7 @@ namespace TerryBros.LevelElements
                 return;
             }
 
-            STBGame.LevelFinished(player);
+            Event.Run(TBEvent.Level.GoalReached, player);
         }
     }
 }

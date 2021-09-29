@@ -2,6 +2,7 @@ using System;
 
 using Sandbox;
 
+using TerryBros.Events;
 using TerryBros.Gamemode;
 using TerryBros.Player;
 using TerryBros.Utils;
@@ -36,18 +37,6 @@ namespace TerryBros.LevelElements
             SpawnPoint = new STBSpawn();
         }
 
-        public void RegisterReset(ref Action resetDelegate)
-        {
-            if (resetDelegate != null)
-            {
-                resetDelegate += ResetCheckPoint;
-            }
-            else
-            {
-                resetDelegate = ResetCheckPoint;
-            }
-        }
-
         public override void Touch(Entity other)
         {
             base.Touch(other);
@@ -64,6 +53,7 @@ namespace TerryBros.LevelElements
             }
         }
 
+        [Event(TBEvent.Level.Restart)]
         public void ResetCheckPoint()
         {
             _wasTouched = false;

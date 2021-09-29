@@ -4,6 +4,7 @@ using System.Text.Json;
 
 using Sandbox;
 
+using TerryBros.Events;
 using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
@@ -37,8 +38,6 @@ namespace TerryBros.Levels
 
         protected STBSpawn RestartSpawn;
         protected STBSpawn CheckPointSpawn;
-
-        private Action _onResetCheckPoints = null;
 
         public Level()
         {
@@ -118,15 +117,12 @@ namespace TerryBros.Levels
         public void SetCheckPoint(Checkpoint checkPoint)
         {
             CheckPointSpawn = checkPoint.SpawnPoint;
-
-            checkPoint.RegisterReset(ref _onResetCheckPoints);
         }
 
+        [Event(TBEvent.Level.Restart)]
         public void Restart()
         {
             CheckPointSpawn = null;
-
-            _onResetCheckPoints?.Invoke();
         }
 
         protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()

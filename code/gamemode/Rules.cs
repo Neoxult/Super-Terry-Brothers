@@ -1,5 +1,6 @@
 using Sandbox;
 
+using TerryBros.Events;
 using TerryBros.Player;
 
 namespace TerryBros.Gamemode
@@ -18,15 +19,25 @@ namespace TerryBros.Gamemode
             ClientOutOfBounds(cl);
         }
 
+        [Event(TBEvent.Level.GoalReached)]
+        private static void GoalReached(TerryBrosPlayer player)
+        {
+            //TODO: Maybe add Logic for more players that want to run to the goal
+            // And a Timer, that runs down to put pressure on them
+            Event.Run(TBEvent.Level.Finished, player);
+        }
+
         // server-side only
-        public static void LevelFinished(TerryBrosPlayer player)
+        [Event(TBEvent.Level.Finished)]
+        private static void LevelFinished(TerryBrosPlayer player)
         {
             if (Host.IsClient)
             {
                 return;
             }
 
-            CurrentLevel?.Restart();
+            //TODO: Add a real Level Change instead of a restart
+            Event.Run(TBEvent.Level.Restart);
             ClientRestartLevel();
 
             player.Respawn();
@@ -35,7 +46,7 @@ namespace TerryBros.Gamemode
         [ClientRpc]
         public static void ClientRestartLevel()
         {
-            CurrentLevel?.Restart();
+            Event.Run(TBEvent.Level.Restart);
         }
 
         private void ClientOutOfBounds(Client cl)
