@@ -1,5 +1,7 @@
 using System;
 
+using Sandbox;
+
 using TerryBros.Utils;
 
 namespace TerryBros.Settings
@@ -18,7 +20,7 @@ namespace TerryBros.Settings
             {
                 _forwardDir = value;
 
-                UpdateLookDir();
+                UpdateTransformations();
             }
         }
         private static Vector3 _forwardDir = Vector3.Forward;
@@ -30,20 +32,53 @@ namespace TerryBros.Settings
             {
                 _upwardDir = value;
 
-                UpdateLookDir();
+                UpdateTransformations();
             }
         }
         private static Vector3 _upwardDir = Vector3.Up;
 
         public static Vector3 LookDir
         {
-            get => _lookDir;
+            get
+            {
+                if (_doUpdateTransformations)
+                {
+                    UpdateTransformations();
+                }
+                return _lookDir;
+            }
             set
             {
                 throw new InvalidOperationException("You cant set globalSettings.lookDir manually. It is calculated!");
             }
         }
-        private static Vector3 _lookDir = Vector3.Cross(Vector3.Up, Vector3.Forward);
+        public static Utils.Matrix LocalToGlobalTransformation
+        {
+            get
+            {
+                if (_doUpdateTransformations)
+                {
+                    UpdateTransformations();
+                }
+                return _localToGlobalTransformation;
+            }
+        }
+        public static Utils.Matrix GlobalToLocalTransformation
+        {
+            get
+            {
+                if (_doUpdateTransformations)
+                {
+                    UpdateTransformations();
+                }
+                return _globalToLocalTransformation;
+            }
+        }
+
+        private static bool _doUpdateTransformations = true;
+        private static Vector3 _lookDir;
+        private static Utils.Matrix _localToGlobalTransformation;
+        private static Utils.Matrix _globalToLocalTransformation;
 
         /// <summary>
         /// 0, 0 is the first ground block.
@@ -105,9 +140,29 @@ namespace TerryBros.Settings
             return ConvertLocalToGlobalCoordinates(new Vector3(local.x, local.y, local.z));
         }
 
-        private static void UpdateLookDir()
+        public static void UpdateTransformations()
         {
+            _doUpdateTransformations = false;
             _lookDir = Vector3.Cross(_upwardDir, _forwardDir);
+            //_localToGlobalTransformation = new Utils.Matrix(_forwardDir , _upwardDir, _lookDir);
+            //_globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
+            _localToGlobalTransformation = new Utils.Matrix((_forwardDir*4 + _upwardDir*3).Normal, (-_forwardDir*3 + _upwardDir*4).Normal, Vector3.Cross((_forwardDir*4 + _upwardDir*3).Normal, (-_forwardDir*3 + _upwardDir*4).Normal));
+            _globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
+            _globalToLocalTransformation.Invert3x3();
+            Log.Info("First Test:");
+            Log.Info("Local to global:");
+            Log.Info(_localToGlobalTransformation);
+            Log.Info("Vector3 Local");
+            Log.Info(new Vector3(5, 0, 0));
+            Log.Info("Vector3 to global");
+            Log.Info(_localToGlobalTransformation * new Vector3(5, 0, 0));
+            Log.Info("\nSecond Test:");
+            Log.Info("Global to local:");
+            Log.Info(_globalToLocalTransformation);
+            Log.Info("Vector3 global");
+            Log.Info(new Vector3(4, 0, 3));
+            Log.Info("Vector3 to local");
+            Log.Info(_globalToLocalTransformation * new Vector3(4, 0, 3));
         }
     }
 }

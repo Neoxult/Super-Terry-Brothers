@@ -25,8 +25,8 @@ namespace TerryBros.Player
         /// </summary>
         public Clothing.Container Clothing = new();
 
-        [ClientVar]
-        public static bool stb_2D { get; set; } = false;
+        [ClientVar, Change("SetCameraDimension")]
+        public static bool stb_2D { get; set; } = true;
 
         public bool IsInLevelBuilder = false;
         public bool IsInMenu = false;
@@ -43,7 +43,10 @@ namespace TerryBros.Player
         {
             Clothing.LoadFromClient(cl);
         }
-
+        public void SetCameraDimension()
+        {
+            Camera = stb_2D ? new SideScroller2DCamera() : new SideScrollerCamera();
+        }
         public override void Respawn()
         {
             base.Respawn();
@@ -52,7 +55,7 @@ namespace TerryBros.Player
 
             Controller = new MovementController();
             Animator = new StandardPlayerAnimator();
-            Camera = new SideScrollerCamera();
+            SetCameraDimension();
 
             EnableAllCollisions = true;
             EnableDrawing = true;
