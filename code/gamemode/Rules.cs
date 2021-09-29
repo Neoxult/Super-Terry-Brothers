@@ -2,6 +2,7 @@ using Sandbox;
 
 using TerryBros.Events;
 using TerryBros.Player;
+using TerryBros.Settings;
 
 namespace TerryBros.Gamemode
 {
@@ -70,7 +71,7 @@ namespace TerryBros.Gamemode
                 || player.Position.y < bBox.Mins.y
                 || player.Position.y > bBox.Maxs.y
                 || player.Position.z < bBox.Mins.z
-                || player.Position.z > bBox.Maxs.z
+                || player.Position.z > bBox.Maxs.z + 5 * GlobalSettings.BlockSize
                 )
             {
                 player.Respawn();

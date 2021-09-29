@@ -40,9 +40,18 @@ namespace TerryBros.Utils
             return new IntVector3(a.x / b, a.y / b, a.z / b);
         }
 
-        public static IntVector3 operator /(IntVector3 a, float b)
+        public static Vector3 operator /(IntVector3 a, float b)
         {
-            return new IntVector3((int) (a.x / b), (int) (a.y / b), (int) (a.z / b));
+            return new Vector3( a.x / b, a.y / b, a.z / b);
+        }
+        public static IntVector3 operator *(IntVector3 a, int b)
+        {
+            return new IntVector3(a.x * b, a.y * b, a.z * b);
+        }
+
+        public static Vector3 operator *(IntVector3 a, float b)
+        {
+            return new Vector3( a.x * b, a.y * b, a.z * b);
         }
 
         public static IntVector3 Zero => new IntVector3(0, 0, 0);

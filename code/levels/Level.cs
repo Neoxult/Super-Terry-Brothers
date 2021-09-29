@@ -16,6 +16,7 @@ namespace TerryBros.Levels
     public abstract partial class Level : Entity
     {
         public BBox LevelBounds { get; private set; }
+        public BBox LevelBoundsLocal { get; private set; }
 
         /// <summary>
         /// World Bound given in number of Blocks
@@ -27,9 +28,15 @@ namespace TerryBros.Levels
             {
                 _levelBoundsBlocks = value;
 
+                //TODO: Find out why blockbounds are set on top of a block not in the middle?
+                LevelBoundsLocal = new BBox(
+                    (value.Mins * 2 - new Vector3(1, 2, 1)) * GlobalSettings.BlockSize / 2,
+                    (value.Maxs * 2 + new Vector3(1, 0, 1)) * GlobalSettings.BlockSize / 2
+                );
+
                 LevelBounds = new BBox(
-                    GlobalSettings.GetBlockPosForGridCoordinates(value.Mins) - (GlobalSettings.ForwardDir + 2 * GlobalSettings.UpwardDir + GlobalSettings.LookDir) * GlobalSettings.BlockSize / 2,
-                    GlobalSettings.GetBlockPosForGridCoordinates(value.Maxs) + (GlobalSettings.ForwardDir + GlobalSettings.LookDir) * GlobalSettings.BlockSize / 2
+                    GlobalSettings.ConvertLocalToGlobalCoordinates(LevelBoundsLocal.Mins),
+                    GlobalSettings.ConvertLocalToGlobalCoordinates(LevelBoundsLocal.Maxs)
                 );
             }
         }
@@ -69,9 +76,9 @@ namespace TerryBros.Levels
                 intBBox.Mins.y = GridY;
             }
 
-            if (GridY + 5 > intBBox.Maxs.y)
+            if (GridY > intBBox.Maxs.y)
             {
-                intBBox.Maxs.y = GridY + 5;
+                intBBox.Maxs.y = GridY;
             }
 
             if (GridZ < intBBox.Mins.z)

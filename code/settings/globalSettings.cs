@@ -52,7 +52,7 @@ namespace TerryBros.Settings
                 throw new InvalidOperationException("You cant set globalSettings.lookDir manually. It is calculated!");
             }
         }
-        public static Utils.Matrix LocalToGlobalTransformation
+        private static Utils.Matrix LocalToGlobalTransformation
         {
             get
             {
@@ -63,7 +63,7 @@ namespace TerryBros.Settings
                 return _localToGlobalTransformation;
             }
         }
-        public static Utils.Matrix GlobalToLocalTransformation
+        private static Utils.Matrix GlobalToLocalTransformation
         {
             get
             {
@@ -114,6 +114,17 @@ namespace TerryBros.Settings
         public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
         {
             return LocalToGlobalTransformation * local;
+        }
+
+        /// <summary>
+        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
+        /// Use this function to convert the actual used global to the local coordinate system
+        /// </summary>
+        /// <param name="global">The global coordinates</param>
+        /// <returns></returns>
+        public static Vector3 ConvertGlobalToLocalCoordinates(Vector3 global)
+        {
+            return GlobalToLocalTransformation * global;
         }
 
         public static void UpdateTransformations()
