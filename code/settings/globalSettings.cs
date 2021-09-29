@@ -80,35 +80,18 @@ namespace TerryBros.Settings
         private static Utils.Matrix _localToGlobalTransformation;
         private static Utils.Matrix _globalToLocalTransformation;
 
-        /// <summary>
-        /// 0, 0 is the first ground block.
-        /// TODO: Maybe Move to a Library for more such functions.
-        /// </summary>
-        /// <param name="GridX"> Horizontal displacement </param>
-        /// <param name="GridY"> Vertical displacement </param>
-        /// <param name="GridZ"> Depth displacement </param>
-        /// <returns></returns>
-        public static Vector3 GetBlockPosForGridCoordinates(int GridX, int GridY, int GridZ = 0)
-        {
-            Vector3 centerBlockPos = GroundPos;
-            centerBlockPos -= UpwardDir * BlockSize / 2;
-            centerBlockPos += GridX * ForwardDir * BlockSize;
-            centerBlockPos += GridY * UpwardDir * BlockSize;
-            centerBlockPos += GridZ * LookDir * BlockSize;
-
-            return centerBlockPos;
-        }
+        //TODO: Maybe Move to a Library for more such functions.
         public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate)
         {
             Vector3 centerBlockPos = GroundPos;
             centerBlockPos -= UpwardDir * BlockSize / 2;
-            centerBlockPos += _localToGlobalTransformation * coordinate * BlockSize;
+            centerBlockPos += LocalToGlobalTransformation * coordinate * BlockSize;
 
             return centerBlockPos;
         }
-        public static Vector3 GetBlockPosForGridCoordinates(IntVector3 coordinate)
+        public static Vector3 GetBlockPosForGridCoordinates(int GridX, int GridY, int GridZ = 0)
         {
-            return GetBlockPosForGridCoordinates((Vector3) coordinate);
+            return GetBlockPosForGridCoordinates(new Vector3(GridX, GridY, GridZ));
         }
 
         public static IntVector3 GetGridCoordinatesForBlockPos(Vector3 position)
@@ -131,17 +114,6 @@ namespace TerryBros.Settings
         public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
         {
             return LocalToGlobalTransformation * local;
-        }
-
-        /// <summary>
-        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
-        /// Use this function to convert local to the actual used global coordinate system
-        /// </summary>
-        /// <param name="local">The local coordinates</param>
-        /// <returns></returns>
-        public static Vector3 ConvertLocalToGlobalCoordinates(IntVector3 local)
-        {
-            return ConvertLocalToGlobalCoordinates((Vector3) local);
         }
 
         public static void UpdateTransformations()
