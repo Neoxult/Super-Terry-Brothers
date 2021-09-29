@@ -40,9 +40,10 @@ namespace TerryBros.Gamemode
             //TODO: Add a real Level Change instead of a restart
             Event.Run(TBEvent.Level.Restart);
 
+            ClientRestartLevel();
+
             foreach (Client client in Client.All)
             {
-                ClientRestartLevel();
 
                 if (client.Pawn is TerryBrosPlayer player)
                 {
