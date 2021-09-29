@@ -9,9 +9,9 @@ namespace TerryBros.Utils
 
         public IntVector3(Vector3 vector3)
         {
-            x = (int) vector3.x;
-            y = (int) vector3.y;
-            z = (int) vector3.z;
+            x = (int) System.Math.Round(vector3.x);
+            y = (int) System.Math.Round(vector3.y);
+            z = (int) System.Math.Round(vector3.z);
         }
 
         public IntVector3(int x, int y, int z)
@@ -60,6 +60,16 @@ namespace TerryBros.Utils
             }
 
             return base.Equals(intVector3);
+        }
+
+        public static explicit operator IntVector3(Vector3 vec)
+        {
+            return new IntVector3(vec);
+        }
+
+        public static implicit operator Vector3(IntVector3 vec)
+        {
+            return new Vector3(vec.x, vec.y, vec.z);
         }
     }
 }

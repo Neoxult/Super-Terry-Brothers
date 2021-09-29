@@ -49,7 +49,7 @@ namespace TerryBros.Player.Camera
                 }
 
                 // vertical camera movement
-
+                /*
                 val = 1f;
                 if (Pos.z < bBox.Mins.y + Screen.Height / 2 * _orthoSize * val)
                 {
@@ -58,7 +58,7 @@ namespace TerryBros.Player.Camera
                 else if (Pos.z > bBox.Maxs.y - Screen.Height / 2 * _orthoSize)
                 {
                     Pos = new(Pos.x, Pos.y, bBox.Maxs.y - Screen.Height / 2 * _orthoSize);
-                }
+                }*/
             }
 
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);

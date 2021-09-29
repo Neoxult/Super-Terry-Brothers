@@ -98,24 +98,28 @@ namespace TerryBros.Settings
 
             return centerBlockPos;
         }
+        public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate)
+        {
+            Vector3 centerBlockPos = GroundPos;
+            centerBlockPos -= UpwardDir * BlockSize / 2;
+            centerBlockPos += _localToGlobalTransformation * coordinate * BlockSize;
+
+            return centerBlockPos;
+        }
         public static Vector3 GetBlockPosForGridCoordinates(IntVector3 coordinate)
         {
-            return GetBlockPosForGridCoordinates(coordinate.x, coordinate.y, coordinate.z);
+            return GetBlockPosForGridCoordinates((Vector3) coordinate);
         }
 
         public static IntVector3 GetGridCoordinatesForBlockPos(Vector3 position)
         {
             Vector3 gridPos = new Vector3(position);
             gridPos -= GroundPos;
-            gridPos += UpwardDir * BlockSize / 2;
+            gridPos /= BlockSize;
+            gridPos += UpwardDir / 2;
+            gridPos = GlobalToLocalTransformation * gridPos;
 
-            IntVector3 gridCoordinate = new IntVector3(
-                (int) Math.Round(gridPos.x / BlockSize),
-                (int) Math.Round(gridPos.z / BlockSize),
-                (int) Math.Round(gridPos.y / BlockSize)
-            );
-
-            return gridCoordinate;
+            return (IntVector3) gridPos;
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace TerryBros.Settings
         /// <returns></returns>
         public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
         {
-            return new Vector3(local.x * _forwardDir + local.y * _upwardDir + local.z * _lookDir);
+            return LocalToGlobalTransformation * local;
         }
 
         /// <summary>
@@ -137,32 +141,16 @@ namespace TerryBros.Settings
         /// <returns></returns>
         public static Vector3 ConvertLocalToGlobalCoordinates(IntVector3 local)
         {
-            return ConvertLocalToGlobalCoordinates(new Vector3(local.x, local.y, local.z));
+            return ConvertLocalToGlobalCoordinates((Vector3) local);
         }
 
         public static void UpdateTransformations()
         {
             _doUpdateTransformations = false;
             _lookDir = Vector3.Cross(_upwardDir, _forwardDir);
-            //_localToGlobalTransformation = new Utils.Matrix(_forwardDir , _upwardDir, _lookDir);
-            //_globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
-            _localToGlobalTransformation = new Utils.Matrix((_forwardDir*4 + _upwardDir*3).Normal, (-_forwardDir*3 + _upwardDir*4).Normal, Vector3.Cross((_forwardDir*4 + _upwardDir*3).Normal, (-_forwardDir*3 + _upwardDir*4).Normal));
+            _localToGlobalTransformation = new Utils.Matrix(_forwardDir , _upwardDir, _lookDir);
             _globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
             _globalToLocalTransformation.Invert3x3();
-            Log.Info("First Test:");
-            Log.Info("Local to global:");
-            Log.Info(_localToGlobalTransformation);
-            Log.Info("Vector3 Local");
-            Log.Info(new Vector3(5, 0, 0));
-            Log.Info("Vector3 to global");
-            Log.Info(_localToGlobalTransformation * new Vector3(5, 0, 0));
-            Log.Info("\nSecond Test:");
-            Log.Info("Global to local:");
-            Log.Info(_globalToLocalTransformation);
-            Log.Info("Vector3 global");
-            Log.Info(new Vector3(4, 0, 3));
-            Log.Info("Vector3 to local");
-            Log.Info(_globalToLocalTransformation * new Vector3(4, 0, 3));
         }
     }
 }

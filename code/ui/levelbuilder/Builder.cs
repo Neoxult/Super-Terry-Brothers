@@ -18,7 +18,7 @@ namespace TerryBros.UI.LevelBuilder
         {
             Instance = this;
 
-            StyleSheet.Load("/ui/levelbuider/Builder.scss");
+            StyleSheet.Load("/ui/levelbuilder/Builder.scss");
 
             Editor = new Editor(this);
 

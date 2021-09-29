@@ -33,7 +33,7 @@ namespace TerryBros.UI.LevelBuilder
         {
             Parent = parent ?? Parent;
 
-            StyleSheet.Load("/ui/levelbuider/Editor.scss");
+            StyleSheet.Load("/ui/levelbuilder/Editor.scss");
 
             OpenLabel = Add.Label("Open", "openlabel");
             OpenLabel.AddEventListener("onclick", (e) =>

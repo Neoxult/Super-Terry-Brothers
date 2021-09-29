@@ -78,6 +78,9 @@ namespace TerryBros.Player.Camera
             if (!player.IsInLevelBuilder && !TerryBrosPlayer.stb_2D)
             {
                 Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
+
+                //TODO: Discuss if we should just point in one direction all time
+                // Currently the background is just a zoomed in skybox, which makes switching blurry as hell
                 if (player.Controller is Controller.MovementController movementController)
                 {
                     float moveDirectionFactor = Math.Clamp(movementController.MovedirectionChanged * 2f, 0f, 1f);
@@ -95,8 +98,6 @@ namespace TerryBros.Player.Camera
                     _rotationFactor = Math.Clamp(moveDirectionFactor, -1f, 1f);
                     _rotationFactor -= _oldFactor;
 
-                    //TODO: Discuss if we should just point in one direction all time
-                    // Currently the background is just a zoomed in skybox, which makes switching blurry as hell
                     Rot = Rot.RotateAroundAxis(GlobalSettings.UpwardDir, _rotationFactor * (_wasForward ? -10f : 10f));
                 }
             }
