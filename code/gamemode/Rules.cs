@@ -24,12 +24,12 @@ namespace TerryBros.Gamemode
         {
             //TODO: Maybe add Logic for more players that want to run to the goal
             // And a Timer, that runs down to put pressure on them
-            Event.Run(TBEvent.Level.Finished, player);
+            Event.Run(TBEvent.Level.Finished);
         }
 
         // server-side only
         [Event(TBEvent.Level.Finished)]
-        private static void LevelFinished(TerryBrosPlayer player)
+        private static void LevelFinished()
         {
             if (Host.IsClient)
             {
@@ -38,9 +38,16 @@ namespace TerryBros.Gamemode
 
             //TODO: Add a real Level Change instead of a restart
             Event.Run(TBEvent.Level.Restart);
-            ClientRestartLevel();
 
-            player.Respawn();
+            foreach (Client client in Client.All)
+            {
+                ClientRestartLevel();
+
+                if (client.Pawn is TerryBrosPlayer player)
+                {
+                    player.Respawn();
+                }
+            }
         }
 
         [ClientRpc]

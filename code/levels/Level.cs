@@ -6,6 +6,7 @@ using Sandbox;
 
 using TerryBros.Events;
 using TerryBros.Gamemode;
+using TerryBros.Player;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
@@ -113,9 +114,9 @@ namespace TerryBros.Levels
         {
             return CheckPointSpawn ?? GetRestartPoint();
         }
-
-        public void SetCheckPoint(Checkpoint checkPoint)
+        public void CheckPointReached(TerryBrosPlayer player, Checkpoint checkPoint)
         {
+            //TODO: Allow different players to have different checkpoints
             CheckPointSpawn = checkPoint.SpawnPoint;
         }
 

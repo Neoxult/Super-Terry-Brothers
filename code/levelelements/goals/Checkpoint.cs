@@ -41,7 +41,7 @@ namespace TerryBros.LevelElements
         {
             base.Touch(other);
 
-            if (_wasTouched || other is not TerryBrosPlayer)
+            if (_wasTouched || other is not TerryBrosPlayer player)
             {
                 return;
             }
@@ -49,7 +49,7 @@ namespace TerryBros.LevelElements
             if (STBGame.CurrentLevel != null)
             {
                 _wasTouched = true;
-                STBGame.CurrentLevel.SetCheckPoint(this);
+                STBGame.CurrentLevel.CheckPointReached(player, this);
             }
         }
 
