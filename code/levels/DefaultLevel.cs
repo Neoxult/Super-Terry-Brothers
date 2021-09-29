@@ -27,17 +27,30 @@ namespace TerryBros.Levels
         public override void Build()
         {
             //CreateBox<Brick>(0, 0);
-            CreateWallFromTo<Brick>(-30, -2, -10, 0);
-            CreateWallFromTo<Brick>(-6, -2, 20, 0);
-            CreateWallFromTo<Brick>(24, -2, 40, 0);
-            CreateStair<LogTop>(5, 1, 14, true);
-            CreateStair<Brick>(19, 1, 13, false);
-            CreateWall<Brick>(-30, 1, 2, 3);
-            CreateWall<Brick>(-30, 9, 2, 4);
-            CreateWall<Brick>(-29, 1, 2, 3);
-            CreateWall<Brick>(-29, 9, 2, 4);
-            CreateCheckPoint(-12, 1);
-            CreateGoal(-20, 1);
+            //Floor
+            CreateWallFromTo<Brick>(-10, -2, 10, 0);
+            CreateWallFromTo<Brick>(14, -2, 29, 0);
+            CreateWallFromTo<Brick>(33, -2, 50, 0);
+            CreateWallFromTo<Brick>(54, -2, 60, 0);
+
+            //Platform
+            CreateWall<Brick>(4, 3, 3, 1);
+
+            CreateStair<LogTop>(20, 1, 3);
+            CreateStair<Brick>(23, 1, 2, false);
+
+            //StartWall
+            CreateWall<Brick>(-10, 1, 2, 3);
+            CreateWall<Brick>(-10, 9, 2, 4);
+
+            //EndWall
+            CreateWall<Brick>(59, 1, 2, 3);
+            CreateWall<Brick>(59, 9, 2, 4);
+
+            CreateCheckPoint(22, 4);
+            CreateCheckPoint(35, 1);
+            CreateCheckPoint(48, 1);
+            CreateGoal(55, 1);
         }
     }
 }

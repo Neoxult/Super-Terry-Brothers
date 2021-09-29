@@ -14,10 +14,7 @@ namespace TerryBros.LevelElements
 
         public Goal() : base()
         {
-            Transmit = TransmitType.Always;
             CollisionGroup = CollisionGroup.Trigger;
-            EnableAllCollisions = true;
-            EnableHitboxes = true;
             RenderColor = Color.Green;
         }
 
