@@ -62,8 +62,6 @@ namespace TerryBros.Player
         }
         public override void Respawn()
         {
-            base.Respawn();
-
             SetModel("models/citizen/citizen.vmdl");
 
             Controller = new MovementController();
@@ -82,6 +80,8 @@ namespace TerryBros.Player
             PhysicsGroup?.Wake();
 
             ClientRespawn(this);
+
+            base.Respawn();
         }
 
         [ClientRpc]

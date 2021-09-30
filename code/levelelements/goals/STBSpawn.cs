@@ -20,7 +20,7 @@ namespace TerryBros.LevelElements
         }
         public void MoveToSpawn(Entity pawn)
         {
-            pawn.Transform = Transform;
+            pawn.Transform = new(Transform.Position,pawn.Rotation,pawn.Scale);
         }
     }
 }
