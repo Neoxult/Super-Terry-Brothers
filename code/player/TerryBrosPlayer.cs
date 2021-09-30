@@ -46,7 +46,6 @@ namespace TerryBros.Player
 
         public TerryBrosPlayer()
         {
-
         }
 
         public TerryBrosPlayer(Client cl) : this()

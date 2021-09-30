@@ -33,10 +33,12 @@ namespace TerryBros.LevelElements
         {
             CollisionGroup = CollisionGroup.Trigger;
             RenderColor = Color.Blue;
-
-            SpawnPoint = new STBSpawn();
         }
-
+        public override void Spawn()
+        {
+            SpawnPoint = new STBSpawn();
+            base.Spawn();
+        }
         public override void Touch(Entity other)
         {
             base.Touch(other);
