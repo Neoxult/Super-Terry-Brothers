@@ -48,10 +48,11 @@ namespace TerryBros.Gamemode
             base.ClientJoined(client);
 
             TerryBrosPlayer player = new(client);
-            client.Pawn = player;
 
             // TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
             player.Respawn();
+
+            client.Pawn = player;
         }
 
         public override void MoveToSpawnpoint(Entity pawn)

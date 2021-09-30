@@ -29,37 +29,45 @@ namespace TerryBros.LevelElements
 
         public virtual PhysicsMotionType PhysicsMotionType => PhysicsMotionType.Static;
 
-        public Vector3 BlockSizeFloat
+        public Vector3 GlobalBlockSize
         {
-            get => GlobalSettings.ConvertLocalToGlobalCoordinates(BlockSize);
+            get => GlobalSettings.ConvertLocalToGlobalScale(BlockSize);
+        }
+
+        /// <summary>
+        /// Its the position in the new local Coordinate system
+        /// x,y being the screen horizontally, vertically and z being the depth
+        /// </summary>
+        [Predicted]
+        public override Vector3 LocalPosition
+        {
+            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
+            set => Position = GlobalSettings.ConvertLocalToGlobalCoordinates(value);
         }
 
         /// <summary>
         /// Offsets the Position for Blockentities, so that their first block is directly on the grid.
         /// Normally this is the center, but we use the most nearest (z), lowest (y), left (x) corner.
         /// </summary>
+        [Predicted]
         public override Vector3 Position
         {
-            get => base.Position - (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
+            get => base.Position - GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
             set
             {
-                base.Position = value + (BlockSizeFloat - new Vector3(1, 1, 1)) * GlobalSettings.BlockSize / 2;
-
-                _gridPosition = GlobalSettings.GetGridCoordinatesForBlockPos(Position);
+                base.Position = value + GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
 
                 STBGame.CurrentLevel?.RegisterBlock(this);
             }
         }
 
-        public Vector3 Mins => Position - GlobalSettings.BlockSize / 2;
-        public Vector3 Maxs => Mins + BlockSizeFloat * GlobalSettings.BlockSize;
-
+        [Predicted]
         public IntVector3 GridPosition
         {
-            get => _gridPosition;
+            get => GlobalSettings.GetGridCoordinatesForBlockPos(Position);
+            set => Position = GlobalSettings.GetBlockPosForGridCoordinates(value);
         }
 
-        private IntVector3 _gridPosition = new IntVector3(0, 0, 0);
         public BlockEntity() : base()
         {
 

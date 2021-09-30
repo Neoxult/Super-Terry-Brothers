@@ -13,15 +13,15 @@ namespace TerryBros.LevelElements
         {
             VertexBuffer vb = new();
             vb.Init(true);
-            vb.AddCube(Vector3.Zero, BlockSizeFloat * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
+            vb.AddCube(Vector3.Zero, GlobalBlockSize * GlobalSettings.BlockSize, Rotation.LookAt(GlobalSettings.ForwardDir, -GlobalSettings.UpwardDir));
 
             Mesh mesh = new(Material.Load(MaterialName));
             mesh.CreateBuffers(vb);
-            mesh.SetBounds(BlockSizeFloat * -GlobalSettings.BlockSize / 2, BlockSizeFloat * GlobalSettings.BlockSize / 2);
+            mesh.SetBounds(GlobalBlockSize * -GlobalSettings.BlockSize / 2, GlobalBlockSize * GlobalSettings.BlockSize / 2);
 
             Model model = new ModelBuilder()
                 .AddMesh(mesh)
-                .AddCollisionBox(BlockSizeFloat * GlobalSettings.BlockSize / 2)
+                .AddCollisionBox(GlobalBlockSize * GlobalSettings.BlockSize / 2)
                 .Create();
 
             SetModel(model);

@@ -11,8 +11,8 @@ namespace TerryBros.Settings
         public static float BlockSize = 20f;
 
         //TODO: Get the real Height of the playermodel;
-        public static float FigureHeight = 80;
-        public static Vector3 GroundPos = Vector3.Zero;
+        public static float FigureHeight = 80f;
+        public static Vector3 GroundPos = Vector3.Forward * 20f - Vector3.Up * 100f;
         public static Vector3 ForwardDir
         {
             get => _forwardDir;
@@ -83,50 +83,57 @@ namespace TerryBros.Settings
         //TODO: Maybe Move to a Library for more such functions.
         public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate)
         {
-            Vector3 centerBlockPos = GroundPos;
-            centerBlockPos -= UpwardDir * BlockSize / 2;
-            centerBlockPos += LocalToGlobalTransformation * coordinate * BlockSize;
-
-            return centerBlockPos;
+            return ConvertLocalToGlobalCoordinates(coordinate * BlockSize);
         }
         public static Vector3 GetBlockPosForGridCoordinates(int GridX, int GridY, int GridZ = 0)
         {
             return GetBlockPosForGridCoordinates(new Vector3(GridX, GridY, GridZ));
         }
-
         public static IntVector3 GetGridCoordinatesForBlockPos(Vector3 position)
         {
-            Vector3 gridPos = new Vector3(position);
-            gridPos -= GroundPos;
-            gridPos /= BlockSize;
-            gridPos += UpwardDir / 2;
-            gridPos = GlobalToLocalTransformation * gridPos;
-
-            return (IntVector3) gridPos;
+            return (IntVector3) (ConvertGlobalToLocalCoordinates(position) / BlockSize);
         }
 
         /// <summary>
-        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
+        /// The local coordinate System is defined as X' -> Horizontal, Y' -> Vertical and Z' -> Depth.
+        /// And has his origin at Block-Center (0,0,0)
         /// Use this function to convert local to the actual used global coordinate system
         /// </summary>
         /// <param name="local">The local coordinates</param>
         /// <returns></returns>
         public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
         {
-            return LocalToGlobalTransformation * local;
+            local -= new Vector3(0, BlockSize / 2, 0);
+            Vector3 global = LocalToGlobalTransformation * local;
+            global += GroundPos;
+
+            return global;
         }
 
         /// <summary>
-        /// The coordinate System is defined as X -> Horizontal, Y -> Vertical and Z -> Depth.
+        /// The global coordinate System is defined as X -> ForwardDir, Y -> UpwardDir and Z -> LookDir.
+        /// And has his origin at Groundpos on top of a Block
         /// Use this function to convert the actual used global to the local coordinate system
         /// </summary>
         /// <param name="global">The global coordinates</param>
         /// <returns></returns>
         public static Vector3 ConvertGlobalToLocalCoordinates(Vector3 global)
         {
-            return GlobalToLocalTransformation * global;
+            global -= GroundPos;
+            Vector3 local = GlobalToLocalTransformation * global;
+            local += new Vector3(0, BlockSize / 2, 0);
+
+            return local;
         }
 
+        public static Vector3 ConvertLocalToGlobalScale(Vector3 localScale)
+        {
+            return LocalToGlobalTransformation * localScale;
+        }
+        public static Vector3 ConvertGlobalToLocalScale(Vector3 globalScale)
+        {
+            return GlobalToLocalTransformation * globalScale;
+        }
         public static void UpdateTransformations()
         {
             _doUpdateTransformations = false;

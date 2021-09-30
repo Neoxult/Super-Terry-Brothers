@@ -10,7 +10,7 @@ namespace TerryBros.Player.Camera
     public partial class SideScroller2DCamera : Sandbox.Camera
     {
         public float FreeCameraSpeed = 500f;
-        public Vector3 Position
+        public Vector3 LocalPosition
         {
             get => GlobalSettings.ConvertGlobalToLocalCoordinates(Pos);
             set { Pos = GlobalSettings.ConvertLocalToGlobalCoordinates(value); }
@@ -30,11 +30,12 @@ namespace TerryBros.Player.Camera
             if (!player.IsInLevelBuilder)
             {
                 BBox bBox = STBGame.CurrentLevel.LevelBoundsLocal;
+
                 OrthoSize = Math.Min((bBox.Maxs.x - bBox.Mins.x) / Screen.Width, (bBox.Maxs.y - bBox.Mins.y) / Screen.Height);
                 OrthoSize = Math.Min(_orthoSize, OrthoSize);
 
                 //TODO: Use Local for player and ground directly
-                Vector3 newPos = GlobalSettings.ConvertGlobalToLocalCoordinates(new(player.Position.x, player.Position.y, GlobalSettings.GroundPos.z));
+                Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
                 newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
                 newPos.y += Screen.Height / 2 * OrthoSize;
                 newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
@@ -45,7 +46,7 @@ namespace TerryBros.Player.Camera
                 // vertical camera movement
                 newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
                 
-                Position = newPos;
+                LocalPosition = newPos;
             }
 
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);

@@ -12,7 +12,7 @@ namespace TerryBros.Gamemode
         {
             if (cl.Pawn is TerryBrosPlayer player)
             {
-                player.Position = player.Position.WithY(0);
+                player.LocalPosition = player.LocalPosition.WithZ(0);
             }
 
             base.Simulate(cl);
@@ -65,14 +65,15 @@ namespace TerryBros.Gamemode
                 return;
             }
 
-            BBox bBox = STBGame.CurrentLevel.LevelBounds;
+            BBox bBox = CurrentLevel.LevelBoundsLocal;
+            Vector3 pos = player.LocalPosition;
 
-            if (player.Position.x < bBox.Mins.x
-                || player.Position.x > bBox.Maxs.x
-                || player.Position.y < bBox.Mins.y
-                || player.Position.y > bBox.Maxs.y
-                || player.Position.z < bBox.Mins.z
-                || player.Position.z > bBox.Maxs.z + 5 * GlobalSettings.BlockSize
+            if (pos.x < bBox.Mins.x
+                || pos.x > bBox.Maxs.x
+                || pos.y < bBox.Mins.y
+                || pos.y > bBox.Maxs.y + 5 * GlobalSettings.BlockSize
+                || pos.z < bBox.Mins.z
+                || pos.z > bBox.Maxs.z 
                 )
             {
                 player.Respawn();

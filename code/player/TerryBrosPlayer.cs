@@ -31,6 +31,16 @@ namespace TerryBros.Player
         public bool IsInLevelBuilder = false;
         public bool IsInMenu = false;
 
+        /// <summary>
+        /// Its the position in the new local Coordinate system
+        /// x,y being the screen horizontally, vertically and z being the depth
+        /// </summary>
+        public override Vector3 LocalPosition
+        {
+            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
+            set => Position = GlobalSettings.ConvertLocalToGlobalCoordinates(value);
+        }
+
         private IntVector3 _oldGrid = IntVector3.Zero;
         private bool _isDrawing = false;
 
@@ -48,7 +58,7 @@ namespace TerryBros.Player
             //TODO: Separate LevelEditor Camera from SidescrollerCamera
             //Note: Tried here to experiment with own cameras, which makes the leveleditor unusable
             //Camera = stb_2D ? new SideScroller2DCamera() : new SideScrollerCamera();
-            Camera = new SideScrollerCamera();
+            Camera = new SideScroller2DCamera();
         }
         public override void Respawn()
         {
