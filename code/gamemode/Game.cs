@@ -25,15 +25,16 @@ namespace TerryBros.Gamemode
 
         public STBGame()
         {
-            if (IsServer)
-            {
-                new Hud();
-            }
         }
 
         [Event.Entity.PostSpawn]
         private void PostLevelSpawn()
         {
+            if (IsServer && Hud.Instance == null)
+            {
+                new Hud();
+            }
+
             if (CurrentLevel != null)
             {
                 return;
@@ -53,6 +54,7 @@ namespace TerryBros.Gamemode
             // TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
             player.Respawn();
 
+            
         }
 
         public override void MoveToSpawnpoint(Entity pawn)

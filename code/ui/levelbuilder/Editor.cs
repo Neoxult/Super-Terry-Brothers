@@ -41,7 +41,8 @@ namespace TerryBros.UI.LevelBuilder
                 IsOpened = !IsOpened;
             });
 
-            AddBlocks(Add.Panel("blocks"));
+            //TODO: Initialize Blocks outside of constructor
+            //AddBlocks(Add.Panel("blocks"));
 
             IsOpened = true;
         }
