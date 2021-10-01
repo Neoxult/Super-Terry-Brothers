@@ -18,14 +18,15 @@ namespace TerryBros.LevelElements
             get { return base.Position + GlobalSettings.BlockSize / 2 * GlobalSettings.UpwardDir; }
             set { base.Position = value - GlobalSettings.BlockSize / 2 * GlobalSettings.UpwardDir; }
         }
-        public BlockModelEntity() : base()
+        public BlockModelEntity() : base() { }
+
+        public override void LateInitialize()
         {
-            //TODO: Check why SceneObject is sometimes not instantiated
-            // or do it in a later call to be sure
-            if (Host.IsClient && UseMaterial)
+            if (Host.IsClient && UseMaterial &&  SceneObject != null)
             {
                 SceneObject.SetMaterialOverride(Material.Load(MaterialName));
             }
+            base.LateInitialize();
         }
         public override void Spawn()
         {

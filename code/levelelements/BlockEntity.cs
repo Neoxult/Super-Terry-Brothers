@@ -72,8 +72,13 @@ namespace TerryBros.LevelElements
 
         public BlockEntity() : base()
         {
-
+            STBGame.AddLateInitializeAction(LateInitialize);
         }
+
+        /// <summary>
+        /// Add work here, that cant be done in a constructor and needs a later initialize
+        /// </summary>
+        public virtual void LateInitialize() { }
         public BlockData GetBlockData()
         {
             Type type = GetType();
