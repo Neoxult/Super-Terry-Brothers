@@ -50,13 +50,11 @@ namespace TerryBros.UI.LevelBuilder
         private void AddBlocks(Panel parent)
         {
             int count = 0;
-            Log.Info($"IsServer:{Host.IsServer}, IsClient:{Host.IsClient}");
-            Log.Info("Editor Add Blocks.");
+
             foreach (BlockData blockData in STBGame.BlockDataList)
             {
                 count++;
 
-                Log.Info(blockData.Name);
                 BlockList.Add(new Block(parent, blockData));
 
                 if (count == 1)

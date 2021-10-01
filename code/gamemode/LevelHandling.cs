@@ -65,8 +65,6 @@ namespace TerryBros.Gamemode
 
         private void CreateBlockData()
         {
-            Log.Info($"IsServer:{Host.IsServer}, IsClient:{Host.IsClient}");
-            Log.Info("Create Blockdata.");
             foreach (Type type in Library.GetAll<BlockEntity>())
             {
                 if (!type.IsAbstract && !type.ContainsGenericParameters)
