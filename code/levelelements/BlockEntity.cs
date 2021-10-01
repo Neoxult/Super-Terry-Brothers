@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 
 using Sandbox;
 
 using TerryBros.Gamemode;
-using TerryBros.Levels;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
@@ -19,6 +17,10 @@ namespace TerryBros.LevelElements
 
     public abstract class BlockEntity : ModelEntity
     {
+        /// <summary>
+        /// Note: Translucent materials are not properly shown on the editor UI,
+        /// so use pngs or non-translucent vmats for now on Models that dont need the MaterialName otherwise
+        /// </summary>
         public virtual string MaterialName => "materials/blocks/stair_block.vmat";
         public virtual IntVector3 BlockSize => new(1, 1, 1);
 
