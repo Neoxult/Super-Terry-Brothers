@@ -55,7 +55,7 @@ namespace TerryBros.Gamemode
 
         }
 
-        public override void MoveToSpawnpoint(Entity pawn)
+        /*public override void MoveToSpawnpoint(Entity pawn)
         {
             STBSpawn spawnPoint = CurrentLevel?.GetLastCheckPoint();
 
@@ -67,6 +67,6 @@ namespace TerryBros.Gamemode
             }
 
             spawnPoint.MoveToSpawn(pawn);
-        }
+        }*/
     }
 }

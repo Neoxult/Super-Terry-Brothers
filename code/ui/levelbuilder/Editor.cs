@@ -57,10 +57,8 @@ namespace TerryBros.UI.LevelBuilder
                     count++;
 
                     BlockEntity blockEntity = Library.Create<BlockEntity>(type);
-                    BlockData blockData = blockEntity.GetBlockData();
 
                     blockEntity.Delete();
-                    BlockList.Add(new Block(parent, blockData));
 
                     if (count == 1)
                     {

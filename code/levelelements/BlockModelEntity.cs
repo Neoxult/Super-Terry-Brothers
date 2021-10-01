@@ -13,6 +13,7 @@ namespace TerryBros.LevelElements
         /// In case the model doesnt contain a Material use the given material as override.
         /// </summary>
         public virtual bool UseMaterial => false;
+        [Predicted]
         public override Vector3 Position
         {
             get { return base.Position + GlobalSettings.BlockSize / 2 * GlobalSettings.UpwardDir; }
@@ -22,7 +23,7 @@ namespace TerryBros.LevelElements
         {
             //TODO: Check why SceneObject is sometimes not instantiated
             // or do it in a later call to be sure
-            if (Host.IsClient && UseMaterial)
+            if (Host.IsClient && UseMaterial && SceneObject != null)
             {
                 SceneObject.SetMaterialOverride(Material.Load(MaterialName));
             }

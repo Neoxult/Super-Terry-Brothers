@@ -10,17 +10,6 @@ namespace TerryBros.UI.Menu
     {
         public void ShowLevels(Panel wrapperPanel)
         {
-            foreach (string level in TerryBrosPlayer.GetLevels())
-            {
-                wrapperPanel.Add.Button(level.Split('.')[0], "entry", () =>
-                {
-                    TerryBros.Player.TerryBrosPlayer.LoadLevel(level);
-
-                    OnClickHome();
-
-                    Menu.Instance.Display = false;
-                });
-            }
         }
     }
 }

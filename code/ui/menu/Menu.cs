@@ -25,7 +25,6 @@ namespace TerryBros.UI.Menu
                 {
                     player.IsInMenu = _display;
 
-                    TerryBrosPlayer.ServerToggleMenu(_display);
                 }
 
                 if (!_display)

@@ -47,28 +47,6 @@ namespace TerryBros.Player.Controller
 
             if (player.IsInLevelBuilder)
             {
-                SideScrollerCamera sideScrollerCamera = player.Camera as SideScrollerCamera;
-
-                Vector3 newPos = new Vector3(sideScrollerCamera.Pos);
-
-                if (Input.Down(InputButton.Left))
-                {
-                    newPos.x -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Right))
-                {
-                    newPos.x += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Forward))
-                {
-                    newPos.z += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Back))
-                {
-                    newPos.z -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-
-                sideScrollerCamera.Pos = newPos;
             }
             else
             {

@@ -4,7 +4,6 @@ using System.Text.Json;
 
 using Sandbox;
 
-using TerryBros.Events;
 using TerryBros.Gamemode;
 using TerryBros.Player;
 using TerryBros.LevelElements;
@@ -43,8 +42,8 @@ namespace TerryBros.Levels
 
         public Dictionary<int, Dictionary<int, BlockEntity>> GridBlocks = new();
 
-        protected STBSpawn RestartSpawn;
-        protected STBSpawn CheckPointSpawn;
+        //protected STBSpawn RestartSpawn;
+        //protected STBSpawn CheckPointSpawn;
 
         public Level()
         {
@@ -111,7 +110,7 @@ namespace TerryBros.Levels
             dict[GridY] = block;
 
         }
-        public STBSpawn GetRestartPoint()
+        /*public STBSpawn GetRestartPoint()
         {
             return RestartSpawn;
         }
@@ -130,7 +129,7 @@ namespace TerryBros.Levels
         public void Restart()
         {
             CheckPointSpawn = null;
-        }
+        }*/
 
         protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
         {
@@ -178,7 +177,7 @@ namespace TerryBros.Levels
             }
         }
 
-        protected Checkpoint CreateCheckPoint(int GridX, int GridY)
+        /*protected Checkpoint CreateCheckPoint(int GridX, int GridY)
         {
             return CreateBox<Checkpoint>(GridX, GridY);
         }
@@ -186,7 +185,7 @@ namespace TerryBros.Levels
         protected Goal CreateGoal(int GridX, int GridY)
         {
             return CreateBox<Goal>(GridX, GridY);
-        }
+        }*/
 
         public string Export()
         {
