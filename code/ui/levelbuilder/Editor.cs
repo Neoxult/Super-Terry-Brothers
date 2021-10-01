@@ -5,6 +5,7 @@ using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
+using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder
@@ -41,32 +42,26 @@ namespace TerryBros.UI.LevelBuilder
                 IsOpened = !IsOpened;
             });
 
-            //TODO: Initialize Blocks outside of constructor
-            //AddBlocks(Add.Panel("blocks"));
+            AddBlocks(Add.Panel("blocks"));
 
             IsOpened = true;
         }
-
+        
         private void AddBlocks(Panel parent)
         {
             int count = 0;
-
-            foreach (Type type in Library.GetAll<BlockEntity>())
+            Log.Info($"IsServer:{Host.IsServer}, IsClient:{Host.IsClient}");
+            Log.Info("Editor Add Blocks.");
+            foreach (BlockData blockData in STBGame.BlockDataList)
             {
-                if (!type.IsAbstract && !type.ContainsGenericParameters)
+                count++;
+
+                Log.Info(blockData.Name);
+                BlockList.Add(new Block(parent, blockData));
+
+                if (count == 1)
                 {
-                    count++;
-
-                    BlockEntity blockEntity = Library.Create<BlockEntity>(type);
-                    BlockData blockData = blockEntity.GetBlockData();
-
-                    blockEntity.Delete();
-                    BlockList.Add(new Block(parent, blockData));
-
-                    if (count == 1)
-                    {
-                        Select(type);
-                    }
+                    Select(blockData.Type);
                 }
             }
         }

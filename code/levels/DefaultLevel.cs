@@ -35,7 +35,7 @@ namespace TerryBros.Levels
 
             //CreateBox<Brick>(0, -3);
             //Floor
-            CreateWallFromTo<Brick>(-300, -2, 10, 0);
+            CreateWallFromTo<Brick>(-10, -2, 10, 0);
             CreateWallFromTo<Brick>(14, -2, 29, 0);
             CreateWallFromTo<Brick>(33, -2, 50, 0);
             CreateWallFromTo<Brick>(54, -2, 60, 0);

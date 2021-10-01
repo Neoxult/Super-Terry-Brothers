@@ -1,47 +1,14 @@
 using Sandbox;
 
-using TerryBros.LevelElements;
-using TerryBros.Levels;
 using TerryBros.Player;
-using TerryBros.UI;
 
 namespace TerryBros.Gamemode
 {
     [Library("STB", Title = "Super Terry Brothers")]
     public partial class STBGame : Sandbox.Game
     {
-        public static Level LastLevel { get; private set; }
-
-        public static Level CurrentLevel
-        {
-            get => _currentLevel;
-            set
-            {
-                LastLevel = _currentLevel;
-                _currentLevel = value;
-            }
-        }
-        private static Level _currentLevel;
-
         public STBGame()
         {
-        }
-
-        [Event.Entity.PostSpawn]
-        private void PostLevelSpawn()
-        {
-            if (IsServer && Hud.Instance == null)
-            {
-                new Hud();
-            }
-
-            if (CurrentLevel != null)
-            {
-                return;
-            }
-
-            CurrentLevel = new DefaultLevel();
-            CurrentLevel.Build();
         }
 
         public override void ClientJoined(Client client)
@@ -51,24 +18,7 @@ namespace TerryBros.Gamemode
             TerryBrosPlayer player = new(client);
             client.Pawn = player;
 
-            // TODO: Find error, that sometimes the player doesnt fully spawn or gets rendered
             player.Respawn();
-
-            
-        }
-
-        public override void MoveToSpawnpoint(Entity pawn)
-        {
-            STBSpawn spawnPoint = CurrentLevel?.GetLastCheckPoint();
-
-            if (spawnPoint == null)
-            {
-                Log.Warning($"Couldn't find spawnpoint for {pawn}!");
-
-                return;
-            }
-
-            spawnPoint.MoveToSpawn(pawn);
         }
     }
 }

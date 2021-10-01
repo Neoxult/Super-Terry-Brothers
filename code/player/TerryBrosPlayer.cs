@@ -57,7 +57,7 @@ namespace TerryBros.Player
             //TODO: Separate LevelEditor Camera from SidescrollerCamera
             //Note: Tried here to experiment with own cameras, which makes the leveleditor unusable
             //Camera = stb_2D ? new SideScroller2DCamera() : new SideScrollerCamera();
-            Camera = new SideScroller2DCamera();
+            Camera = new SideScrollerCamera();
         }
         public override void Respawn()
         {
