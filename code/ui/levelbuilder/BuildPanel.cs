@@ -4,23 +4,23 @@ using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder
 {
-    public class Builder : Panel
+    public class BuildPanel : Panel
     {
-        public static Builder Instance;
+        public static BuildPanel Instance;
         public bool IsMouseDown { get; private set; } = false;
         public bool IsLeftMouseButtonDown { get; private set; } = false;
         public bool IsRightMouseButtonDown { get; private set; } = false;
         public BlockData SelectedBlockData;
 
-        public Editor Editor;
+        public BlockSelector BlockSelection;
 
-        public Builder() : base()
+        public BuildPanel() : base()
         {
             Instance = this;
 
-            StyleSheet.Load("/ui/levelbuilder/Builder.scss");
+            StyleSheet.Load("/ui/levelbuilder/BuildPanel.scss");
 
-            Editor = new Editor(this);
+            BlockSelection = new BlockSelector(this);
 
             Toggle(false);
         }
@@ -39,12 +39,11 @@ namespace TerryBros.UI.LevelBuilder
                 IsRightMouseButtonDown = false;
             }
         }
-
         protected override void OnMouseDown(MousePanelEvent e)
         {
             base.OnMouseDown(e);
 
-            if (e.Target is not Builder)
+            if (e.Target is not BuildPanel)
             {
                 return;
             }

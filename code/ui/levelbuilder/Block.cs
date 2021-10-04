@@ -24,7 +24,7 @@ namespace TerryBros.UI.LevelBuilder
 
             AddEventListener("onclick", (e) =>
             {
-                Builder.Instance.Editor.Select(BlockData.Type);
+                BuildPanel.Instance.BlockSelection.Select(BlockData.Type);
             });
         }
     }

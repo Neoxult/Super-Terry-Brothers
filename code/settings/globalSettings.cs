@@ -81,6 +81,10 @@ namespace TerryBros.Settings
         private static Utils.Matrix _globalToLocalTransformation;
 
         //TODO: Maybe Move to a Library for more such functions.
+        public static Vector3 GetBlockPosForLocalPos(Vector3 localPos)
+        {
+            return GetBlockPosForGridCoordinates((IntVector3)(localPos / BlockSize));
+        }
         public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate)
         {
             return ConvertLocalToGlobalCoordinates(coordinate * BlockSize);

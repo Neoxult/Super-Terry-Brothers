@@ -44,16 +44,6 @@ namespace TerryBros.Gamemode
         [Event.Entity.PostSpawn]
         private void PostLevelSpawn()
         {
-            CreateBlockData();
-
-            if (IsClient)
-            {
-                //Note: Normally created on server and then networked,
-                // but event is called later and blockdatas are missing
-                //TODO: Discuss with Alf, if this is okay like that
-                new Hud();
-            }
-
             if (CurrentLevel != null)
             {
                 return;
@@ -63,8 +53,9 @@ namespace TerryBros.Gamemode
             CurrentLevel.Build();
         }
 
-        private void CreateBlockData()
+        public static void CreateBlockData()
         {
+            BlockDataList = new();
             foreach (Type type in Library.GetAll<BlockEntity>())
             {
                 if (!type.IsAbstract && !type.ContainsGenericParameters)

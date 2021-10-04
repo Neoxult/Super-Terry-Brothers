@@ -9,6 +9,7 @@ using TerryBros.Player.Controller;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
+using TerryBros.UI.LevelBuilder;
 
 namespace TerryBros.Levels.Builder
 {
@@ -18,9 +19,6 @@ namespace TerryBros.Levels.Builder
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
         public static void ServerCreateBlock(Vector3 position, string blockTypeName)
         {
-            TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
-            MovementController movementController = player.Controller as MovementController;
-
             CreateBlock(position, blockTypeName);
             ClientCreateBlock(position, blockTypeName);
         }
@@ -29,9 +27,6 @@ namespace TerryBros.Levels.Builder
         [ServerCmd(Name = "stb_block_delete", Help = "Removes a block in front of the player")]
         public static void ServerDeleteBlock(Vector3 position)
         {
-            TerryBrosPlayer player = ConsoleSystem.Caller.Pawn as TerryBrosPlayer;
-            MovementController movementController = player.Controller as MovementController;
-
             DeleteBlock(position);
             ClientDeleteBlock(position);
         }
@@ -113,11 +108,11 @@ namespace TerryBros.Levels.Builder
                 return;
             }
 
-            player.IsInLevelBuilder = !player.IsInLevelBuilder;
+            player.EnableLevelEditor(!player.IsInLevelBuilder);
 
             ServerToggleLevelEditor(player.IsInLevelBuilder);
 
-            UI.LevelBuilder.Builder.Instance.Toggle(player.IsInLevelBuilder);
+            BuildPanel.Instance.Toggle(player.IsInLevelBuilder);
         }
 
         [ServerCmd]
@@ -128,7 +123,7 @@ namespace TerryBros.Levels.Builder
                 return;
             }
 
-            player.IsInLevelBuilder = toggle;
+            player.EnableLevelEditor(toggle);
         }
 
         [ServerCmd]

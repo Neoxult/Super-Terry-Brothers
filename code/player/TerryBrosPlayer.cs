@@ -18,31 +18,7 @@ namespace TerryBros.Player
         [ClientVar, Change("SetCameraDimension")]
         public static bool stb_2D { get; set; } = false;
 
-        public bool IsInLevelBuilder
-        {
-            get => _isInLevelBuilder;
-            set
-            {
-                _isInLevelBuilder = value;
-                if (Host.IsServer) {
-                    if (value)
-                    {
-                        Controller = null;
-                        Camera = new LevelEditorCamera();
-
-                        EnableAllCollisions = false;
-                        EnableDrawing = false;
-                    } else
-                    {
-                        Respawn();
-                    }
-                }
-            }
-        }
-
         public bool IsInMenu = false;
-
-        private bool _isInLevelBuilder = false;
         /// <summary>
         /// Its the position in the new local Coordinate system
         /// x -> horizontally, y -> vertically and z -> depth
@@ -55,6 +31,10 @@ namespace TerryBros.Player
 
         public TerryBrosPlayer()
         {
+            if (Host.IsServer)
+            {
+                new UI.Hud();
+            }
         }
 
         public TerryBrosPlayer(Client cl) : this()
@@ -115,6 +95,12 @@ namespace TerryBros.Player
             base.Simulate(cl);
 
             SimulateActiveChild(cl, ActiveChild);
+        }
+
+        public override void FrameSimulate(Client cl)
+        {
+            base.FrameSimulate(cl);
+            SimulateLevelEditing();
         }
 
         public override void OnKilled()

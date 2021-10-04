@@ -10,7 +10,7 @@ using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder
 {
-    public class Editor : Panel
+    public class BlockSelector : Panel
     {
         public bool IsOpened
         {
@@ -30,11 +30,13 @@ namespace TerryBros.UI.LevelBuilder
 
         public List<Block> BlockList = new();
 
-        public Editor(Panel parent = null) : base()
+        private Panel blocksParentPanel;
+
+        public BlockSelector(Panel parent = null) : base()
         {
             Parent = parent ?? Parent;
 
-            StyleSheet.Load("/ui/levelbuilder/Editor.scss");
+            StyleSheet.Load("/ui/levelbuilder/BlockSelector.scss");
 
             OpenLabel = Add.Label("Open", "openlabel");
             OpenLabel.AddEventListener("onclick", (e) =>
@@ -42,20 +44,25 @@ namespace TerryBros.UI.LevelBuilder
                 IsOpened = !IsOpened;
             });
 
-            AddBlocks(Add.Panel("blocks"));
-
             IsOpened = true;
+
+            //Shift Block-Creation to a late Initialization
+            blocksParentPanel = Add.Panel("blocks");
+            STBGame.AddLateInitializeAction(AddBlocksData);
         }
         
-        private void AddBlocks(Panel parent)
+        private void AddBlocksData()
         {
             int count = 0;
+
+            //Outside of a constructor we can create Entities
+            STBGame.CreateBlockData();
 
             foreach (BlockData blockData in STBGame.BlockDataList)
             {
                 count++;
 
-                BlockList.Add(new Block(parent, blockData));
+                BlockList.Add(new Block(blocksParentPanel, blockData));
 
                 if (count == 1)
                 {
@@ -74,7 +81,7 @@ namespace TerryBros.UI.LevelBuilder
 
                 if (selected)
                 {
-                    Builder.Instance.SelectedBlockData = block.BlockData;
+                    BuildPanel.Instance.SelectedBlockData = block.BlockData;
                 }
             }
         }

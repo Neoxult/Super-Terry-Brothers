@@ -23,7 +23,7 @@ namespace TerryBros.UI
 
             Instance = this;
 
-            RootPanel.AddChild<LevelBuilder.Builder>();
+            RootPanel.AddChild<LevelBuilder.BuildPanel>();
             RootPanel.AddChild<Menu.Menu>();
         }
 
