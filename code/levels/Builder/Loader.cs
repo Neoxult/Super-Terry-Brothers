@@ -6,11 +6,11 @@ using System.Text.Json;
 using Sandbox;
 
 using TerryBros.Gamemode;
-using TerryBros.Levels;
+using TerryBros.Player;
 
-namespace TerryBros.Player
+namespace TerryBros.Levels.Builder
 {
-    public partial class TerryBrosPlayer
+    public static partial class Loader
     {
         private static int _currentPacketHash = -1;
         private static int _packetCount;

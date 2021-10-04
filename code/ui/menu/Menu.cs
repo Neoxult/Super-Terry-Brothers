@@ -2,6 +2,7 @@ using Sandbox;
 using Sandbox.UI;
 
 using TerryBros.Player;
+using TerryBros.Levels.Builder;
 
 namespace TerryBros.UI.Menu
 {
@@ -25,7 +26,7 @@ namespace TerryBros.UI.Menu
                 {
                     player.IsInMenu = _display;
 
-                    TerryBrosPlayer.ServerToggleMenu(_display);
+                    Editor.ServerToggleMenu(_display);
                 }
 
                 if (!_display)

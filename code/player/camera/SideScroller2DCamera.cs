@@ -4,6 +4,8 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Settings;
+using TerryBros.Utils;
+using TerryBros.Levels.Builder;
 
 namespace TerryBros.Player.Camera
 {
@@ -27,27 +29,24 @@ namespace TerryBros.Player.Camera
                 return;
             }
 
-            if (!player.IsInLevelBuilder)
-            {
-                BBox bBox = STBGame.CurrentLevel.LevelBoundsLocal;
+            BBox bBox = STBGame.CurrentLevel.LevelBoundsLocal;
 
-                OrthoSize = Math.Min((bBox.Maxs.x - bBox.Mins.x) / Screen.Width, (bBox.Maxs.y - bBox.Mins.y) / Screen.Height);
-                OrthoSize = Math.Min(_orthoSize, OrthoSize);
+            OrthoSize = Math.Min((bBox.Maxs.x - bBox.Mins.x) / Screen.Width, (bBox.Maxs.y - bBox.Mins.y) / Screen.Height);
+            OrthoSize = Math.Min(_orthoSize, OrthoSize);
 
-                //TODO: Use Local for player and ground directly
-                Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
-                newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
-                newPos.y += Screen.Height / 2 * OrthoSize;
-                newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
+            //TODO: Use Local for player and ground directly
+            Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
+            newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
+            newPos.y += Screen.Height / 2 * OrthoSize;
+            newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
 
-                // horizontal camera movement
-                newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
+            // horizontal camera movement
+            newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
 
-                // vertical camera movement
-                newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
+            // vertical camera movement
+            newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
                 
-                LocalPosition = newPos;
-            }
+            LocalPosition = newPos;
 
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 

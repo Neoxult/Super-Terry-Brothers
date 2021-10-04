@@ -9,6 +9,7 @@ namespace TerryBros.Gamemode
 {
     public partial class STBGame
     {
+        //TODO: Make this toggleable via console or similar
         private bool ShouldDebug = true;
 
         private bool DebugSpawnPoint = false;

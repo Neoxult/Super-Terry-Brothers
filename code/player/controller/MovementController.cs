@@ -49,47 +49,19 @@ namespace TerryBros.Player.Controller
             //TODO: Find out if the game is really lagging with sprinting
             //SprintSpeed = DefaultSpeed;
 
-            if (player.IsInLevelBuilder)
+            if (!IsJumpAttacking)
             {
-                SideScrollerCamera sideScrollerCamera = player.Camera as SideScrollerCamera;
-
-                Vector3 newPos = new Vector3(sideScrollerCamera.Pos);
-
-                if (Input.Down(InputButton.Left))
+                if (Input.Left != 0f)
                 {
-                    newPos.x -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Right))
-                {
-                    newPos.x += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Forward))
-                {
-                    newPos.z += sideScrollerCamera.FreeCameraSpeed * Time.Delta;
-                }
-                if (Input.Down(InputButton.Back))
-                {
-                    newPos.z -= sideScrollerCamera.FreeCameraSpeed * Time.Delta;
+                    Forward = Input.Left <= 0f;
+                    Input.Forward = Math.Abs(Input.Left);
+                    Input.Left = 0f;
                 }
 
-                sideScrollerCamera.Pos = newPos;
+                Input.Rotation = Rotation.LookAt(Forward ? GlobalSettings.ForwardDir : -GlobalSettings.ForwardDir, GlobalSettings.UpwardDir);
             }
-            else
-            {
-                if (!IsJumpAttacking)
-                {
-                    if (Input.Left != 0f)
-                    {
-                        Forward = Input.Left <= 0f;
-                        Input.Forward = Math.Abs(Input.Left);
-                        Input.Left = 0f;
-                    }
 
-                    Input.Rotation = Rotation.LookAt(Forward ? GlobalSettings.ForwardDir : -GlobalSettings.ForwardDir, GlobalSettings.UpwardDir);
-                }
-
-                CalculateSimulation();
-            }
+            CalculateSimulation();
         }
 
         private void CalculateSimulation()
