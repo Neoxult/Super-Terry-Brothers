@@ -15,14 +15,14 @@ namespace TerryBros.LevelElements
         public Goal() : base()
         {
             CollisionGroup = CollisionGroup.Trigger;
-            RenderColor = Color.Green;
+            RenderColor = Color.Green.WithAlpha(0.5f);
         }
 
         public override void Touch(Entity other)
         {
             base.Touch(other);
 
-            if (!Host.IsServer || other is not TerryBrosPlayer player)
+            if (other is not TerryBrosPlayer player)
             {
                 return;
             }

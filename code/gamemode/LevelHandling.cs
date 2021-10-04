@@ -74,7 +74,6 @@ namespace TerryBros.Gamemode
 
                     blockEntity.Delete();
                     BlockDataList.Add(blockData);
-                    Log.Info(blockData.Name);
                 }
             }
         }

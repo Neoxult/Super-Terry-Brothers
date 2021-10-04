@@ -35,6 +35,10 @@ namespace TerryBros.Player.Controller
 
         public bool IsJumping = false;
 
+        public BBox GetBounds()
+        {
+            return new BBox(mins, maxs);
+        }
         public override void Simulate()
         {
             if (Pawn is not TerryBrosPlayer player || player.IsInMenu)

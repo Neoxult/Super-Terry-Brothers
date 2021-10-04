@@ -8,14 +8,12 @@ namespace TerryBros.Gamemode
 {
     public partial class STBGame
     {
-        public override void Simulate(Client cl)
+        private void SimulateRules(Client cl)
         {
             if (cl.Pawn is TerryBrosPlayer player)
             {
                 player.LocalPosition = player.LocalPosition.WithZ(0);
             }
-
-            base.Simulate(cl);
 
             ClientOutOfBounds(cl);
         }

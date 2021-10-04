@@ -14,6 +14,13 @@ namespace TerryBros.Gamemode
         public STBGame()
         {
         }
+        public override void Simulate(Client cl)
+        {
+            base.Simulate(cl);
+
+            SimulateRules(cl);
+            SimulateDebug(cl);
+        }
         public override void ClientJoined(Client client)
         {
             base.ClientJoined(client);

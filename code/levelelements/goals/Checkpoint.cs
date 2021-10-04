@@ -32,7 +32,7 @@ namespace TerryBros.LevelElements
         public Checkpoint() : base()
         {
             CollisionGroup = CollisionGroup.Trigger;
-            RenderColor = Color.Blue;
+            RenderColor = Color.Blue.WithAlpha(0.5f);
         }
         public override void Spawn()
         {

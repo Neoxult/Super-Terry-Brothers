@@ -33,7 +33,7 @@ namespace TerryBros.Player
 
         /// <summary>
         /// Its the position in the new local Coordinate system
-        /// x,y being the screen horizontally, vertically and z being the depth
+        /// x -> horizontally, y -> vertically and z -> depth
         /// </summary>
         public override Vector3 LocalPosition
         {
@@ -61,6 +61,8 @@ namespace TerryBros.Player
         }
         public override void Respawn()
         {
+            base.Respawn();
+
             SetModel("models/citizen/citizen.vmdl");
 
             Controller = new MovementController();
@@ -79,8 +81,6 @@ namespace TerryBros.Player
             PhysicsGroup?.Wake();
 
             ClientRespawn(this);
-
-            base.Respawn();
         }
 
         [ClientRpc]
@@ -106,30 +106,6 @@ namespace TerryBros.Player
             base.Simulate(cl);
 
             SimulateActiveChild(cl, ActiveChild);
-
-            if (IsClient)
-            {
-                if (cl.Pawn != null)
-                {
-                    Vector3 playerPos = new Vector3(cl.Pawn.Position);
-                    playerPos.x -= 5f;
-                    playerPos.y = -10f;
-
-                    DebugOverlay.Box(playerPos, playerPos + new Vector3(10f, 10f, Input.Down(InputButton.Duck) ? 20f : 30f), Color.Black);
-                }
-
-                STBSpawn spawnpoint = STBGame.CurrentLevel?.GetLastCheckPoint();
-
-                if (spawnpoint != null)
-                {
-                    Vector3 spawnPos = new Vector3(spawnpoint.Position);
-                    spawnPos.x -= 5f;
-                    spawnPos.y = -10f;
-                    spawnPos.z -= 10f;
-
-                    DebugOverlay.Box(spawnPos, spawnPos + new Vector3(10f, 10f, 10f), Color.Blue);
-                }
-            }
 
             if (!IsClient || !IsInLevelBuilder)
             {
