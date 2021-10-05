@@ -13,13 +13,8 @@ namespace TerryBros.LevelElements
         /// In case the model doesnt contain a Material use the given material as override.
         /// </summary>
         public virtual bool UseMaterial => false;
-        public override Vector3 Position
-        {
-            get { return base.Position + GlobalSettings.BlockSize / 2 * GlobalSettings.UpwardDir; }
-            set { base.Position = value - GlobalSettings.BlockSize / 2 * GlobalSettings.UpwardDir; }
-        }
         public BlockModelEntity() : base() { }
-
+        protected virtual float BlenderBlockSize => 100f;
         public override void LateInitialize()
         {
             if (Host.IsClient && UseMaterial &&  SceneObject != null)
@@ -33,7 +28,7 @@ namespace TerryBros.LevelElements
             SetModel(ModelName);
             SetupPhysicsFromModel(PhysicsMotionType);
 
-            Scale = GlobalSettings.BlockSize / WorldSpaceBounds.Size.y;
+            Scale = GlobalSettings.BlockSize / BlenderBlockSize; // WorldSpaceBounds.Size.z;
 
             base.Spawn();
         }
