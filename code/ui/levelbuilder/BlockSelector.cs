@@ -30,8 +30,6 @@ namespace TerryBros.UI.LevelBuilder
 
         public List<Block> BlockList = new();
 
-        private Panel blocksParentPanel;
-
         public BlockSelector(Panel parent = null) : base()
         {
             Parent = parent ?? Parent;
@@ -46,23 +44,24 @@ namespace TerryBros.UI.LevelBuilder
 
             IsOpened = true;
 
-            //Shift Block-Creation to a late Initialization
-            blocksParentPanel = Add.Panel("blocks");
-            STBGame.AddLateInitializeAction(AddBlocksData);
+
+            //Shift to LateInitialize. Outside of a constructor we can create Entities
+            STBGame.AddLateInitializeAction(
+                () => { AddBlocksData(Add.Panel("blocks"));
+            });
         }
         
-        private void AddBlocksData()
+        private void AddBlocksData(Panel parent)
         {
             int count = 0;
 
-            //Outside of a constructor we can create Entities
-            STBGame.CreateBlockData();
+            List<BlockData> blockDataList = CreateBlockData();
 
-            foreach (BlockData blockData in STBGame.BlockDataList)
+            foreach (BlockData blockData in blockDataList)
             {
                 count++;
 
-                BlockList.Add(new Block(blocksParentPanel, blockData));
+                BlockList.Add(new Block(parent, blockData));
 
                 if (count == 1)
                 {
@@ -70,7 +69,24 @@ namespace TerryBros.UI.LevelBuilder
                 }
             }
         }
+        private List<BlockData> CreateBlockData()
+        {
+            List<BlockData> blockDataList = new();
 
+            foreach (Type type in Library.GetAll<BlockEntity>())
+            {
+                if (!type.IsAbstract && !type.ContainsGenericParameters)
+                {
+                    BlockEntity blockEntity = Library.Create<BlockEntity>(type);
+                    BlockData blockData = blockEntity.GetBlockData();
+
+                    blockEntity.Delete();
+                    blockDataList.Add(blockData);
+                }
+            }
+
+            return blockDataList;
+        }
         public void Select(Type type)
         {
             foreach (Block block in BlockList)

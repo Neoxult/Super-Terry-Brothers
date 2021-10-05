@@ -24,8 +24,6 @@ namespace TerryBros.Gamemode
             }
         }
 
-        public static List<BlockData> BlockDataList = new();
-
         private static Level _currentLevel;
         public override void MoveToSpawnpoint(Entity pawn)
         {
@@ -53,20 +51,5 @@ namespace TerryBros.Gamemode
             CurrentLevel.Build();
         }
 
-        public static void CreateBlockData()
-        {
-            BlockDataList = new();
-            foreach (Type type in Library.GetAll<BlockEntity>())
-            {
-                if (!type.IsAbstract && !type.ContainsGenericParameters)
-                {
-                    BlockEntity blockEntity = Library.Create<BlockEntity>(type);
-                    BlockData blockData = blockEntity.GetBlockData();
-
-                    blockEntity.Delete();
-                    BlockDataList.Add(blockData);
-                }
-            }
-        }
     }
 }
