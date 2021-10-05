@@ -4,8 +4,6 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Settings;
-using TerryBros.Utils;
-using TerryBros.Levels.Builder;
 
 namespace TerryBros.Player.Camera
 {

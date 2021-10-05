@@ -16,7 +16,7 @@ namespace TerryBros.Player
         public Clothing.Container Clothing = new();
 
         [ClientVar, Change("SetCameraDimension")]
-        public static bool stb_2D { get; set; } = false;
+        public static bool camera2D { get; set; } = false;
 
         public bool IsInMenu = false;
         /// <summary>
@@ -43,10 +43,7 @@ namespace TerryBros.Player
         }
         public void SetCameraDimension()
         {
-            //TODO: Separate LevelEditor Camera from SidescrollerCamera
-            //Note: Tried here to experiment with own cameras, which makes the leveleditor unusable
-            //Camera = stb_2D ? new SideScroller2DCamera() : new SideScrollerCamera();
-            Camera = new SideScroller2DCamera();
+            Camera = camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
         }
         public override void Respawn()
         {

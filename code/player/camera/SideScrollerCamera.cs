@@ -39,7 +39,7 @@ namespace TerryBros.Player.Camera
 
                 float val = 1f;
 
-                if (!TerryBrosPlayer.stb_2D)
+                if (!TerryBrosPlayer.camera2D)
                 {
                     val += _orthoSize / 2;
                 }
@@ -57,7 +57,7 @@ namespace TerryBros.Player.Camera
 
                 val = 1f;
 
-                if (!TerryBrosPlayer.stb_2D)
+                if (!TerryBrosPlayer.camera2D)
                 {
                     val += _orthoSize;
                 }
@@ -75,7 +75,7 @@ namespace TerryBros.Player.Camera
             Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 
             // Camera 3d effect
-            if (!player.IsInLevelBuilder && !TerryBrosPlayer.stb_2D)
+            if (!player.IsInLevelBuilder && !TerryBrosPlayer.camera2D)
             {
                 Rot = Rot.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 
