@@ -55,6 +55,8 @@ namespace TerryBros.Player.Camera
             newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
 
             //As shifts in multiple directions dont work good together, choose one
+            //Note: Spherical coordinates would improve it,
+            //but it still doesnt solve that there are either no horizontal or vertical Lines possible
             if (DoHorizontalShift)
             {
                 // correct x Pos due to 3D-Effect
