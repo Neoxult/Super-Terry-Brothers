@@ -16,12 +16,12 @@ namespace TerryBros.UI
 
         public Hud()
         {
+            Instance = this;
+
             if (!IsClient)
             {
                 return;
             }
-
-            Instance = this;
 
             RootPanel.AddChild<LevelBuilder.BuildPanel>();
             RootPanel.AddChild<Menu.Menu>();
@@ -30,12 +30,14 @@ namespace TerryBros.UI
         [Event.Hotload]
         public static void OnHotReloaded()
         {
-            if (Host.IsClient)
+            if (!Host.IsClient)
             {
-                Local.Hud?.Delete();
-
-                Hud hud = new();
+                return;
             }
+
+            Local.Hud?.Delete();
+
+            new Hud();
         }
     }
 }

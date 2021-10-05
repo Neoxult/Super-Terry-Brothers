@@ -22,6 +22,14 @@ namespace TerryBros.Player.Camera
         private float _orthoSize = 0.3f;
         private int _visibleGroundBlocks = 3;
 
+        public SideScroller2DCamera()
+        {
+            Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
+
+            Ortho = true;
+
+            Viewer = null;
+        }
         public override void Update()
         {
             if (Local.Pawn is not TerryBrosPlayer player)
@@ -34,7 +42,6 @@ namespace TerryBros.Player.Camera
             OrthoSize = Math.Min((bBox.Maxs.x - bBox.Mins.x) / Screen.Width, (bBox.Maxs.y - bBox.Mins.y) / Screen.Height);
             OrthoSize = Math.Min(_orthoSize, OrthoSize);
 
-            //TODO: Use Local for player and ground directly
             Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
             newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
             newPos.y += Screen.Height / 2 * OrthoSize;
@@ -47,12 +54,6 @@ namespace TerryBros.Player.Camera
             newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
                 
             LocalPosition = newPos;
-
-            Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
-
-            Ortho = true;
-
-            Viewer = null;
         }
     }
 }
