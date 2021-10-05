@@ -10,6 +10,8 @@ namespace TerryBros.UI.LevelBuilder
         public bool IsMouseDown { get; private set; } = false;
         public bool IsLeftMouseButtonDown { get; private set; } = false;
         public bool IsRightMouseButtonDown { get; private set; } = false;
+        public float MouseWheel { get; private set; } = 0f;
+        private float _mouseWheel = 0f;
         public BlockData SelectedBlockData;
 
         public BlockSelector BlockSelection;
@@ -38,6 +40,29 @@ namespace TerryBros.UI.LevelBuilder
                 IsLeftMouseButtonDown = false;
                 IsRightMouseButtonDown = false;
             }
+        }
+        public override void Tick()
+        {
+            base.Tick();
+
+            MouseWheel = _mouseWheel;
+            _mouseWheel = 0f;
+        }
+        //TODO: Stop Scrolling when over BuildPanel for later use of scroll in blockList
+        /*protected override void OnMouseOver(MousePanelEvent e)
+        {
+            base.OnMouseOver(e);
+
+            if (e.Target is not BuildPanel) return;
+
+            MouseWheel = 0f;
+            _mouseWheel = 0f;
+        }*/
+        public override void OnMouseWheel(float value)
+        {
+            base.OnMouseWheel(value);
+
+            _mouseWheel = value;
         }
         protected override void OnMouseDown(MousePanelEvent e)
         {

@@ -6,6 +6,7 @@ using TerryBros.Gamemode;
 using TerryBros.Settings;
 using TerryBros.Utils;
 using TerryBros.Levels.Builder;
+using TerryBros.UI.LevelBuilder;
 
 namespace TerryBros.Player.Camera
 {
@@ -41,8 +42,8 @@ namespace TerryBros.Player.Camera
             newPos.y += Input.Forward * FreeCameraSpeed * Time.Delta;
 
             LocalPosition = newPos;
-
-            OrthoSize = Math.Clamp(OrthoSize - Input.MouseWheel * _zoomDistanceSteps, 0.1f, 2f);
+            
+            OrthoSize = Math.Clamp(OrthoSize + BuildPanel.Instance.MouseWheel * _zoomDistanceSteps, 0.1f, 2f);
         }
     }
 }
