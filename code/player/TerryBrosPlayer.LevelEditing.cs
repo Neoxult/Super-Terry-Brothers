@@ -34,6 +34,7 @@ namespace TerryBros.Player
 
             CreateBlockOnMouseEvent(blockPos);
         }
+
         public void EnableLevelEditor(bool enable)
         {
             IsInLevelBuilder = enable;
@@ -55,6 +56,7 @@ namespace TerryBros.Player
                 }
             }
         }
+
         private static Vector3 PreviewAndGetBlockPlacement(Vector3 localPosition)
         {
             Vector3 mousePos = GlobalSettings.ConvertLocalToGlobalCoordinates(localPosition);

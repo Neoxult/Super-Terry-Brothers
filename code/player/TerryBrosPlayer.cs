@@ -5,7 +5,6 @@ using TerryBros.Settings;
 namespace TerryBros.Player
 {
     using Camera;
-
     using Controller;
 
     public partial class TerryBrosPlayer : Sandbox.Player
@@ -15,10 +14,24 @@ namespace TerryBros.Player
         /// </summary>
         public Clothing.Container Clothing = new();
 
-        [ClientVar, Change("SetCameraDimension")]
-        public static bool Camera2D { get; set; } = false;
+        [ClientVar]
+        public static bool Camera2D
+        {
+            get => _camera2D;
+            set
+            {
+                _camera2D = value;
+
+                if (Local.Client != null && Local.Client.Pawn is TerryBrosPlayer terryBrosPlayer)
+                {
+                    terryBrosPlayer.SetCameraDimension();
+                }
+            }
+        }
+        private static bool _camera2D = true;
 
         public bool IsInMenu = false;
+
         /// <summary>
         /// Its the position in the new local Coordinate system
         /// x -> horizontally, y -> vertically and z -> depth
@@ -41,10 +54,12 @@ namespace TerryBros.Player
         {
             Clothing.LoadFromClient(cl);
         }
+
         public void SetCameraDimension()
         {
             CameraMode = Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
         }
+
         public override void Respawn()
         {
             base.Respawn();
@@ -53,6 +68,7 @@ namespace TerryBros.Player
 
             Controller = new MovementController();
             Animator = new StandardPlayerAnimator();
+
             SetCameraDimension();
 
             EnableAllCollisions = true;
