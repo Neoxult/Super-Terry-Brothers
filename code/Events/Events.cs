@@ -5,19 +5,19 @@ namespace TerryBros.Events
         public static class Level
         {
             /// <summary>
-            /// Triggered when a level is restarted. 
+            /// Triggered when a level is restarted.
             /// </summary>
-            public const string Restart = "terrybros.level.restart";
+            public const string RESTART = "terrybros.level.restart";
 
             /// <summary>
-            /// Triggered when one player reached the goal. <c>TerryBrosPlayer</c> object is passed to events. 
+            /// Triggered when one player reached the goal. <c>TerryBrosPlayer</c> object is passed to events.
             /// </summary>
-            public const string GoalReached = "terrybros.level.goalreached";
+            public const string GOAL_REACHED = "terrybros.level.goalreached";
 
             /// <summary>
-            /// Triggered when a level is finished. 
+            /// Triggered when a level is finished.
             /// </summary>
-            public const string Finished = "terrybros.level.finished";
+            public const string FINISHED = "terrybros.level.finished";
         }
     }
 }

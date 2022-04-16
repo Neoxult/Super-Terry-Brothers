@@ -13,16 +13,18 @@ namespace TerryBros.LevelElements
         /// In case the model doesnt contain a Material use the given material as override.
         /// </summary>
         public virtual bool UseMaterial => false;
-        public BlockModelEntity() : base() { }
         protected virtual float BlenderBlockSize => 100f;
+
         public override void LateInitialize()
         {
-            if (Host.IsClient && UseMaterial &&  SceneObject != null)
+            if (Host.IsClient && UseMaterial && SceneObject != null)
             {
                 SceneObject.SetMaterialOverride(Material.Load(MaterialName));
             }
+
             base.LateInitialize();
         }
+
         public override void Spawn()
         {
             SetModel(ModelName);

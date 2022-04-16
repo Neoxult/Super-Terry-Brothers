@@ -46,48 +46,43 @@ namespace TerryBros.Levels
         protected STBSpawn RestartSpawn;
         protected STBSpawn CheckPointSpawn;
 
-        public Level()
-        {
-
-        }
-
         public abstract void Build();
         public void RegisterBlock(BlockEntity block)
         {
             IntBBox intBBox = LevelBoundsBlocks;
 
-            int GridX = block.GridPosition.x;
-            int GridY = block.GridPosition.y;
-            int GridZ = block.GridPosition.z;
+            int GridX = block.GridPosition.X;
+            int GridY = block.GridPosition.Y;
+            int GridZ = block.GridPosition.Z;
 
-            if (GridX < intBBox.Mins.x)
+            if (GridX < intBBox.Mins.X)
             {
-                intBBox.Mins.x = GridX;
+                intBBox.Mins.X = GridX;
             }
 
-            if (GridX > intBBox.Maxs.x)
+            if (GridX > intBBox.Maxs.X)
             {
-                intBBox.Maxs.x = GridX;
+                intBBox.Maxs.X = GridX;
             }
 
-            if (GridY < intBBox.Mins.y)
+            if (GridY < intBBox.Mins.Y)
             {
-                intBBox.Mins.y = GridY;
+                intBBox.Mins.Y = GridY;
             }
 
-            if (GridY > intBBox.Maxs.y)
+            if (GridY > intBBox.Maxs.Y)
             {
-                intBBox.Maxs.y = GridY;
+                intBBox.Maxs.Y = GridY;
             }
 
-            if (GridZ < intBBox.Mins.z)
+            if (GridZ < intBBox.Mins.Z)
             {
-                intBBox.Mins.z = GridZ;
+                intBBox.Mins.Z = GridZ;
             }
 
-            if (GridZ > intBBox.Maxs.z)
+            if (GridZ > intBBox.Maxs.Z)
             {
-                intBBox.Maxs.z = GridZ;
+                intBBox.Maxs.Z = GridZ;
             }
 
             LevelBoundsBlocks = intBBox;
@@ -120,19 +115,19 @@ namespace TerryBros.Levels
         {
             return CheckPointSpawn ?? GetRestartPoint();
         }
-        public void CheckPointReached(TerryBrosPlayer player, Checkpoint checkPoint)
+        public void CheckPointReached(TerryBrosPlayer _, Checkpoint checkPoint)
         {
             //TODO: Allow different players to have different checkpoints
             CheckPointSpawn = checkPoint.SpawnPoint;
         }
 
-        [Event(TBEvent.Level.Restart)]
+        [Event(TBEvent.Level.RESTART)]
         public void Restart()
         {
             CheckPointSpawn = null;
         }
 
-        protected T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
+        protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
         {
             return new T()
             {
@@ -140,7 +135,7 @@ namespace TerryBros.Levels
             };
         }
 
-        protected void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
+        protected static void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
         {
             for (int i = 0; i < height; i++)
             {
@@ -156,7 +151,7 @@ namespace TerryBros.Levels
             }
         }
 
-        protected void CreateWallFromTo<T>(int StartGridX, int StartGridY, int EndGridX, int EndGridY) where T : BlockEntity, new()
+        protected static void CreateWallFromTo<T>(int StartGridX, int StartGridY, int EndGridX, int EndGridY) where T : BlockEntity, new()
         {
             for (int x = StartGridX; x <= EndGridX; x++)
             {
@@ -167,7 +162,7 @@ namespace TerryBros.Levels
             }
         }
 
-        protected void CreateWall<T>(int GridX, int GridY, int width, int height) where T : BlockEntity, new()
+        protected static void CreateWall<T>(int GridX, int GridY, int width, int height) where T : BlockEntity, new()
         {
             for (int x = GridX; x < GridX + width; x++)
             {
@@ -178,12 +173,12 @@ namespace TerryBros.Levels
             }
         }
 
-        protected Checkpoint CreateCheckPoint(int GridX, int GridY)
+        protected static Checkpoint CreateCheckPoint(int GridX, int GridY)
         {
             return CreateBox<Checkpoint>(GridX, GridY);
         }
 
-        protected Goal CreateGoal(int GridX, int GridY)
+        protected static Goal CreateGoal(int GridX, int GridY)
         {
             return CreateBox<Goal>(GridX, GridY);
         }

@@ -1,18 +1,16 @@
 using System;
 
-using Sandbox;
-
 using TerryBros.Utils;
 
 namespace TerryBros.Settings
 {
     public static partial class GlobalSettings
     {
-        public static float BlockSize = 20f;
+        public static float BlockSize { get; set; } = 20f;
 
         //TODO: Get the real Height of the playermodel;
-        public static float FigureHeight = 80f;
-        public static Vector3 GroundPos = Vector3.Forward * 20f - Vector3.Up * 100f;
+        public static float FigureHeight { get; set; } = 80f;
+        public static Vector3 GroundPos { get; set; } = Vector3.Forward * 20f - Vector3.Up * 100f;
         public static Vector3 ForwardDir
         {
             get => _forwardDir;
@@ -45,6 +43,7 @@ namespace TerryBros.Settings
                 {
                     UpdateTransformations();
                 }
+
                 return _lookDir;
             }
             set
@@ -60,6 +59,7 @@ namespace TerryBros.Settings
                 {
                     UpdateTransformations();
                 }
+
                 return _localToGlobalTransformation;
             }
         }
@@ -71,6 +71,7 @@ namespace TerryBros.Settings
                 {
                     UpdateTransformations();
                 }
+
                 return _globalToLocalTransformation;
             }
         }
@@ -81,22 +82,11 @@ namespace TerryBros.Settings
         private static Utils.Matrix _globalToLocalTransformation;
 
         //TODO: Maybe Move to a Library for more such functions.
-        public static Vector3 GetBlockPosForLocalPos(Vector3 localPos)
-        {
-            return GetBlockPosForGridCoordinates((IntVector3)(localPos / BlockSize));
-        }
-        public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate)
-        {
-            return ConvertLocalToGlobalCoordinates(coordinate * BlockSize);
-        }
-        public static Vector3 GetBlockPosForGridCoordinates(int GridX, int GridY, int GridZ = 0)
-        {
-            return GetBlockPosForGridCoordinates(new Vector3(GridX, GridY, GridZ));
-        }
-        public static IntVector3 GetGridCoordinatesForBlockPos(Vector3 position)
-        {
-            return (IntVector3) (ConvertGlobalToLocalCoordinates(position) / BlockSize);
-        }
+        public static Vector3 GetBlockPosForLocalPos(Vector3 localPos) => GetBlockPosForGridCoordinates((IntVector3) (localPos / BlockSize));
+
+        public static Vector3 GetBlockPosForGridCoordinates(Vector3 coordinate) => ConvertLocalToGlobalCoordinates(coordinate * BlockSize);
+        public static Vector3 GetBlockPosForGridCoordinates(int GridX, int GridY, int GridZ = 0) => GetBlockPosForGridCoordinates(new Vector3(GridX, GridY, GridZ));
+        public static IntVector3 GetGridCoordinatesForBlockPos(Vector3 position) => (IntVector3) (ConvertGlobalToLocalCoordinates(position) / BlockSize);
 
         /// <summary>
         /// The local coordinate System is defined as X' -> Horizontal, Y' -> Vertical and Z' -> Depth.
@@ -130,19 +120,14 @@ namespace TerryBros.Settings
             return local;
         }
 
-        public static Vector3 ConvertLocalToGlobalScale(Vector3 localScale)
-        {
-            return LocalToGlobalTransformation * localScale;
-        }
-        public static Vector3 ConvertGlobalToLocalScale(Vector3 globalScale)
-        {
-            return GlobalToLocalTransformation * globalScale;
-        }
+        public static Vector3 ConvertLocalToGlobalScale(Vector3 localScale) => LocalToGlobalTransformation * localScale;
+        public static Vector3 ConvertGlobalToLocalScale(Vector3 globalScale) => GlobalToLocalTransformation * globalScale;
+
         public static void UpdateTransformations()
         {
             _doUpdateTransformations = false;
             _lookDir = Vector3.Cross(_upwardDir, _forwardDir);
-            _localToGlobalTransformation = new Utils.Matrix(_forwardDir , _upwardDir, _lookDir);
+            _localToGlobalTransformation = new Utils.Matrix(_forwardDir, _upwardDir, _lookDir);
             _globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
             _globalToLocalTransformation.Invert3x3();
         }

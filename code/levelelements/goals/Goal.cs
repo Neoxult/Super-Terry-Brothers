@@ -1,7 +1,6 @@
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Gamemode;
 using TerryBros.Player;
 using TerryBros.Utils;
 
@@ -27,7 +26,7 @@ namespace TerryBros.LevelElements
                 return;
             }
 
-            Event.Run(TBEvent.Level.GoalReached, player);
+            Event.Run(TBEvent.Level.GOAL_REACHED, player);
         }
     }
 }

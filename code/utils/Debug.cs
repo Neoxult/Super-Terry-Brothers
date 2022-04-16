@@ -6,7 +6,7 @@ namespace TerryBros.Utils
     {
         public static void LogServerOrClient()
         {
-            Log.Info($"{(Host.IsServer ? "Server" : Host.IsClient? "Client" : "---")} is executing this code.");
+            Log.Info($"{(Host.IsServer ? "Server" : Host.IsClient ? "Client" : "---")} is executing this code.");
         }
     }
 }

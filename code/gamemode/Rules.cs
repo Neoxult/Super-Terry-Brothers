@@ -4,11 +4,13 @@ using TerryBros.Events;
 using TerryBros.Player;
 using TerryBros.Settings;
 
+#pragma warning disable IDE0051, IDE0060
+
 namespace TerryBros.Gamemode
 {
     public partial class STBGame
     {
-        private void SimulateRules(Client cl)
+        private static void SimulateRules(Client cl)
         {
             if (cl.Pawn is TerryBrosPlayer player)
             {
@@ -18,16 +20,16 @@ namespace TerryBros.Gamemode
             ClientOutOfBounds(cl);
         }
 
-        [Event(TBEvent.Level.GoalReached)]
+        [Event(TBEvent.Level.GOAL_REACHED)]
         private static void GoalReached(TerryBrosPlayer player)
         {
-            //TODO: Maybe add Logic for more players that want to run to the goal
+            // TODO: Maybe add Logic for more players that want to run to the goal
             // And a Timer, that runs down to put pressure on them
-            Event.Run(TBEvent.Level.Finished);
+            Event.Run(TBEvent.Level.FINISHED);
         }
 
         // server-side only
-        [Event(TBEvent.Level.Finished)]
+        [Event(TBEvent.Level.FINISHED)]
         private static void LevelFinished()
         {
             if (Host.IsClient)
@@ -35,8 +37,8 @@ namespace TerryBros.Gamemode
                 return;
             }
 
-            //TODO: Add a real Level Change instead of a restart
-            Event.Run(TBEvent.Level.Restart);
+            // TODO: Add a real Level Change instead of a restart
+            Event.Run(TBEvent.Level.RESTART);
 
             ClientRestartLevel();
 
@@ -53,10 +55,10 @@ namespace TerryBros.Gamemode
         [ClientRpc]
         public static void ClientRestartLevel()
         {
-            Event.Run(TBEvent.Level.Restart);
+            Event.Run(TBEvent.Level.RESTART);
         }
 
-        private void ClientOutOfBounds(Client cl)
+        private static void ClientOutOfBounds(Client cl)
         {
             if (Host.IsClient || cl.Pawn is not TerryBrosPlayer player)
             {
@@ -66,13 +68,9 @@ namespace TerryBros.Gamemode
             BBox bBox = CurrentLevel.LevelBoundsLocal;
             Vector3 pos = player.LocalPosition;
 
-            if (pos.x < bBox.Mins.x
-                || pos.x > bBox.Maxs.x
-                || pos.y < bBox.Mins.y
-                || pos.y > bBox.Maxs.y + 5 * GlobalSettings.BlockSize
-                || pos.z < bBox.Mins.z
-                || pos.z > bBox.Maxs.z 
-                )
+            if (pos.x < bBox.Mins.x || pos.x > bBox.Maxs.x
+                || pos.y < bBox.Mins.y || pos.y > bBox.Maxs.y + 5 * GlobalSettings.BlockSize
+                || pos.z < bBox.Mins.z || pos.z > bBox.Maxs.z)
             {
                 player.Respawn();
             }

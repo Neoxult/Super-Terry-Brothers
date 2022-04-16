@@ -47,10 +47,12 @@ namespace TerryBros.UI.LevelBuilder
 
             //Shift to LateInitialize. Outside of a constructor we can create Entities
             STBGame.AddLateInitializeAction(
-                () => { AddBlocksData(Add.Panel("blocks"));
-            });
+                () =>
+                {
+                    AddBlocksData(Add.Panel("blocks"));
+                });
         }
-        
+
         private void AddBlocksData(Panel parent)
         {
             int count = 0;
@@ -69,7 +71,8 @@ namespace TerryBros.UI.LevelBuilder
                 }
             }
         }
-        private List<BlockData> CreateBlockData()
+
+        private static List<BlockData> CreateBlockData()
         {
             List<BlockData> blockDataList = new();
 
@@ -87,6 +90,7 @@ namespace TerryBros.UI.LevelBuilder
 
             return blockDataList;
         }
+
         public void Select(Type type)
         {
             foreach (Block block in BlockList)

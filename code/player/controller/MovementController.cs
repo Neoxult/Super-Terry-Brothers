@@ -2,7 +2,6 @@ using System;
 
 using Sandbox;
 
-using TerryBros.Player.Camera;
 using TerryBros.Settings;
 
 namespace TerryBros.Player.Controller
@@ -35,10 +34,8 @@ namespace TerryBros.Player.Controller
 
         public bool IsJumping = false;
 
-        public BBox GetBounds()
-        {
-            return new BBox(mins, maxs);
-        }
+        public BBox GetBounds() => new(mins, maxs);
+
         public override void Simulate()
         {
             if (Pawn is not TerryBrosPlayer player || player.IsInMenu)
@@ -66,11 +63,11 @@ namespace TerryBros.Player.Controller
 
         private void CalculateSimulation()
         {
-            EyePosLocal = Vector3.Up * (EyeHeight * Pawn.Scale);
+            EyeLocalPosition = Vector3.Up * (EyeHeight * Pawn.Scale);
             UpdateBBox();
 
-            EyePosLocal += TraceOffset;
-            EyeRot = Input.Rotation;
+            EyeLocalPosition += TraceOffset;
+            EyeRotation = Input.Rotation;
 
             if (_wasMovedirectionChanged)
             {
@@ -99,7 +96,7 @@ namespace TerryBros.Player.Controller
                 {
                     Velocity = Vector3.Zero;
 
-                    (Pawn as TerryBrosPlayer).Animator.SetParam("jumpattack", 0.8f);
+                    (Pawn as TerryBrosPlayer).Animator.SetAnimParameter("jumpattack", 0.8f);
                 }
                 else if (GroundEntity == null && !IsJumpAttackTriggered)
                 {
@@ -111,7 +108,7 @@ namespace TerryBros.Player.Controller
 
             CheckLadder();
 
-            Swimming = Pawn.WaterLevel.Fraction > 0.6f;
+            Swimming = Pawn.WaterLevel > 0.6f;
 
             //
             // Start Gravity
@@ -245,8 +242,8 @@ namespace TerryBros.Player.Controller
             Velocity -= BaseVelocity;
         }
 
-        bool IsTouchingLadder = false;
-        Vector3 LadderNormal;
+        internal bool IsTouchingLadder { get; set; } = false;
+        internal Vector3 LadderNormal { get; set; }
 
         public override void CheckLadder()
         {
@@ -258,9 +255,9 @@ namespace TerryBros.Player.Controller
                 return;
             }
 
-            const float ladderDistance = 1.0f;
+            const float LADDER_DISTANCE = 1.0f;
             Vector3 start = Position;
-            Vector3 end = start + (IsTouchingLadder ? (LadderNormal * -1.0f) : WishVelocity.Normal) * ladderDistance;
+            Vector3 end = start + (IsTouchingLadder ? (LadderNormal * -1.0f) : WishVelocity.Normal) * LADDER_DISTANCE;
 
             TraceResult pm = Trace.Ray(start, end)
                 .Size(mins, maxs)
@@ -307,7 +304,7 @@ namespace TerryBros.Player.Controller
 
                 if (pm.Fraction == 1)
                 {
-                    Position = pm.EndPos;
+                    Position = pm.EndPosition;
 
                     StayOnGround();
 

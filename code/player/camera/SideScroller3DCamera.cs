@@ -7,26 +7,28 @@ using TerryBros.Settings;
 
 namespace TerryBros.Player.Camera
 {
-    public partial class SideScroller3DCamera : Sandbox.Camera
+    public partial class SideScroller3DCamera : CameraMode
     {
         public Vector3 LocalPosition
         {
-            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Pos);
-            set { Pos = GlobalSettings.ConvertLocalToGlobalCoordinates(value); }
+            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
+            set
+            {
+                Position = GlobalSettings.ConvertLocalToGlobalCoordinates(value);
+            }
         }
 
-        private int distanceInBlocks = 100;
-        private int visibleGroundBlocks = 3;
+        private readonly int _distanceInBlocks = 100;
+        private readonly int _visibleGroundBlocks = 3;
 
-        private bool DoHorizontalShift = false;
-        private float ShiftDegrees = 10;
+        private readonly bool _doHorizontalShift = false;
+        private readonly float _shiftDegrees = 10;
 
-        private float _orthoSize = 0.3f;
+        private readonly float _orthoSize = 0.3f;
 
         public SideScroller3DCamera()
         {
             Ortho = true;
-
             Viewer = null;
         }
         public override void Update()
@@ -36,7 +38,7 @@ namespace TerryBros.Player.Camera
                 return;
             }
 
-            Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
+            Rotation = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 
             BBox bBox = STBGame.CurrentLevel.LevelBoundsLocal;
 
@@ -44,9 +46,9 @@ namespace TerryBros.Player.Camera
             OrthoSize = Math.Min(_orthoSize, OrthoSize);
 
             Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
-            newPos.y -= GlobalSettings.BlockSize * visibleGroundBlocks;
+            newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
             newPos.y += Screen.Height / 2 * OrthoSize;
-            newPos.z -= GlobalSettings.BlockSize * distanceInBlocks;
+            newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
 
             // horizontal camera movement
             newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
@@ -57,19 +59,21 @@ namespace TerryBros.Player.Camera
             //As shifts in multiple directions dont work good together, choose one
             //Note: Spherical coordinates would improve it,
             //but it still doesnt solve that there are either no horizontal or vertical Lines possible
-            if (DoHorizontalShift)
+            if (_doHorizontalShift)
             {
                 // correct x Pos due to 3D-Effect
-                newPos.x += (float) Math.Tan(-ShiftDegrees / 180f * Math.PI) * GlobalSettings.BlockSize * (distanceInBlocks - 0.5f);
-                newPos.x -= Screen.Width / 2 * OrthoSize * (1 - 1 / (float) Math.Cos(-ShiftDegrees / 180f * Math.PI));
+                newPos.x += (float) Math.Tan(-_shiftDegrees / 180f * Math.PI) * GlobalSettings.BlockSize * (_distanceInBlocks - 0.5f);
+                newPos.x -= Screen.Width / 2 * OrthoSize * (1 - 1 / (float) Math.Cos(-_shiftDegrees / 180f * Math.PI));
 
-                Rot = Rot.RotateAroundAxis(GlobalSettings.UpwardDir, -ShiftDegrees);
-            } else { 
+                Rotation = Rotation.RotateAroundAxis(GlobalSettings.UpwardDir, -_shiftDegrees);
+            }
+            else
+            {
                 // correct y Pos due to 3D-Effect
-                newPos.y += (float) Math.Tan(ShiftDegrees / 180f * Math.PI) * GlobalSettings.BlockSize * (distanceInBlocks - 0.5f);
-                newPos.y -= Screen.Height / 2 * OrthoSize * (1 - 1 / (float) Math.Cos(ShiftDegrees / 180f * Math.PI));
+                newPos.y += (float) Math.Tan(_shiftDegrees / 180f * Math.PI) * GlobalSettings.BlockSize * (_distanceInBlocks - 0.5f);
+                newPos.y -= Screen.Height / 2 * OrthoSize * (1 - 1 / (float) Math.Cos(_shiftDegrees / 180f * Math.PI));
 
-                Rot = Rot.RotateAroundAxis(GlobalSettings.LookDir, ShiftDegrees);
+                Rotation = Rotation.RotateAroundAxis(GlobalSettings.LookDir, _shiftDegrees);
             }
 
             LocalPosition = newPos;

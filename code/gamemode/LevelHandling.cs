@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-
 using Sandbox;
 
 using TerryBros.Levels;
 using TerryBros.LevelElements;
-using TerryBros.UI;
-using TerryBros.Settings;
+
+#pragma warning disable IDE0051
 
 namespace TerryBros.Gamemode
 {
@@ -40,7 +37,7 @@ namespace TerryBros.Gamemode
         }
 
         [Event.Entity.PostSpawn]
-        private void PostLevelSpawn()
+        private static void PostLevelSpawn()
         {
             if (CurrentLevel != null)
             {
@@ -50,6 +47,5 @@ namespace TerryBros.Gamemode
             CurrentLevel = new DefaultLevel();
             CurrentLevel.Build();
         }
-
     }
 }

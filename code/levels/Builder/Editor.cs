@@ -5,7 +5,6 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 using TerryBros.Player;
-using TerryBros.Player.Controller;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
@@ -48,16 +47,16 @@ namespace TerryBros.Levels.Builder
             Level level = STBGame.CurrentLevel;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
 
-            level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
+            level.GridBlocks.TryGetValue(intVector3.X, out Dictionary<int, BlockEntity> dict);
 
             if (dict == null)
             {
                 dict = new();
 
-                level.GridBlocks.Add(intVector3.x, dict);
+                level.GridBlocks.Add(intVector3.X, dict);
             }
 
-            dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
+            dict.TryGetValue(intVector3.Y, out BlockEntity blockEntity);
 
             if (blockEntity == null)
             {
@@ -68,7 +67,7 @@ namespace TerryBros.Levels.Builder
                     blockEntity = Library.Create<BlockEntity>(type);
                     blockEntity.Position = position;
 
-                    dict[intVector3.y] = blockEntity;
+                    dict[intVector3.Y] = blockEntity;
 
                     return blockEntity;
                 }
@@ -82,20 +81,20 @@ namespace TerryBros.Levels.Builder
             Level level = STBGame.CurrentLevel;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
 
-            level.GridBlocks.TryGetValue(intVector3.x, out Dictionary<int, BlockEntity> dict);
+            level.GridBlocks.TryGetValue(intVector3.X, out Dictionary<int, BlockEntity> dict);
 
             if (dict == null)
             {
                 dict = new();
 
-                level.GridBlocks.Add(intVector3.x, dict);
+                level.GridBlocks.Add(intVector3.X, dict);
             }
 
-            dict.TryGetValue(intVector3.y, out BlockEntity blockEntity);
+            dict.TryGetValue(intVector3.Y, out BlockEntity blockEntity);
 
             if (blockEntity != null)
             {
-                dict.Remove(intVector3.y);
+                dict.Remove(intVector3.Y);
                 blockEntity.Delete();
             }
         }

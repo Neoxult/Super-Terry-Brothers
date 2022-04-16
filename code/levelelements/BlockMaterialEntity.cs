@@ -6,9 +6,6 @@ namespace TerryBros.LevelElements
 {
     public abstract class BlockMaterialEntity : BlockEntity
     {
-        public BlockMaterialEntity() : base()
-        {
-        }
         public override void Spawn()
         {
             VertexBuffer vb = new();
@@ -19,12 +16,11 @@ namespace TerryBros.LevelElements
             mesh.CreateBuffers(vb);
             mesh.SetBounds(GlobalBlockSize * -GlobalSettings.BlockSize / 2, GlobalBlockSize * GlobalSettings.BlockSize / 2);
 
-            Model model = new ModelBuilder()
+            Model = new ModelBuilder()
                 .AddMesh(mesh)
                 .AddCollisionBox(GlobalBlockSize * GlobalSettings.BlockSize / 2)
                 .Create();
 
-            SetModel(model);
             SetupPhysicsFromModel(PhysicsMotionType);
 
             base.Spawn();

@@ -7,10 +7,6 @@ namespace TerryBros.Levels
 {
     public partial class DefaultLevel : Level
     {
-        public DefaultLevel() : base()
-        {
-        }
-
         public override void Build()
         {
             RestartSpawn = new STBSpawn

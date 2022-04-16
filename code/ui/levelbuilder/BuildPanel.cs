@@ -6,7 +6,7 @@ namespace TerryBros.UI.LevelBuilder
 {
     public class BuildPanel : Panel
     {
-        public static BuildPanel Instance;
+        public static BuildPanel Instance { get; set; }
         public bool IsMouseDown { get; private set; } = false;
         public bool IsLeftMouseButtonDown { get; private set; } = false;
         public bool IsRightMouseButtonDown { get; private set; } = false;
@@ -48,6 +48,7 @@ namespace TerryBros.UI.LevelBuilder
             MouseWheel = _mouseWheel;
             _mouseWheel = 0f;
         }
+
         //TODO: Stop Scrolling when over BuildPanel for later use of scroll in blockList
         /*protected override void OnMouseOver(MousePanelEvent e)
         {
@@ -58,6 +59,7 @@ namespace TerryBros.UI.LevelBuilder
             MouseWheel = 0f;
             _mouseWheel = 0f;
         }*/
+
         public override void OnMouseWheel(float value)
         {
             base.OnMouseWheel(value);

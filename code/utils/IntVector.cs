@@ -3,82 +3,41 @@ namespace TerryBros.Utils
 {
     public class IntVector3
     {
-        public int x;
-        public int y;
-        public int z;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
         public IntVector3(Vector3 vector3)
         {
-            x = (int) System.Math.Round(vector3.x);
-            y = (int) System.Math.Round(vector3.y);
-            z = (int) System.Math.Round(vector3.z);
+            X = (int) System.Math.Round(vector3.x);
+            Y = (int) System.Math.Round(vector3.y);
+            Z = (int) System.Math.Round(vector3.z);
         }
 
         public IntVector3(int x, int y, int z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public static IntVector3 operator +(IntVector3 a) => a;
-
-        public static IntVector3 operator -(IntVector3 a)
-        {
-            return new IntVector3(-a.x, -a.y, -a.z);
-        }
-
-        public static IntVector3 operator +(IntVector3 a, IntVector3 b)
-        {
-            return new IntVector3(a.x + b.x, a.y + b.y, a.z + b.z);
-        }
-
+        public static IntVector3 operator -(IntVector3 a) => new(-a.X, -a.Y, -a.Z);
+        public static IntVector3 operator +(IntVector3 a, IntVector3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         public static IntVector3 operator -(IntVector3 a, IntVector3 b) => a + (-b);
+        public static IntVector3 operator /(IntVector3 a, int b) => new(a.X / b, a.Y / b, a.Z / b);
+        public static Vector3 operator /(IntVector3 a, float b) => new(a.X / b, a.Y / b, a.Z / b);
+        public static IntVector3 operator *(IntVector3 a, int b) => new(a.X * b, a.Y * b, a.Z * b);
+        public static Vector3 operator *(IntVector3 a, float b) => new(a.X * b, a.Y * b, a.Z * b);
 
-        public static IntVector3 operator /(IntVector3 a, int b)
-        {
-            return new IntVector3(a.x / b, a.y / b, a.z / b);
-        }
+        public static IntVector3 Zero => new(0, 0, 0);
 
-        public static Vector3 operator /(IntVector3 a, float b)
-        {
-            return new Vector3( a.x / b, a.y / b, a.z / b);
-        }
-        public static IntVector3 operator *(IntVector3 a, int b)
-        {
-            return new IntVector3(a.x * b, a.y * b, a.z * b);
-        }
+        public Vector3 ToVector3() => new(X, Y, Z);
 
-        public static Vector3 operator *(IntVector3 a, float b)
-        {
-            return new Vector3( a.x * b, a.y * b, a.z * b);
-        }
+        public bool Equals(IntVector3 intVector3) => X == intVector3.X && Y == intVector3.Y && Z == intVector3.Z || base.Equals(intVector3);
 
-        public static IntVector3 Zero => new IntVector3(0, 0, 0);
+        public static explicit operator IntVector3(Vector3 vec) => new(vec);
 
-        public Vector3 ToVector3()
-        {
-            return new Vector3(x, y, z);
-        }
-
-        public bool Equals(IntVector3 intVector3)
-        {
-            if (x == intVector3.x && y == intVector3.y && z == intVector3.z)
-            {
-                return true;
-            }
-
-            return base.Equals(intVector3);
-        }
-
-        public static explicit operator IntVector3(Vector3 vec)
-        {
-            return new IntVector3(vec);
-        }
-
-        public static implicit operator Vector3(IntVector3 vec)
-        {
-            return new Vector3(vec.x, vec.y, vec.z);
-        }
+        public static implicit operator Vector3(IntVector3 vec) => new(vec.X, vec.Y, vec.Z);
     }
 }

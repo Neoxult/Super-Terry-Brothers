@@ -16,7 +16,7 @@ namespace TerryBros.Player
         public Clothing.Container Clothing = new();
 
         [ClientVar, Change("SetCameraDimension")]
-        public static bool camera2D { get; set; } = false;
+        public static bool Camera2D { get; set; } = false;
 
         public bool IsInMenu = false;
         /// <summary>
@@ -33,7 +33,7 @@ namespace TerryBros.Player
         {
             if (Host.IsServer)
             {
-                new UI.Hud();
+                _ = new UI.Hud();
             }
         }
 
@@ -43,7 +43,7 @@ namespace TerryBros.Player
         }
         public void SetCameraDimension()
         {
-            Camera = camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
+            CameraMode = Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
         }
         public override void Respawn()
         {
@@ -64,7 +64,6 @@ namespace TerryBros.Player
 
             Scale = 0.34f;
             PhysicsGroup?.RebuildMass();
-            PhysicsGroup?.Wake();
 
             ClientRespawn(this);
         }
@@ -97,6 +96,7 @@ namespace TerryBros.Player
         public override void FrameSimulate(Client cl)
         {
             base.FrameSimulate(cl);
+
             SimulateLevelEditing();
         }
 
@@ -104,6 +104,5 @@ namespace TerryBros.Player
         {
             base.OnKilled();
         }
-
     }
 }

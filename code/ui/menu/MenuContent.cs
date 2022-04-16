@@ -1,6 +1,5 @@
 using System;
 
-using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
@@ -12,7 +11,7 @@ namespace TerryBros.UI.Menu
         public Panel WrapperPanel;
         public string CurrentView;
 
-        private Button _backButton;
+        private readonly Button _backButton;
 
         public MenuContent(Panel parent = null) : base()
         {

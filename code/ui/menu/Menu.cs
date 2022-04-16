@@ -2,13 +2,12 @@ using Sandbox;
 using Sandbox.UI;
 
 using TerryBros.Player;
-using TerryBros.Levels.Builder;
 
 namespace TerryBros.UI.Menu
 {
     public partial class Menu : Panel
     {
-        public static Menu Instance;
+        public static Menu Instance { get; set; }
         public MenuContent MenuContent;
 
         private bool _pressed = false;
@@ -26,7 +25,7 @@ namespace TerryBros.UI.Menu
                 {
                     player.IsInMenu = _display;
 
-                    Editor.ServerToggleMenu(_display);
+                    Levels.Builder.Editor.ServerToggleMenu(_display);
                 }
 
                 if (!_display)

@@ -10,7 +10,7 @@ namespace TerryBros.UI
     /// This is the HUD entity. It creates a RootPanel clientside, which can be accessed
     /// via RootPanel on this entity, or Local.Hud.
     /// </summary>
-    public partial class Hud : Sandbox.HudEntity<RootPanel>
+    public partial class Hud : HudEntity<RootPanel>
     {
         public static Hud Instance { get; set; }
 
@@ -37,7 +37,7 @@ namespace TerryBros.UI
 
             Local.Hud?.Delete();
 
-            new Hud();
+            _ = new Hud();
         }
     }
 }

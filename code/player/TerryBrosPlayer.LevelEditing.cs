@@ -1,6 +1,5 @@
 using Sandbox;
 
-using TerryBros.Levels.Builder;
 using TerryBros.Settings;
 using TerryBros.Utils;
 using TerryBros.UI.LevelBuilder;
@@ -18,12 +17,12 @@ namespace TerryBros.Player
 
         private void SimulateLevelEditing()
         {
-            if (!IsInLevelBuilder || Camera is not LevelEditorCamera camera)
+            if (!IsInLevelBuilder || CameraMode is not LevelEditorCamera camera)
             {
                 return;
             }
 
-            Vector3 screenPos = GlobalSettings.ConvertGlobalToLocalCoordinates(camera.Pos);
+            Vector3 screenPos = GlobalSettings.ConvertGlobalToLocalCoordinates(camera.Position);
             float orthoSize = camera.OrthoSize;
             screenPos /= orthoSize;
 
@@ -45,7 +44,7 @@ namespace TerryBros.Player
                 {
                     //TODO: Solve Prediction error for Controller and Camera!!
                     Controller = null;
-                    Camera = new LevelEditorCamera();
+                    CameraMode = new LevelEditorCamera();
 
                     EnableAllCollisions = false;
                     EnableDrawing = false;
@@ -56,7 +55,7 @@ namespace TerryBros.Player
                 }
             }
         }
-        private Vector3 PreviewAndGetBlockPlacement(Vector3 localPosition)
+        private static Vector3 PreviewAndGetBlockPlacement(Vector3 localPosition)
         {
             Vector3 mousePos = GlobalSettings.ConvertLocalToGlobalCoordinates(localPosition);
             Vector3 halfBlockSize = GlobalSettings.BlockSize / 2f;
@@ -66,7 +65,7 @@ namespace TerryBros.Player
             Vector3 blockPos = GlobalSettings.GetBlockPosForLocalPos(localPosition);
 
             DebugOverlay.Box(blockPos - halfBlockSize, blockPos + halfBlockSize, Color.Red);
-            
+
             return blockPos;
         }
 
@@ -84,11 +83,11 @@ namespace TerryBros.Player
 
                 if (buildPanel.IsLeftMouseButtonDown)
                 {
-                    Editor.ServerCreateBlock(BlockPos, buildPanel.SelectedBlockData.Name);
+                    Levels.Builder.Editor.ServerCreateBlock(BlockPos, buildPanel.SelectedBlockData.Name);
                 }
                 else if (buildPanel.IsRightMouseButtonDown)
                 {
-                    Editor.ServerDeleteBlock(BlockPos);
+                    Levels.Builder.Editor.ServerDeleteBlock(BlockPos);
                 }
             }
             else if (isDrawing && !buildPanel.IsMouseDown)

@@ -3,17 +3,18 @@ using Sandbox;
 using TerryBros.LevelElements;
 using TerryBros.Player;
 using TerryBros.Player.Controller;
-using TerryBros.Utils;
+
+#pragma warning disable CA1822
 
 namespace TerryBros.Gamemode
 {
     public partial class STBGame
     {
         //TODO: Make this toggleable via console or similar
-        private bool ShouldDebug = true;
+        private readonly bool ShouldDebug = true;
 
-        private bool DebugSpawnPoint = false;
-        private bool DebugPlayerCollisionBox = true;
+        private readonly bool DebugSpawnPoint = false;
+        private readonly bool DebugPlayerCollisionBox = true;
 
         private void SimulateDebug(Client cl)
         {
@@ -24,9 +25,7 @@ namespace TerryBros.Gamemode
 
             if (Host.IsServer)
             {
-                TerryBrosPlayer player = cl.Pawn as TerryBrosPlayer;
-
-                if (DebugPlayerCollisionBox && player != null && player.Controller is MovementController controller)
+                if (DebugPlayerCollisionBox && cl.Pawn is TerryBrosPlayer player && player.Controller is MovementController controller)
                 {
                     ShowPlayerCollisionBox(controller.GetBounds() + player.Position);
                 }
@@ -41,7 +40,6 @@ namespace TerryBros.Gamemode
                     }
                 }
             }
-
         }
 
         [ClientRpc]
@@ -54,7 +52,7 @@ namespace TerryBros.Gamemode
         private void ShowSpawnPointPosition(Vector3 position)
         {
             float boxExtents = 5;
-            Vector3 spawnMins = new Vector3(position);
+            Vector3 spawnMins = new(position);
             spawnMins.x -= boxExtents;
             spawnMins.y -= boxExtents;
             spawnMins.z -= boxExtents;
@@ -62,7 +60,5 @@ namespace TerryBros.Gamemode
             boxExtents *= 2;
             DebugOverlay.Box(spawnMins, spawnMins + new Vector3(boxExtents, boxExtents, boxExtents), Color.Green);
         }
-
     }
-
 }

@@ -7,25 +7,26 @@ using TerryBros.Settings;
 
 namespace TerryBros.Player.Camera
 {
-    public partial class SideScroller2DCamera : Sandbox.Camera
+    public partial class SideScroller2DCamera : CameraMode
     {
         public float FreeCameraSpeed = 500f;
         public Vector3 LocalPosition
         {
-            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Pos);
-            set { Pos = GlobalSettings.ConvertLocalToGlobalCoordinates(value); }
+            get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
+            set
+            {
+                Position = GlobalSettings.ConvertLocalToGlobalCoordinates(value);
+            }
         }
 
-        private int _distanceInBlocks = 10;
-        private float _orthoSize = 0.3f;
-        private int _visibleGroundBlocks = 3;
+        private readonly int _distanceInBlocks = 10;
+        private readonly float _orthoSize = 0.3f;
+        private readonly int _visibleGroundBlocks = 3;
 
         public SideScroller2DCamera()
         {
-            Rot = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
-
+            Rotation = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
             Ortho = true;
-
             Viewer = null;
         }
         public override void Update()
@@ -50,7 +51,7 @@ namespace TerryBros.Player.Camera
 
             // vertical camera movement
             newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
-                
+
             LocalPosition = newPos;
         }
     }
