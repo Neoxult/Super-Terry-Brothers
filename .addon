@@ -1,24 +1,21 @@
 {
-    "name": "Super Terry Brothers",
-    "version": "0.01",
-    "sharedassets": "*.*",
-    "type": "game",
-    "ident": "neox.terrybros",
-
-    "depends": [
-        "base",
-        "citizen",
-        "rust"
-    ],
-
-    //
-    // Addons can contain multiple addons, describe them here
-    //
-    "gamemodes": [
-        {
-            "name": "terrybros",
-            "title": "Super Terry Brothers",
-            "description": "Get to the finish line, without dying"
-        }
-    ]
+  "Title": "Super Terry Brothers",
+  "Type": "game",
+  "Org": "neox",
+  "Ident": "terrybros",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": [
+    "/sounds/*",
+    "/materials/*"
+  ],
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "TerryBros",
+  "Metadata": {
+    "MapList": [],
+    "MinPlayers": 1,
+    "MapSelect": 4
+  }
 }
