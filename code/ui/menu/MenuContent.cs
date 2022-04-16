@@ -57,6 +57,7 @@ namespace TerryBros.UI.Menu
             {
                 SetContent("Load level", ShowLevels, "levels");
             });
+            wrapperPanel.Add.Button("Level Editor", "entry", () => Levels.Builder.Editor.ClientToggleLevelEditor());
 
             wrapperPanel.Add.Button("Settings", "entry disabled");
             wrapperPanel.Add.Button("About", "entry disabled");
