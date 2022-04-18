@@ -4,11 +4,9 @@ using TerryBros.Settings;
 using TerryBros.Utils;
 using TerryBros.UI.LevelBuilder;
 
-namespace TerryBros.Player
+namespace TerryBros
 {
-    using Camera;
-
-    public partial class TerryBrosPlayer
+    public partial class Player
     {
         public bool IsInLevelBuilder { get; private set; }
 
@@ -71,11 +69,14 @@ namespace TerryBros.Player
             return blockPos;
         }
 
-        private void CreateBlockOnMouseEvent(Vector3 BlockPos)
+        private void CreateBlockOnMouseEvent(Vector3 pos)
         {
-            if (BuildPanel.Instance == null) return;
+            if (BuildPanel.Instance == null)
+            {
+                return;
+            }
 
-            IntVector3 gridCoord = GlobalSettings.GetGridCoordinatesForBlockPos(BlockPos);
+            IntVector3 gridCoord = GlobalSettings.GetGridCoordinatesForBlockPos(pos);
             BuildPanel buildPanel = BuildPanel.Instance;
 
             if (buildPanel.IsMouseDown && !oldGrid.Equals(gridCoord))
@@ -85,11 +86,11 @@ namespace TerryBros.Player
 
                 if (buildPanel.IsLeftMouseButtonDown)
                 {
-                    Levels.Builder.Editor.ServerCreateBlock(BlockPos, buildPanel.SelectedBlockData.Name);
+                    Levels.Builder.Editor.ServerCreateBlock(pos, buildPanel.SelectedAsset.Name);
                 }
                 else if (buildPanel.IsRightMouseButtonDown)
                 {
-                    Levels.Builder.Editor.ServerDeleteBlock(BlockPos);
+                    Levels.Builder.Editor.ServerDeleteBlock(pos);
                 }
             }
             else if (isDrawing && !buildPanel.IsMouseDown)

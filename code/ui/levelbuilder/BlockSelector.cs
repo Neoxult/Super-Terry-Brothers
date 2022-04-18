@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 
-using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-
-using TerryBros.Gamemode;
-using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder
 {
@@ -44,64 +39,37 @@ namespace TerryBros.UI.LevelBuilder
 
             IsOpened = true;
 
-
-            //Shift to LateInitialize. Outside of a constructor we can create Entities
-            STBGame.AddLateInitializeAction(
-                () =>
-                {
-                    AddBlocksData(Add.Panel("blocks"));
-                });
+            AddBlocksData(Add.Panel("blocks"));
         }
 
         private void AddBlocksData(Panel parent)
         {
             int count = 0;
 
-            List<BlockData> blockDataList = CreateBlockData();
-
-            foreach (BlockData blockData in blockDataList)
+            foreach (LevelElements.BlockAsset asset in LevelElements.BlockAsset.All)
             {
                 count++;
 
-                BlockList.Add(new Block(parent, blockData));
+                BlockList.Add(new(parent, asset));
 
                 if (count == 1)
                 {
-                    Select(blockData.Type);
+                    Select(asset.Name);
                 }
             }
         }
 
-        private static List<BlockData> CreateBlockData()
-        {
-            List<BlockData> blockDataList = new();
-
-            foreach (Type type in Library.GetAll<BlockEntity>())
-            {
-                if (!type.IsAbstract && !type.ContainsGenericParameters)
-                {
-                    BlockEntity blockEntity = Library.Create<BlockEntity>(type);
-                    BlockData blockData = blockEntity.GetBlockData();
-
-                    blockEntity.Delete();
-                    blockDataList.Add(blockData);
-                }
-            }
-
-            return blockDataList;
-        }
-
-        public void Select(Type type)
+        public void Select(string name)
         {
             foreach (Block block in BlockList)
             {
-                bool selected = block.BlockData.Type == type;
+                bool selected = block.Asset.Name == name;
 
                 block.SetClass("selected", selected);
 
                 if (selected)
                 {
-                    BuildPanel.Instance.SelectedBlockData = block.BlockData;
+                    BuildPanel.Instance.SelectedAsset = block.Asset;
                 }
             }
         }

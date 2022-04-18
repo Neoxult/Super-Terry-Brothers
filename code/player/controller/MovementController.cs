@@ -4,7 +4,7 @@ using Sandbox;
 
 using TerryBros.Settings;
 
-namespace TerryBros.Player.Controller
+namespace TerryBros
 {
     public partial class MovementController : WalkController
     {
@@ -38,7 +38,7 @@ namespace TerryBros.Player.Controller
 
         public override void Simulate()
         {
-            if (Pawn is not TerryBrosPlayer player || player.IsInMenu)
+            if (Pawn is not Player player || player.IsInMenu)
             {
                 return;
             }
@@ -96,7 +96,7 @@ namespace TerryBros.Player.Controller
                 {
                     Velocity = Vector3.Zero;
 
-                    (Pawn as TerryBrosPlayer).Animator.SetAnimParameter("jumpattack", 0.8f);
+                    (Pawn as Player).Animator.SetAnimParameter("jumpattack", 0.8f);
                 }
                 else if (GroundEntity == null && !IsJumpAttackTriggered)
                 {

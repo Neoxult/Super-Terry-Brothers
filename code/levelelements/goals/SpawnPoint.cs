@@ -4,7 +4,7 @@ using TerryBros.Settings;
 
 namespace TerryBros.LevelElements
 {
-    public partial class STBSpawn : Entity
+    public partial class SpawnPoint : Entity
     {
         /// <summary>
         /// Make sure the Player can spawn here properly.

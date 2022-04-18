@@ -1,7 +1,6 @@
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Player;
 using TerryBros.Settings;
 
 #pragma warning disable IDE0051, IDE0060
@@ -12,7 +11,7 @@ namespace TerryBros.Gamemode
     {
         private static void SimulateRules(Client cl)
         {
-            if (cl.Pawn is TerryBrosPlayer player)
+            if (cl.Pawn is Player player)
             {
                 player.LocalPosition = player.LocalPosition.WithZ(0);
             }
@@ -21,7 +20,7 @@ namespace TerryBros.Gamemode
         }
 
         [Event(TBEvent.Level.GOAL_REACHED)]
-        private static void GoalReached(TerryBrosPlayer player)
+        private static void GoalReached(Player player)
         {
             // TODO: Maybe add Logic for more players that want to run to the goal
             // And a Timer, that runs down to put pressure on them
@@ -45,7 +44,7 @@ namespace TerryBros.Gamemode
             foreach (Client client in Client.All)
             {
 
-                if (client.Pawn is TerryBrosPlayer player)
+                if (client.Pawn is Player player)
                 {
                     player.Respawn();
                 }
@@ -60,7 +59,7 @@ namespace TerryBros.Gamemode
 
         private static void ClientOutOfBounds(Client cl)
         {
-            if (Host.IsClient || cl.Pawn is not TerryBrosPlayer player)
+            if (Host.IsClient || cl.Pawn is not Player player)
             {
                 return;
             }

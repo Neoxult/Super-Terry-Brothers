@@ -2,12 +2,9 @@ using Sandbox;
 
 using TerryBros.Settings;
 
-namespace TerryBros.Player
+namespace TerryBros
 {
-    using Camera;
-    using Controller;
-
-    public partial class TerryBrosPlayer : Sandbox.Player
+    public partial class Player : Sandbox.Player
     {
         /// <summary>
         /// The clothing container is what dresses the citizen
@@ -22,7 +19,7 @@ namespace TerryBros.Player
             {
                 _camera2D = value;
 
-                if (Local.Client != null && Local.Client.Pawn is TerryBrosPlayer terryBrosPlayer)
+                if (Local.Client != null && Local.Client.Pawn is Player terryBrosPlayer)
                 {
                     terryBrosPlayer.SetCameraDimension();
                 }
@@ -40,19 +37,6 @@ namespace TerryBros.Player
         {
             get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
             set => Position = GlobalSettings.ConvertLocalToGlobalCoordinates(value);
-        }
-
-        public TerryBrosPlayer()
-        {
-            if (Host.IsServer)
-            {
-                _ = new UI.Hud();
-            }
-        }
-
-        public TerryBrosPlayer(Client cl) : this()
-        {
-            Clothing.LoadFromClient(cl);
         }
 
         public void SetCameraDimension()
@@ -85,7 +69,7 @@ namespace TerryBros.Player
         }
 
         [ClientRpc]
-        public static void ClientRespawn(TerryBrosPlayer player)
+        public static void ClientRespawn(Player player)
         {
             if (player == null || !player.IsValid)
             {

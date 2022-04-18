@@ -1,9 +1,5 @@
 using Sandbox;
 
-using TerryBros.LevelElements;
-using TerryBros.Player;
-using TerryBros.Player.Controller;
-
 #pragma warning disable CA1822
 
 namespace TerryBros.Gamemode
@@ -25,14 +21,14 @@ namespace TerryBros.Gamemode
 
             if (Host.IsServer)
             {
-                if (DebugPlayerCollisionBox && cl.Pawn is TerryBrosPlayer player && player.Controller is MovementController controller)
+                if (DebugPlayerCollisionBox && cl.Pawn is Player player && player.Controller is MovementController controller)
                 {
                     ShowPlayerCollisionBox(controller.GetBounds() + player.Position);
                 }
 
                 if (DebugSpawnPoint)
                 {
-                    STBSpawn spawnpoint = CurrentLevel?.GetLastCheckPoint();
+                    LevelElements.SpawnPoint spawnpoint = CurrentLevel?.GetLastCheckPoint();
 
                     if (spawnpoint != null)
                     {

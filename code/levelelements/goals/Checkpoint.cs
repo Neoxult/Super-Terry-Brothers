@@ -2,16 +2,15 @@ using Sandbox;
 
 using TerryBros.Events;
 using TerryBros.Gamemode;
-using TerryBros.Player;
 using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Checkpoint : BlockMaterialEntity
+    public partial class Checkpoint : BlockEntity
     {
-        public STBSpawn SpawnPoint { get; private set; }
-        public override string MaterialName => "materials/blocks/stair_block.vmat";
+        public SpawnPoint SpawnPoint { get; private set; }
         public override IntVector3 BlockSize => new(1, 3, 1);
+
         public override Vector3 Position
         {
             get => base.Position;
@@ -25,6 +24,7 @@ namespace TerryBros.LevelElements
                 }
             }
         }
+
         private bool _wasTouched = false;
 
         public Checkpoint() : base()
@@ -32,17 +32,19 @@ namespace TerryBros.LevelElements
             CollisionGroup = CollisionGroup.Trigger;
             RenderColor = Color.Blue.WithAlpha(0.5f);
         }
+
         public override void Spawn()
         {
-            SpawnPoint = new STBSpawn();
+            SpawnPoint = new();
 
             base.Spawn();
         }
+
         public override void Touch(Entity other)
         {
             base.Touch(other);
 
-            if (_wasTouched || other is not TerryBrosPlayer player)
+            if (_wasTouched || other is not Player player)
             {
                 return;
             }

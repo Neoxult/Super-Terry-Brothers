@@ -1,5 +1,3 @@
-using System;
-
 using Sandbox;
 
 using TerryBros.Gamemode;
@@ -8,26 +6,9 @@ using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public class BlockData
+    public partial class BlockEntity : ModelEntity
     {
-        public string Name { get; set; }
-        public string MaterialName;
-        public Type Type;
-    }
-
-    public abstract class BlockEntity : ModelEntity
-    {
-        /// <summary>
-        /// Note: Translucent materials are not properly shown on the editor UI,
-        /// so use pngs or non-translucent vmats for now on Models that dont need the MaterialName otherwise
-        /// </summary>
-        public virtual string MaterialName => "materials/blocks/stair_block.vmat";
         public virtual IntVector3 BlockSize => new(1, 1, 1);
-
-        public string TypeName
-        {
-            get => GetType().FullName.Replace(GetType().Namespace, "").TrimStart('.');
-        }
 
         public virtual PhysicsMotionType PhysicsMotionType => PhysicsMotionType.Static;
 
@@ -70,37 +51,44 @@ namespace TerryBros.LevelElements
             set => Position = GlobalSettings.GetBlockPosForGridCoordinates(value);
         }
 
-        public BlockEntity() : base()
+        public BlockAsset Asset
         {
-            STBGame.AddLateInitializeAction(LateInitialize);
-        }
-
-        /// <summary>
-        /// Add work here, that cant be done in a constructor and needs a later initialize
-        /// </summary>
-        public virtual void LateInitialize() { }
-        public BlockData GetBlockData()
-        {
-            Type type = GetType();
-
-            return new BlockData
+            get => _asset;
+            set
             {
-                Type = type,
-                Name = TypeName,
-                MaterialName = MaterialName
-            };
-        }
+                _asset = value;
 
-        public static Type GetByName(string name)
-        {
-            foreach (Type t in Library.GetAll<BlockEntity>())
-            {
-                if (!t.IsAbstract && !t.ContainsGenericParameters)
+                if (_asset != null)
                 {
-                    if (t.FullName.Replace(t.Namespace, "").TrimStart('.') == name)
-                    {
-                        return t;
-                    }
+                    SetModel(_asset.ModelName);
+                }
+            }
+        }
+        private BlockAsset _asset;
+
+        public override void Spawn()
+        {
+            SetupPhysicsFromModel(PhysicsMotionType);
+
+            Scale = GlobalSettings.BlockSize * 0.01f; // WorldSpaceBounds.Size.z;
+
+            base.Spawn();
+        }
+
+        public static BlockEntity FromAsset(BlockAsset asset) => new()
+        {
+            Asset = asset
+        };
+
+        public static BlockEntity FromPath(string assetPath) => FromAsset(Sandbox.Asset.FromPath<BlockAsset>(assetPath));
+
+        public static BlockEntity FromName(string name)
+        {
+            foreach (BlockAsset asset in BlockAsset.All)
+            {
+                if (asset.Name == name)
+                {
+                    return FromAsset(asset);
                 }
             }
 

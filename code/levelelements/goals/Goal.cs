@@ -1,14 +1,12 @@
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Player;
 using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
-    public partial class Goal : BlockMaterialEntity
+    public partial class Goal : BlockEntity
     {
-        public override string MaterialName => "materials/blocks/stair_block.vmat";
         public override IntVector3 BlockSize => new(1, 8, 1);
 
         public Goal() : base()
@@ -21,7 +19,7 @@ namespace TerryBros.LevelElements
         {
             base.Touch(other);
 
-            if (other is not TerryBrosPlayer player)
+            if (other is not Player player)
             {
                 return;
             }

@@ -5,7 +5,7 @@ using Sandbox;
 using TerryBros.Gamemode;
 using TerryBros.Settings;
 
-namespace TerryBros.Player.Camera
+namespace TerryBros
 {
     public partial class SideScroller2DCamera : CameraMode
     {
@@ -31,7 +31,7 @@ namespace TerryBros.Player.Camera
         }
         public override void Update()
         {
-            if (Local.Pawn is not TerryBrosPlayer player)
+            if (Local.Pawn is not Player player)
             {
                 return;
             }

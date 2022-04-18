@@ -6,7 +6,6 @@ using System.Text.Json;
 using Sandbox;
 
 using TerryBros.Gamemode;
-using TerryBros.Player;
 
 namespace TerryBros.Levels.Builder
 {
@@ -113,7 +112,7 @@ namespace TerryBros.Levels.Builder
 
                     foreach (Client client in Client.All)
                     {
-                        if (client.Pawn is TerryBrosPlayer player)
+                        if (client.Pawn is Player player)
                         {
                             player.Respawn();
                         }

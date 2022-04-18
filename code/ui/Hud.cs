@@ -18,11 +18,6 @@ namespace TerryBros.UI
         {
             Instance = this;
 
-            if (!IsClient)
-            {
-                return;
-            }
-
             RootPanel.AddChild<LevelBuilder.BuildPanel>();
             RootPanel.AddChild<Menu.Menu>();
         }

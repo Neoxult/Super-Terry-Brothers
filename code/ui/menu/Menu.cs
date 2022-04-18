@@ -1,8 +1,6 @@
 using Sandbox;
 using Sandbox.UI;
 
-using TerryBros.Player;
-
 namespace TerryBros.UI.Menu
 {
     public partial class Menu : Panel
@@ -21,7 +19,7 @@ namespace TerryBros.UI.Menu
 
                 SetClass("display", _display);
 
-                if (Local.Pawn is TerryBrosPlayer player)
+                if (Local.Pawn is Player player)
                 {
                     player.IsInMenu = _display;
 

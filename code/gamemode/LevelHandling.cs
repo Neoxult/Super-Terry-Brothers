@@ -1,7 +1,6 @@
 using Sandbox;
 
 using TerryBros.Levels;
-using TerryBros.LevelElements;
 
 #pragma warning disable IDE0051
 
@@ -24,7 +23,7 @@ namespace TerryBros.Gamemode
         private static Level _currentLevel;
         public override void MoveToSpawnpoint(Entity pawn)
         {
-            STBSpawn spawnPoint = CurrentLevel?.GetLastCheckPoint();
+            LevelElements.SpawnPoint spawnPoint = CurrentLevel?.GetLastCheckPoint();
 
             if (spawnPoint == null)
             {

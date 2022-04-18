@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Sandbox;
 
 using TerryBros.Gamemode;
-using TerryBros.Player;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
@@ -16,10 +15,10 @@ namespace TerryBros.Levels.Builder
     {
         // Just some testing, to create blocks dynamically
         [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
-        public static void ServerCreateBlock(Vector3 position, string blockTypeName)
+        public static void ServerCreateBlock(Vector3 position, string blockName)
         {
-            CreateBlock(position, blockTypeName);
-            ClientCreateBlock(position, blockTypeName);
+            CreateBlock(position, blockName);
+            ClientCreateBlock(position, blockName);
         }
 
         // Just some testing, to create blocks dynamically
@@ -31,9 +30,9 @@ namespace TerryBros.Levels.Builder
         }
 
         [ClientRpc]
-        public static void ClientCreateBlock(Vector3 position, string blockTypeName)
+        public static void ClientCreateBlock(Vector3 position, string blockName)
         {
-            CreateBlock(position, blockTypeName);
+            CreateBlock(position, blockName);
         }
 
         [ClientRpc]
@@ -42,7 +41,7 @@ namespace TerryBros.Levels.Builder
             DeleteBlock(position);
         }
 
-        public static ModelEntity CreateBlock(Vector3 position, string blockTypeName)
+        public static ModelEntity CreateBlock(Vector3 position, string blockName)
         {
             Level level = STBGame.CurrentLevel;
             IntVector3 intVector3 = GlobalSettings.GetGridCoordinatesForBlockPos(position);
@@ -60,16 +59,13 @@ namespace TerryBros.Levels.Builder
 
             if (blockEntity == null)
             {
-                Type type = BlockEntity.GetByName(blockTypeName);
+                blockEntity = BlockEntity.FromName(blockName);
 
-                if (type != null)
+                if (blockEntity != null)
                 {
-                    blockEntity = Library.Create<BlockEntity>(type);
                     blockEntity.Position = position;
 
                     dict[intVector3.Y] = blockEntity;
-
-                    return blockEntity;
                 }
             }
 
@@ -102,7 +98,7 @@ namespace TerryBros.Levels.Builder
         [ClientCmd("stb_editor")]
         public static void ClientToggleLevelEditor()
         {
-            if (Local.Pawn is not TerryBrosPlayer player)
+            if (Local.Pawn is not Player player)
             {
                 return;
             }
@@ -117,7 +113,7 @@ namespace TerryBros.Levels.Builder
         [ServerCmd]
         public static void ServerToggleLevelEditor(bool toggle)
         {
-            if (ConsoleSystem.Caller?.Pawn is not TerryBrosPlayer player)
+            if (ConsoleSystem.Caller?.Pawn is not Player player)
             {
                 return;
             }
@@ -128,7 +124,7 @@ namespace TerryBros.Levels.Builder
         [ServerCmd]
         public static void ServerToggleMenu(bool toggle)
         {
-            if (ConsoleSystem.Caller?.Pawn is not TerryBrosPlayer player)
+            if (ConsoleSystem.Caller?.Pawn is not Player player)
             {
                 return;
             }

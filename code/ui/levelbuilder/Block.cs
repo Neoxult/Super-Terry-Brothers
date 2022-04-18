@@ -10,20 +10,18 @@ namespace TerryBros.UI.LevelBuilder
         public Label TextLabel;
         public Image Image;
 
-        public BlockData BlockData { get; set; }
+        public BlockAsset Asset { get; set; }
 
-        public Block(Panel parent = null, BlockData blockData = null) : base()
+        public Block(Panel parent = null, BlockAsset asset = null) : base(parent)
         {
-            Parent = parent ?? Parent;
+            Asset = asset;
 
-            BlockData = blockData;
-
-            Image = Add.Image(blockData.MaterialName.Replace(".vmat", ".png"), "image");
-            TextLabel = Add.Label(blockData.Name, "name");
+            Image = Add.Image(Asset.IconName, "image");
+            TextLabel = Add.Label(Asset.Name, "name");
 
             AddEventListener("onclick", (e) =>
             {
-                BuildPanel.Instance.BlockSelection.Select(BlockData.Type);
+                BuildPanel.Instance.BlockSelection.Select(Asset.Name);
             });
         }
     }

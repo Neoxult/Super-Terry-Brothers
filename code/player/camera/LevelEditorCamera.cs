@@ -5,7 +5,7 @@ using Sandbox;
 using TerryBros.Settings;
 using TerryBros.UI.LevelBuilder;
 
-namespace TerryBros.Player.Camera
+namespace TerryBros
 {
     public partial class LevelEditorCamera : CameraMode
     {

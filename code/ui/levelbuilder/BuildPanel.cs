@@ -1,7 +1,5 @@
 using Sandbox.UI;
 
-using TerryBros.LevelElements;
-
 namespace TerryBros.UI.LevelBuilder
 {
     public class BuildPanel : Panel
@@ -12,7 +10,7 @@ namespace TerryBros.UI.LevelBuilder
         public bool IsRightMouseButtonDown { get; private set; } = false;
         public float MouseWheel { get; private set; } = 0f;
         private float _mouseWheel = 0f;
-        public BlockData SelectedBlockData;
+        public LevelElements.BlockAsset SelectedAsset;
 
         public BlockSelector BlockSelection;
 

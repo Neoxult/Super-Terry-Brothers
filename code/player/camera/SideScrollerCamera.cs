@@ -5,7 +5,7 @@ using Sandbox;
 using TerryBros.Gamemode;
 using TerryBros.Settings;
 
-namespace TerryBros.Player.Camera
+namespace TerryBros
 {
     public partial class SideScrollerCamera : CameraMode
     {
@@ -21,7 +21,7 @@ namespace TerryBros.Player.Camera
 
         public override void Update()
         {
-            if (Local.Pawn is not TerryBrosPlayer player)
+            if (Local.Pawn is not Player player)
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace TerryBros.Player.Camera
 
                 float val = 1f;
 
-                if (!TerryBrosPlayer.Camera2D)
+                if (!Player.Camera2D)
                 {
                     val += _orthoSize / 2;
                 }
@@ -57,7 +57,7 @@ namespace TerryBros.Player.Camera
 
                 val = 1f;
 
-                if (!TerryBrosPlayer.Camera2D)
+                if (!Player.Camera2D)
                 {
                     val += _orthoSize;
                 }
@@ -75,13 +75,13 @@ namespace TerryBros.Player.Camera
             Rotation = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 
             // Camera 3d effect
-            if (!player.IsInLevelBuilder && !TerryBrosPlayer.Camera2D)
+            if (!player.IsInLevelBuilder && !Player.Camera2D)
             {
                 Rotation = Rotation.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 
                 //TODO: Discuss if we should just point in one direction all time
                 // Currently the background is just a zoomed in skybox, which makes switching blurry as hell
-                if (player.Controller is Controller.MovementController movementController)
+                if (player.Controller is MovementController movementController)
                 {
                     float moveDirectionFactor = Math.Clamp(movementController.MovedirectionChanged * 2f, 0f, 1f);
 

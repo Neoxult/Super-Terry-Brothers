@@ -6,7 +6,6 @@ using Sandbox;
 
 using TerryBros.Events;
 using TerryBros.Gamemode;
-using TerryBros.Player;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
@@ -43,8 +42,8 @@ namespace TerryBros.Levels
 
         public Dictionary<int, Dictionary<int, BlockEntity>> GridBlocks = new();
 
-        protected STBSpawn RestartSpawn;
-        protected STBSpawn CheckPointSpawn;
+        protected LevelElements.SpawnPoint RestartSpawn;
+        protected LevelElements.SpawnPoint CheckPointSpawn;
 
         public abstract void Build();
         public void RegisterBlock(BlockEntity block)
@@ -106,16 +105,16 @@ namespace TerryBros.Levels
             dict[GridY] = block;
 
         }
-        public STBSpawn GetRestartPoint()
+        public LevelElements.SpawnPoint GetRestartPoint()
         {
             return RestartSpawn;
         }
 
-        public STBSpawn GetLastCheckPoint()
+        public LevelElements.SpawnPoint GetLastCheckPoint()
         {
             return CheckPointSpawn ?? GetRestartPoint();
         }
-        public void CheckPointReached(TerryBrosPlayer _, Checkpoint checkPoint)
+        public void CheckPointReached(Player _, Checkpoint checkPoint)
         {
             //TODO: Allow different players to have different checkpoints
             CheckPointSpawn = checkPoint.SpawnPoint;
@@ -191,13 +190,13 @@ namespace TerryBros.Levels
             {
                 foreach (KeyValuePair<int, BlockEntity> y in x.Value)
                 {
-                    dict.TryGetValue(y.Value.TypeName, out List<Vector2> blockList);
+                    dict.TryGetValue(y.Value.Name, out List<Vector2> blockList);
 
                     if (blockList == null)
                     {
                         blockList = new();
 
-                        dict.Add(y.Value.TypeName, blockList);
+                        dict.Add(y.Value.Name, blockList);
                     }
 
                     blockList.Add(new Vector2(x.Key, y.Key));
@@ -211,13 +210,13 @@ namespace TerryBros.Levels
         {
             foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
             {
-                Type blockType = BlockEntity.GetByName(blockList.Key);
+                BlockAsset asset = BlockAsset.GetByName(blockList.Key);
 
-                if (blockType != null)
+                if (asset != null)
                 {
                     foreach (Vector2 position in blockList.Value)
                     {
-                        BlockEntity blockEntity = Library.Create<BlockEntity>(blockType);
+                        BlockEntity blockEntity = BlockEntity.FromAsset(asset);
                         blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
                     }
                 }
@@ -226,7 +225,7 @@ namespace TerryBros.Levels
 
         public static void Clear()
         {
-            foreach (Entity entity in Entity.All)
+            foreach (Entity entity in All)
             {
                 if (entity is BlockEntity blockEntity)
                 {
