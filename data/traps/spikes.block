@@ -2,9 +2,9 @@
 {
 	data = 
 	{
-		iconname = "materials/blocks/spikes_wood.png"
-		modelname = resource:"models/blocks/spikes_wood.vmdl"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "3"
+		imagepath = "materials/blocks/spikes_wood.png"
+		modelpath = resource:"models/blocks/spikes_wood.vmdl"
 	}
 }
