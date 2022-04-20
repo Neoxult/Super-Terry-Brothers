@@ -21,7 +21,6 @@ namespace TerryBros.LevelElements
         /// Its the position in the new local Coordinate system
         /// x,y being the screen horizontally, vertically and z being the depth
         /// </summary>
-        [Predicted]
         public override Vector3 LocalPosition
         {
             get => GlobalSettings.ConvertGlobalToLocalCoordinates(Position);
@@ -32,7 +31,6 @@ namespace TerryBros.LevelElements
         /// Offsets the Position for Blockentities, so that their first block is directly on the grid.
         /// Normally this is the center, but we use the most nearest (z), lowest (y), left (x) corner.
         /// </summary>
-        [Predicted]
         public override Vector3 Position
         {
             get => base.Position - GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
@@ -44,7 +42,6 @@ namespace TerryBros.LevelElements
             }
         }
 
-        [Predicted]
         public IntVector3 GridPosition
         {
             get => GlobalSettings.GetGridCoordinatesForBlockPos(Position);

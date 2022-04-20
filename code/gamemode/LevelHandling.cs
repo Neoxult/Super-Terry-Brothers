@@ -21,6 +21,7 @@ namespace TerryBros.Gamemode
         }
 
         private static Level _currentLevel;
+
         public override void MoveToSpawnpoint(Entity pawn)
         {
             LevelElements.SpawnPoint spawnPoint = CurrentLevel?.GetLastCheckPoint();

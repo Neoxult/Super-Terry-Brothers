@@ -46,6 +46,7 @@ namespace TerryBros.Levels
         protected LevelElements.SpawnPoint CheckPointSpawn;
 
         public abstract void Build();
+
         public void RegisterBlock(BlockEntity block)
         {
             IntBBox intBBox = LevelBoundsBlocks;
@@ -103,17 +104,12 @@ namespace TerryBros.Levels
             }
 
             dict[GridY] = block;
-
-        }
-        public LevelElements.SpawnPoint GetRestartPoint()
-        {
-            return RestartSpawn;
         }
 
-        public LevelElements.SpawnPoint GetLastCheckPoint()
-        {
-            return CheckPointSpawn ?? GetRestartPoint();
-        }
+        public LevelElements.SpawnPoint GetRestartPoint() => RestartSpawn;
+
+        public LevelElements.SpawnPoint GetLastCheckPoint() => CheckPointSpawn ?? GetRestartPoint();
+
         public void CheckPointReached(Player _, Checkpoint checkPoint)
         {
             //TODO: Allow different players to have different checkpoints
@@ -126,13 +122,10 @@ namespace TerryBros.Levels
             CheckPointSpawn = null;
         }
 
-        protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new()
+        protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new() => new()
         {
-            return new T()
-            {
-                Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
-            };
-        }
+            Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
+        };
 
         protected static void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
         {
@@ -172,15 +165,9 @@ namespace TerryBros.Levels
             }
         }
 
-        protected static Checkpoint CreateCheckPoint(int GridX, int GridY)
-        {
-            return CreateBox<Checkpoint>(GridX, GridY);
-        }
+        protected static Checkpoint CreateCheckPoint(int GridX, int GridY) => CreateBox<Checkpoint>(GridX, GridY);
 
-        protected static Goal CreateGoal(int GridX, int GridY)
-        {
-            return CreateBox<Goal>(GridX, GridY);
-        }
+        protected static Goal CreateGoal(int GridX, int GridY) => CreateBox<Goal>(GridX, GridY);
 
         public string Export()
         {

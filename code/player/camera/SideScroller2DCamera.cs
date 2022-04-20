@@ -55,6 +55,8 @@ namespace TerryBros
                 newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
             } catch (Exception) { }
 
+            DebugOverlay.Box(bBox.Mins, bBox.Maxs, Color.Red);
+
             LocalPosition = newPos;
         }
     }
