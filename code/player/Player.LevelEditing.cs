@@ -41,8 +41,8 @@ namespace TerryBros
             {
                 if (enable)
                 {
-                    //TODO: Solve Prediction error for Controller and Camera!!
-                    Controller = null;
+                    //TODO: Solve Prediction error for Camera!!
+                    (Controller as MovementController).IsFreeze = true;
                     CameraMode = new LevelEditorCamera();
 
                     EnableAllCollisions = false;

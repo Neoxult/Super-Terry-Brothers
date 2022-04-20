@@ -23,6 +23,9 @@ namespace TerryBros
         }
         private bool _forward = true;
 
+        [Net, Predicted]
+        public bool IsFreeze { get; set; }
+
         private bool _wasMovedirectionChanged = false;
 
         public TimeSince MovedirectionChanged = 1f;
@@ -38,7 +41,7 @@ namespace TerryBros
 
         public override void Simulate()
         {
-            if (Pawn is not Player player || player.IsInMenu)
+            if (Pawn is not Player player || player.IsInMenu || IsFreeze)
             {
                 return;
             }
@@ -325,7 +328,7 @@ namespace TerryBros
 
         public override void StepMove()
         {
-            MoveHelper mover = new MoveHelper(Position, Velocity);
+            MoveHelper mover = new(Position, Velocity);
             mover.Trace = mover.Trace.Size(mins, maxs).Ignore(Pawn);
             mover.MaxStandableAngle = GroundAngle;
 

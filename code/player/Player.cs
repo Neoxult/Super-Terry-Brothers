@@ -57,6 +57,9 @@ namespace TerryBros
             Scale = 0.34f;
             PhysicsGroup?.RebuildMass();
 
+            Controller = new MovementController();
+            Animator = new StandardPlayerAnimator();
+
             Respawn();
         }
 
@@ -64,30 +67,18 @@ namespace TerryBros
         {
             base.Respawn();
 
-            Controller = new MovementController();
-            Animator = new StandardPlayerAnimator();
+            (Controller as MovementController).IsFreeze = false;
 
             EnableAllCollisions = true;
             EnableDrawing = true;
 
-            SetCameraDimension();
-
-            ClientRespawn(this);
+            ClientRespawn(To.Single(this));
         }
 
         [ClientRpc]
-        public static void ClientRespawn(Player player)
+        public void ClientRespawn()
         {
-            if (player == null || !player.IsValid)
-            {
-                return;
-            }
-
-            // sbox weirdness, controller is reset on serverside, but stays with same vars on clientside
-            if (player.Controller is MovementController movementController)
-            {
-                movementController.Forward = true;
-            }
+            SetCameraDimension();
         }
 
         /// <summary>

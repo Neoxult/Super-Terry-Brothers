@@ -103,11 +103,11 @@ namespace TerryBros.Levels.Builder
                 return;
             }
 
-            player.EnableLevelEditor(!player.IsInLevelBuilder);
+            bool toggle = !player.IsInLevelBuilder;
 
-            ServerToggleLevelEditor(player.IsInLevelBuilder);
-
-            BuildPanel.Instance.Toggle(player.IsInLevelBuilder);
+            player.EnableLevelEditor(toggle);
+            ServerToggleLevelEditor(toggle);
+            BuildPanel.Instance.Toggle(toggle);
         }
 
         [ServerCmd]
