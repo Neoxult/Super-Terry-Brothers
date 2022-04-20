@@ -2,9 +2,9 @@
 {
 	data = 
 	{
-		iconname = "materials/blocks/stair_block.png"
-		modelname = resource:"materials/blocks/stair_block.vmat"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "0"
+		imagepath = "materials/blocks/stair_block.png"
+		modelpath = resource:"materials/blocks/stair_block.vmat"
 	}
 }

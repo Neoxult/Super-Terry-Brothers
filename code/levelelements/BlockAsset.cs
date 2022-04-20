@@ -12,10 +12,10 @@ namespace TerryBros.LevelElements
         internal static List<BlockAsset> _all = new();
 
         [Property, Category("Model"), ResourceType("png")]
-        public string IconName { get; set; }
+        public string ImagePath { get; set; }
 
         [Property, Category("Model"), ResourceType("vmdl")]
-        public string ModelName { get; set; }
+        public string ModelPath { get; set; }
 
         [Property, Category("Data")]
         public Vector3 BlockSize { get; set; } = new(1, 1, 1);
@@ -25,7 +25,9 @@ namespace TerryBros.LevelElements
             Block,
             Enemy,
             Obstacle,
-            Trap
+            Trap,
+            Goal,
+            CheckPoint
         }
 
         [Property, Category("Category")]

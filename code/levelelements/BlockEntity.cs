@@ -8,7 +8,7 @@ namespace TerryBros.LevelElements
 {
     public partial class BlockEntity : ModelEntity
     {
-        public virtual IntVector3 BlockSize => new(1, 1, 1);
+        public IntVector3 BlockSize { get; set; } = new(1, 1, 1);
 
         public virtual PhysicsMotionType PhysicsMotionType => PhysicsMotionType.Static;
 
@@ -60,7 +60,7 @@ namespace TerryBros.LevelElements
 
                 if (_asset != null)
                 {
-                    SetModel(_asset.ModelName);
+                    SetModel(_asset.ModelPath);
                 }
             }
         }
@@ -75,10 +75,19 @@ namespace TerryBros.LevelElements
             base.Spawn();
         }
 
-        public static BlockEntity FromAsset(BlockAsset asset) => new()
+        public static BlockEntity FromAsset(BlockAsset asset)
         {
-            Asset = asset
-        };
+            BlockEntity blockEntity = asset.Category switch
+            {
+                BlockAsset.Categories.Goal => new Goal(),
+                BlockAsset.Categories.CheckPoint => new Checkpoint(),
+                _ => new()
+            };
+
+            blockEntity.Asset = asset;
+
+            return blockEntity;
+        }
 
         public static BlockEntity FromPath(string assetPath) => FromAsset(Sandbox.Asset.FromPath<BlockAsset>(assetPath));
 

@@ -2,9 +2,9 @@
 {
 	data = 
 	{
-		iconname = "materials/blocks/leaves_blooming.png"
-		modelname = resource:"models/blocks/leaves_blooming.vmdl"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "0"
+		imagepath = "materials/blocks/leaves_blooming.png"
+		modelpath = resource:"models/blocks/leaves_blooming.vmdl"
 	}
 }

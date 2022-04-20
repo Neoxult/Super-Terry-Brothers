@@ -1,14 +1,12 @@
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
+    [Library("stb_goal"), Hammer.Skip]
     public partial class Goal : BlockEntity
     {
-        public override IntVector3 BlockSize => new(1, 8, 1);
-
         public Goal() : base()
         {
             CollisionGroup = CollisionGroup.Trigger;

@@ -4,6 +4,7 @@ using TerryBros.Settings;
 
 namespace TerryBros.LevelElements
 {
+    [Library("stb_spawnpoint"), Hammer.Skip]
     public partial class SpawnPoint : Entity
     {
         /// <summary>

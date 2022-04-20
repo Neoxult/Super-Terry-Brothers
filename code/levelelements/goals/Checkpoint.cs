@@ -2,14 +2,13 @@ using Sandbox;
 
 using TerryBros.Events;
 using TerryBros.Gamemode;
-using TerryBros.Utils;
 
 namespace TerryBros.LevelElements
 {
+    [Library("stb_checkpoint"), Hammer.Skip]
     public partial class Checkpoint : BlockEntity
     {
         public SpawnPoint SpawnPoint { get; private set; }
-        public override IntVector3 BlockSize => new(1, 3, 1);
 
         public override Vector3 Position
         {

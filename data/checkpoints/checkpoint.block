@@ -2,9 +2,9 @@
 {
 	data = 
 	{
-		blocksize = [ 1.0, 1.0, 1.0 ]
-		category = "0"
-		imagepath = "materials/blocks/log_top.png"
-		modelpath = resource:"models/blocks/log_top.vmdl"
+		imagepath = "materials/blocks/translucent_mat.png"
+		modelpath = resource:"models/blocks/block.vmdl"
+		blocksize = [ 1.0, 3.0, 1.0 ]
+		category = "5"
 	}
 }
