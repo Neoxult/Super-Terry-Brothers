@@ -31,6 +31,7 @@ namespace TerryBros
             Ortho = true;
             Viewer = null;
         }
+
         public override void Update()
         {
             if (Local.Pawn is not Player player)
@@ -42,19 +43,22 @@ namespace TerryBros
 
             BBox bBox = STBGame.CurrentLevel.LevelBoundsLocal;
 
+            float halfWidth = (float) Math.Round(Screen.Width / 2 * OrthoSize, 3);
+            float halfHeight = (float) Math.Round(Screen.Height / 2 * OrthoSize, 3);
+
             OrthoSize = Math.Min((bBox.Maxs.x - bBox.Mins.x) / Screen.Width, (bBox.Maxs.y - bBox.Mins.y) / Screen.Height);
             OrthoSize = Math.Min(_orthoSize, OrthoSize);
 
-            Vector3 newPos = new(player.LocalPosition.x, GlobalSettings.BlockSize * 1, player.LocalPosition.z);
+            Vector3 newPos = new(player.LocalPosition);
             newPos.y -= GlobalSettings.BlockSize * _visibleGroundBlocks;
-            newPos.y += Screen.Height / 2 * OrthoSize;
+            newPos.y += halfHeight;
             newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
 
             // horizontal camera movement
-            newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
+            newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + halfWidth, bBox.Maxs.x - halfWidth);
 
             // vertical camera movement
-            newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
+            newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + halfHeight, bBox.Maxs.y - halfHeight);
 
             //As shifts in multiple directions dont work good together, choose one
             //Note: Spherical coordinates would improve it,

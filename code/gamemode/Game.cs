@@ -30,7 +30,7 @@ namespace TerryBros.Gamemode
             client.Pawn = player;
 
             player.Clothing.LoadFromClient(client);
-            player.Respawn();
+            player.Spawn();
         }
     }
 }

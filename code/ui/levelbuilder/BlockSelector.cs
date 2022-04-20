@@ -26,10 +26,8 @@ namespace TerryBros.UI.LevelBuilder
 
         public List<Block> BlockList = new();
 
-        public BlockSelector(Panel parent = null) : base()
+        public BlockSelector(Panel parent) : base(parent)
         {
-            Parent = parent ?? Parent;
-
             StyleSheet.Load("/ui/levelbuilder/BlockSelector.scss");
 
             OpenLabel = Add.Label("Open", "openlabel");

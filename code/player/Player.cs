@@ -11,6 +11,8 @@ namespace TerryBros
         /// </summary>
         public Clothing.Container Clothing = new();
 
+        public static Model PlayerModel { get; } = Model.Load("models/citizen/citizen.vmdl");
+
         [ClientVar]
         public static bool Camera2D
         {
@@ -25,7 +27,7 @@ namespace TerryBros
                 }
             }
         }
-        private static bool _camera2D = true;
+        private static bool _camera2D = false;
 
         public bool IsInMenu = false;
 
@@ -44,26 +46,31 @@ namespace TerryBros
             CameraMode = Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
         }
 
-        public override void Respawn()
+        public override void Spawn()
         {
-            base.Respawn();
+            base.Spawn();
 
-            SetModel("models/citizen/citizen.vmdl");
-
-            Controller = new MovementController();
-            Animator = new StandardPlayerAnimator();
-
-            SetCameraDimension();
-
-            EnableAllCollisions = true;
-            EnableDrawing = true;
-            EnableHideInFirstPerson = true;
-            EnableShadowInFirstPerson = true;
+            Model = PlayerModel;
 
             Clothing.DressEntity(this);
 
             Scale = 0.34f;
             PhysicsGroup?.RebuildMass();
+
+            Respawn();
+        }
+
+        public override void Respawn()
+        {
+            base.Respawn();
+
+            Controller = new MovementController();
+            Animator = new StandardPlayerAnimator();
+
+            EnableAllCollisions = true;
+            EnableDrawing = true;
+
+            SetCameraDimension();
 
             ClientRespawn(this);
         }

@@ -97,11 +97,9 @@ namespace TerryBros.Settings
         /// <returns></returns>
         public static Vector3 ConvertLocalToGlobalCoordinates(Vector3 local)
         {
-            local -= new Vector3(0, BlockSize / 2, 0);
-            Vector3 global = LocalToGlobalTransformation * local;
-            global += GroundPos;
+            local.y -= BlockSize / 2;
 
-            return global;
+            return LocalToGlobalTransformation * local + GroundPos;
         }
 
         /// <summary>
@@ -127,8 +125,8 @@ namespace TerryBros.Settings
         {
             _doUpdateTransformations = false;
             _lookDir = Vector3.Cross(_upwardDir, _forwardDir);
-            _localToGlobalTransformation = new Utils.Matrix(_forwardDir, _upwardDir, _lookDir);
-            _globalToLocalTransformation = new Utils.Matrix(_localToGlobalTransformation);
+            _localToGlobalTransformation = new(_forwardDir, _upwardDir, _lookDir);
+            _globalToLocalTransformation = new(_localToGlobalTransformation);
             _globalToLocalTransformation.Invert3x3();
         }
     }
