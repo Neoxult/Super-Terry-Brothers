@@ -6,7 +6,7 @@ namespace TerryBros.UI.Menu
     public partial class Menu : Panel
     {
         public static Menu Instance { get; set; }
-        public MenuContent MenuContent;
+        public MenuContent MenuContent { get; set; }
 
         private bool _pressed = false;
 

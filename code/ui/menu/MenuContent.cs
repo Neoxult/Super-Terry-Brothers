@@ -7,15 +7,17 @@ namespace TerryBros.UI.Menu
 {
     public partial class MenuContent : Panel
     {
-        public Label TitleLabel;
-        public Panel WrapperPanel;
-        public string CurrentView;
+        public Label TitleLabel { get; set; }
+        public Panel WrapperPanel { get; set; }
+        public string CurrentView { get; set; }
+
+        public Menu Menu { get; set; }
 
         private readonly Button _backButton;
 
-        public MenuContent(Panel parent = null) : base()
+        public MenuContent(Menu menu) : base(menu)
         {
-            Parent = parent ?? Parent;
+            Menu = menu;
 
             TitleLabel = Add.Label("Menu", "title");
             _backButton = Add.Button("keyboard_backspace", "back", () =>
@@ -57,7 +59,12 @@ namespace TerryBros.UI.Menu
             {
                 SetContent("Load level", ShowLevels, "levels");
             });
-            wrapperPanel.Add.Button("Level Editor", "entry", () => Levels.Builder.Editor.ClientToggleLevelEditor());
+            wrapperPanel.Add.Button("Level Editor", "entry", () =>
+            {
+                Levels.Builder.Editor.ClientToggleLevelEditor();
+
+                Menu.Display = false;
+            });
 
             wrapperPanel.Add.Button("Settings", "entry disabled");
             wrapperPanel.Add.Button("About", "entry disabled");
