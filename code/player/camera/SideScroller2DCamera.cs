@@ -46,11 +46,14 @@ namespace TerryBros
             newPos.y += Screen.Height / 2 * OrthoSize;
             newPos.z -= GlobalSettings.BlockSize * _distanceInBlocks;
 
-            // horizontal camera movement
-            newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
+            try
+            {
+                // horizontal camera movement
+                newPos.x = Math.Clamp(newPos.x, bBox.Mins.x + Screen.Width / 2 * OrthoSize, bBox.Maxs.x - Screen.Width / 2 * OrthoSize);
 
-            // vertical camera movement
-            newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
+                // vertical camera movement
+                newPos.y = Math.Clamp(newPos.y, bBox.Mins.y + Screen.Height / 2 * OrthoSize, bBox.Maxs.y - Screen.Height / 2 * OrthoSize);
+            } catch (Exception) { }
 
             LocalPosition = newPos;
         }
