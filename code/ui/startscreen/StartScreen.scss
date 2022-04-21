@@ -1,0 +1,90 @@
+.startscreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    pointer-events: all;
+
+    background-color: bisque;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    display: none;
+
+    &.display {
+        display: flex;
+    }
+
+    img.logo {
+        transform: scale(0.8);
+    }
+
+    text.title {
+        font-size: 80px;
+        font-family: Roboto;
+        font-weight: bolder;
+        color: white;
+
+        background-color: rgb(177, 34, 34);
+        padding: 10px 20px;
+
+        margin-bottom: 20px;
+    }
+
+    Button.back {
+        font-size: 34px;
+        font-family: Roboto;
+        display: none;
+        width: 800px;
+        justify-content: center;
+
+        &:hover {
+            background-color: rgb(231, 84, 84);
+            font-weight: bolder;
+
+            cursor: pointer;
+        }
+
+        &.display {
+            display: flex;
+        }
+    }
+
+    .wrapper {
+        flex-direction: column;
+
+        width: 800px;
+
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        label {
+            font-size: 34px;
+            font-family: Roboto;
+
+            flex-grow: 1;
+            width: 100%;
+
+            &:hover {
+                font-weight: bolder;
+
+                background-color: burlywood;
+
+                cursor: pointer;
+            }
+        }
+
+        button.entry.disabled label {
+            text-decoration: line-through;
+
+            &:hover {
+                cursor: none;
+                font-weight: normal;
+            }
+        }
+    }
+}

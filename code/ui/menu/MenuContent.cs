@@ -59,15 +59,25 @@ namespace TerryBros.UI.Menu
             {
                 SetContent("Load level", ShowLevels, "levels");
             });
-            wrapperPanel.Add.Button("Level Editor", "entry", () =>
+            wrapperPanel.Add.Button("Level Editor / Test", "entry", () =>
             {
                 Levels.Builder.Editor.ClientToggleLevelEditor();
 
                 Menu.Display = false;
             });
 
-            wrapperPanel.Add.Button("Settings", "entry disabled");
-            wrapperPanel.Add.Button("About", "entry disabled");
+            wrapperPanel.Add.Button("Save", "entry disabled");
+
+            wrapperPanel.Add.Button("Quit", "entry", () =>
+            {
+                if (Sandbox.Local.Client.Pawn is Player player && player.IsInLevelBuilder)
+                {
+                    Levels.Builder.Editor.ClientToggleLevelEditor();
+                }
+
+                Menu.Display = false;
+                StartScreen.StartScreen.Instance.Display = true;
+            });
         }
 
         public void OnClickBack(string currentView)

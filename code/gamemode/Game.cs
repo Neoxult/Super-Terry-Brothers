@@ -11,6 +11,8 @@ namespace TerryBros.Gamemode
             if (IsClient)
             {
                 _ = new UI.Hud();
+
+                UI.StartScreen.StartScreen.Instance.Display = true;
             }
         }
 
@@ -25,6 +27,8 @@ namespace TerryBros.Gamemode
         public override void ClientJoined(Client client)
         {
             base.ClientJoined(client);
+
+            // TODO
 
             Player player = new();
             client.Pawn = player;
