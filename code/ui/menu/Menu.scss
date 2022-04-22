@@ -63,25 +63,32 @@ Menu {
                 padding: 5px 10px;
                 margin: 5px;
 
+                flex-grow: 1;
+
+                justify-content: center;
+
                 border: 2px rgb(143, 110, 68) solid;
                 background-color: rgb(221, 181, 128);
                 box-shadow: 2px 2px 2.5px rgba(0, 0, 0, 0.5);
 
                 transition: background-color 0.1s linear;
 
-                Label {
-                    width: 100%;
-
-                    text-align: center;
-                }
-
                 &:not(.disabled):hover {
                     background-color: rgb(255, 223, 181);
+
                     cursor: pointer;
                 }
 
                 &.disabled {
                     background-color: rgb(161, 127, 82);
+                }
+
+                &.delete {
+                    flex-grow: 0;
+
+                    &:hover {
+                        background-color: rgb(231, 84, 84);
+                    }
                 }
             }
         }

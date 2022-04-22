@@ -86,6 +86,7 @@ namespace TerryBros.UI.StartScreen
             {
                 SetContent("Choose Level", ShowLevels, "levels");
             });
+
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
                 Levels.Builder.Editor.ClientToggleLevelEditor();
@@ -116,13 +117,22 @@ namespace TerryBros.UI.StartScreen
         {
             foreach (string level in Levels.Builder.Loader.GetLevels())
             {
-                wrapperPanel.Add.Button(level.Split('.')[0], "entry", () =>
+                Panel panel = wrapperPanel.Add.Panel("buttons");
+
+                panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
                     Levels.Builder.Loader.LoadLevel(level);
 
                     OnClickHome();
 
                     Display = false;
+                });
+
+                panel.Add.Button("X", "entry delete", () =>
+                {
+                    Levels.Builder.Loader.DeleteLevel(level);
+
+                    panel.Delete();
                 });
             }
         }

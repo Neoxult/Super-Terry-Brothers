@@ -9,13 +9,22 @@ namespace TerryBros.UI.Menu
         {
             foreach (string level in Levels.Builder.Loader.GetLevels())
             {
-                wrapperPanel.Add.Button(level.Split('.')[0], "entry", () =>
+                Panel panel = wrapperPanel.Add.Panel("buttons");
+
+                panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
                     Levels.Builder.Loader.LoadLevel(level);
 
                     OnClickHome();
 
                     Menu.Instance.Display = false;
+                });
+
+                panel.Add.Button("X", "entry delete", () =>
+                {
+                    Levels.Builder.Loader.DeleteLevel(level);
+
+                    panel.Delete();
                 });
             }
         }
@@ -41,7 +50,7 @@ namespace TerryBros.UI.Menu
 
                 foreach (string level in Levels.Builder.Loader.GetLevels())
                 {
-                    if (level.ToLower() == text)
+                    if (level.Split('.')[0].ToLower() == text)
                     {
                         found = true;
 

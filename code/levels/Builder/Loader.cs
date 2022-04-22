@@ -26,6 +26,24 @@ namespace TerryBros.Levels.Builder
             FileSystem.Data.WriteAllText($"custom_levels/{fileName.Split('.')[0]}.json", STBGame.CurrentLevel.Export());
         }
 
+        [ClientCmd(Name = "stb_delete")]
+        public static void DeleteLevel(string fileName)
+        {
+            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            {
+                return;
+            }
+
+            string filePath = $"custom_levels/{fileName.Split('.')[0]}.json";
+
+            if (!FileSystem.Data.FileExists(filePath))
+            {
+                return;
+            }
+
+            FileSystem.Data.DeleteFile(filePath);
+        }
+
         [ClientCmd(Name = "stb_load")]
         public static void LoadLevel(string fileName)
         {

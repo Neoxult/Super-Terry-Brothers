@@ -62,12 +62,19 @@
         justify-content: center;
         text-align: center;
 
-        label {
-            font-size: 34px;
-            font-family: Roboto;
-
-            flex-grow: 1;
+        .buttons {
             width: 100%;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 5px;
+
+            label {
+                flex-grow: 1;
+                font-size: 34px;
+                font-family: Roboto;
+            }
 
             &:hover {
                 font-weight: bolder;
@@ -75,6 +82,14 @@
                 background-color: burlywood;
 
                 cursor: pointer;
+            }
+
+            &.delete {
+                flex-grow: 0;
+
+                &:hover {
+                    background-color: rgb(231, 84, 84);
+                }
             }
         }
 
