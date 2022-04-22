@@ -52,7 +52,7 @@ namespace TerryBros.UI.Menu
             // own pressing detection, as Input.Pressed is unreliable
             if (Input.Down(InputButton.Menu))
             {
-                if (!_pressed)
+                if (!_pressed && !StartScreen.StartScreen.Instance.Display)
                 {
                     _pressed = true;
 
