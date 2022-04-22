@@ -28,6 +28,8 @@ namespace TerryBros.Gamemode
         {
             base.ClientJoined(client);
 
+            ClientOnClientJoined(client);
+
             // TODO
 
             Player player = new();
@@ -35,6 +37,23 @@ namespace TerryBros.Gamemode
 
             player.Clothing.LoadFromClient(client);
             player.Spawn();
+        }
+
+        [ClientRpc]
+        public static void ClientOnClientJoined(Client client)
+        {
+            Event.Run("OnClientConnected", client);
+        }
+
+        public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
+        {
+            ClientOnClientDisconnected(client, reason);
+        }
+
+        [ClientRpc]
+        public static void ClientOnClientDisconnected(Client client, NetworkDisconnectionReason reason)
+        {
+            Event.Run("OnClientDisconnected", client, reason);
         }
     }
 }

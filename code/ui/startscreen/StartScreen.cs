@@ -42,6 +42,8 @@ namespace TerryBros.UI.StartScreen
         public Button BackButton { get; set; }
         public Image Logo { get; set; }
 
+        public PlayerList PlayerList { get; set; }
+
         public StartScreen() : base()
         {
             Instance = this;

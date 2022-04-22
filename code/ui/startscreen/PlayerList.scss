@@ -1,0 +1,44 @@
+.playerlist {
+    justify-content: center;
+    align-items: center;
+
+    margin: 50px;
+
+    .wrapper {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+
+        border: 2px rgb(143, 110, 68) solid;
+        background-color: rgb(221, 181, 128);
+        box-shadow: 2px 2px 2.5px rgba(0, 0, 0, 0.5);
+
+        .player-wrapper {
+            flex-grow: 1;
+            padding: 2px 15px;
+
+            &:hover {
+                background-color: bisque;
+            }
+
+            label.name {
+                flex-grow: 1;
+            }
+
+            button.kick {
+                flex-grow: 0;
+
+                font-weight: bolder;
+                color: rgb(177, 34, 34);
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                margin-left: 10px;
+            }
+        }
+    }
+}

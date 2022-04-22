@@ -1,8 +1,11 @@
 <link rel="stylesheet" href="StartScreen.scss">
 
 <div class="startscreen">
-    <img @ref="Logo" class="logo" />
-    <text @text="Title" class="title"></text>
-    <div @ref="Wrapper" class="wrapper"></div>
-    <button @ref="BackButton" class="back"></button>
+    <div class="main">
+        <img @ref="Logo" class="logo" />
+        <text @text="Title" class="title"></text>
+        <div @ref="Wrapper" class="wrapper"></div>
+        <button @ref="BackButton" class="back"></button>
+    </div>
+    <playerlist @ref="PlayerList"></playerlist>
 </div>
