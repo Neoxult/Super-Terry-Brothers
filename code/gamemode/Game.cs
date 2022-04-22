@@ -48,6 +48,8 @@ namespace TerryBros.Gamemode
         public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
         {
             ClientOnClientDisconnected(client, reason);
+
+            base.ClientDisconnect(client, reason);
         }
 
         [ClientRpc]
