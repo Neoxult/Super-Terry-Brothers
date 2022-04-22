@@ -177,13 +177,13 @@ namespace TerryBros.Levels
             {
                 foreach (KeyValuePair<int, BlockEntity> y in x.Value)
                 {
-                    dict.TryGetValue(y.Value.Name, out List<Vector2> blockList);
+                    dict.TryGetValue(y.Value.Asset.Name, out List<Vector2> blockList);
 
                     if (blockList == null)
                     {
                         blockList = new();
 
-                        dict.Add(y.Value.Name, blockList);
+                        dict.Add(y.Value.Asset.Name, blockList);
                     }
 
                     blockList.Add(new Vector2(x.Key, y.Key));

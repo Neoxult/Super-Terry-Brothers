@@ -82,9 +82,9 @@ namespace TerryBros.UI.StartScreen
 
         public void ShowDefaultMenu(Panel wrapperPanel)
         {
-            wrapperPanel.Add.Button("Load Level", "entry", () =>
+            wrapperPanel.Add.Button("Start Game", "entry", () =>
             {
-                SetContent("Load level", ShowLevels, "levels");
+                SetContent("Choose Level", ShowLevels, "levels");
             });
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
@@ -109,7 +109,7 @@ namespace TerryBros.UI.StartScreen
 
         public void OnClickHome()
         {
-            SetContent("StartScreen", ShowDefaultMenu, "home");
+            SetContent("Main Menu", ShowDefaultMenu, "home");
         }
 
         public void ShowLevels(Panel wrapperPanel)
