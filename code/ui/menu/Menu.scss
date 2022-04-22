@@ -85,5 +85,22 @@ Menu {
                 }
             }
         }
+
+        &.saving TextEntry {
+            padding: 5px 10px;
+            margin: 5px;
+
+            border: 2px rgb(143, 110, 68) solid;
+            background-color: rgb(221, 181, 128);
+            box-shadow: 2px 2px 2.5px rgba(0, 0, 0, 0.5);
+
+            &:focus {
+                background-color: rgb(255, 223, 181);
+            }
+
+            &:not(.has-placeholder) .placeholder {
+                display: none;
+            }
+        }
     }
 }

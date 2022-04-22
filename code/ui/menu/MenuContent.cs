@@ -57,8 +57,9 @@ namespace TerryBros.UI.Menu
         {
             wrapperPanel.Add.Button("Load Level", "entry", () =>
             {
-                SetContent("Load level", ShowLevels, "levels");
+                SetContent("Load Level", ShowLevels, "levels");
             });
+
             wrapperPanel.Add.Button("Level Editor / Test", "entry", () =>
             {
                 Levels.Builder.Editor.ClientToggleLevelEditor();
@@ -66,7 +67,10 @@ namespace TerryBros.UI.Menu
                 Menu.Display = false;
             });
 
-            wrapperPanel.Add.Button("Save", "entry disabled");
+            wrapperPanel.Add.Button("Save", "entry", () =>
+            {
+                SetContent("Save Level", ShowLevelInput, "saving");
+            });
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {
