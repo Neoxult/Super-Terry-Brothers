@@ -39,6 +39,7 @@ namespace TerryBros.UI.LevelBuilder
                 IsRightMouseButtonDown = false;
             }
         }
+
         public override void Tick()
         {
             base.Tick();

@@ -93,7 +93,9 @@ namespace TerryBros.UI.StartScreen
 
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
-                Levels.Editor.ClientToggleLevelEditor();
+                Levels.Editor.ClientToggleLevelEditor(true);
+
+                Menu.Menu.Instance.MenuContent.OnClickHome();
 
                 Display = false;
             });

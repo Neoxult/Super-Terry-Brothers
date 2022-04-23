@@ -8,11 +8,10 @@ namespace TerryBros
 {
     public partial class Player
     {
-        [Net]
         public bool IsInLevelBuilder { get; set; }
 
-        private IntVector3 oldGrid = IntVector3.Zero;
-        private bool isDrawing = false;
+        private IntVector3 _oldGrid = IntVector3.Zero;
+        private bool _isDrawing = false;
 
         private void SimulateLevelEditing()
         {
@@ -38,25 +37,27 @@ namespace TerryBros
         {
             IsInLevelBuilder = enable;
 
-            if (Host.IsServer)
+            if (!Host.IsServer)
             {
-                if (enable)
-                {
-                    (Controller as MovementController).IsFreeze = true;
-                    CameraMode = new LevelEditorCamera();
+                return;
+            }
 
-                    EnableAllCollisions = false;
-                    EnableDrawing = false;
-                }
-                else
-                {
-                    (Controller as MovementController).IsFreeze = false;
+            if (enable)
+            {
+                (Controller as MovementController).IsFreeze = true;
+                CameraMode = new LevelEditorCamera();
 
-                    EnableAllCollisions = true;
-                    EnableDrawing = true;
+                EnableAllCollisions = false;
+                EnableDrawing = false;
+            }
+            else
+            {
+                (Controller as MovementController).IsFreeze = false;
 
-                    Respawn();
-                }
+                EnableAllCollisions = true;
+                EnableDrawing = true;
+
+                Respawn();
             }
         }
 
@@ -84,10 +85,10 @@ namespace TerryBros
             IntVector3 gridCoord = GlobalSettings.GetGridCoordinatesForBlockPos(pos);
             BuildPanel buildPanel = BuildPanel.Instance;
 
-            if (buildPanel.IsMouseDown && !oldGrid.Equals(gridCoord))
+            if (buildPanel.IsMouseDown && !_oldGrid.Equals(gridCoord))
             {
-                oldGrid = gridCoord;
-                isDrawing = true;
+                _oldGrid = gridCoord;
+                _isDrawing = true;
 
                 if (buildPanel.IsLeftMouseButtonDown)
                 {
@@ -98,10 +99,10 @@ namespace TerryBros
                     Levels.Editor.ServerDeleteBlock(pos);
                 }
             }
-            else if (isDrawing && !buildPanel.IsMouseDown)
+            else if (_isDrawing && !buildPanel.IsMouseDown)
             {
-                oldGrid = IntVector3.Zero;
-                isDrawing = false;
+                _oldGrid = IntVector3.Zero;
+                _isDrawing = false;
             }
         }
     }

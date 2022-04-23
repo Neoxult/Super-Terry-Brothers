@@ -1,5 +1,6 @@
 using System;
 
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
@@ -62,9 +63,16 @@ namespace TerryBros.UI.Menu
                 SetContent("Load Level", ShowLevels, "levels");
             });
 
-            wrapperPanel.Add.Button("Level Editor / Test", "entry", () =>
+            bool toggle = false;
+
+            if (Local.Pawn is Player player)
             {
-                Levels.Editor.ClientToggleLevelEditor();
+                toggle = !player.IsInLevelBuilder;
+            }
+
+            wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
+            {
+                Levels.Editor.ClientToggleLevelEditor(toggle);
 
                 Menu.Display = false;
             });
@@ -76,11 +84,12 @@ namespace TerryBros.UI.Menu
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {
-                if (Sandbox.Local.Client.Pawn is Player player && player.IsInLevelBuilder)
+                if (Local.Client.Pawn is Player player && player.IsInLevelBuilder)
                 {
-                    Levels.Editor.ClientToggleLevelEditor();
+                    Levels.Editor.ClientToggleLevelEditor(false);
                 }
 
+                Levels.Level.ServerClear();
                 STBGame.Finish();
 
                 Menu.Display = false;

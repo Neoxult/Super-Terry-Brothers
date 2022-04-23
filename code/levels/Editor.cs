@@ -95,24 +95,19 @@ namespace TerryBros.Levels
         }
 
         [ClientCmd("stb_editor")]
-        public static void ClientToggleLevelEditor()
+        public static void ClientToggleLevelEditor(bool toggle)
         {
-            if (Local.Pawn is not Player caller)
-            {
-                return;
-            }
-
-            bool toggle = !caller.IsInLevelBuilder;
-
-            ServerToggleLevelEditor(toggle);
+            BuildPanel.Instance.Toggle(toggle);
 
             foreach (Client client in Client.All)
             {
                 if (client.Pawn is Player player)
                 {
-                    BuildPanel.Instance.Toggle(toggle);
+                    player.EnableLevelEditor(toggle);
                 }
             }
+
+            ServerToggleLevelEditor(toggle);
         }
 
         [ServerCmd]
