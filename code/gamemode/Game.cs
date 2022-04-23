@@ -66,8 +66,27 @@ namespace TerryBros.Gamemode
             Event.Run("OnClientDisconnected", client, reason);
         }
 
+        [ServerCmd]
+        public static void StartGame(string levelPath)
+        {
+            foreach (Client client in Client.All)
+            {
+                client.SetValue("playing", true);
+            }
+
+            Levels.Loader.Local.Load(levelPath);
+        }
+
+        public static void StartEditor()
+        {
+            Level level = new();
+            level.Build();
+
+            Start(level);
+        }
+
         [Event(TBEvent.Level.LOADED)]
-        public static void Start(Level level)
+        protected static void Start(Level level)
         {
             CurrentLevel = level;
 
@@ -91,7 +110,7 @@ namespace TerryBros.Gamemode
         }
 
         [Event(TBEvent.Level.CLEARED)]
-        public static void Clear(Level level)
+        protected static void Clear(Level level)
         {
             if (CurrentLevel == level)
             {
@@ -121,6 +140,8 @@ namespace TerryBros.Gamemode
                 {
                     player.Delete();
                 }
+
+                client.SetValue("playing", false);
 
                 client.Pawn = null;
             }

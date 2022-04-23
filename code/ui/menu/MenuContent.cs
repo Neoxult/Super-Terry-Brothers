@@ -58,24 +58,27 @@ namespace TerryBros.UI.Menu
 
         public void ShowDefaultMenu(Panel wrapperPanel)
         {
-            wrapperPanel.Add.Button("Load Level", "entry", () =>
-            {
-                SetContent("Load Level", ShowLevels, "levels");
-            });
-
             bool toggle = !Local.Client?.GetValue("leveleditor", false) ?? false;
 
-            wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
+            if (!Local.Client.GetValue("playing", false))
             {
-                Levels.Editor.ClientToggleLevelEditor(toggle);
+                wrapperPanel.Add.Button("Load Level", "entry", () =>
+                {
+                    SetContent("Load Level", ShowLevels, "levels");
+                });
 
-                Menu.Display = false;
-            });
+                wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
+                {
+                    Levels.Editor.ClientToggleLevelEditor(toggle);
 
-            wrapperPanel.Add.Button("Save", "entry", () =>
-            {
-                SetContent("Save Level", ShowLevelInput, "saving");
-            });
+                    Menu.Display = false;
+                });
+
+                wrapperPanel.Add.Button("Save", "entry", () =>
+                {
+                    SetContent("Save Level", ShowLevelInput, "saving");
+                });
+            }
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {

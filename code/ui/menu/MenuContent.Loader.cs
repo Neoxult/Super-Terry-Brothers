@@ -1,6 +1,8 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
+using TerryBros.Gamemode;
+
 namespace TerryBros.UI.Menu
 {
     public partial class MenuContent
@@ -13,7 +15,7 @@ namespace TerryBros.UI.Menu
 
                 panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
-                    Levels.Loader.Local.Load(level);
+                    STBGame.StartGame(level);
 
                     OnClickHome();
 

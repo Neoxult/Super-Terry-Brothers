@@ -96,10 +96,7 @@ namespace TerryBros.Levels
 
         public static void Init()
         {
-            Level level = new();
-            level.Build();
-
-            STBGame.Start(level);
+            STBGame.StartEditor();
         }
 
         [ClientCmd("stb_editor")]
