@@ -90,7 +90,6 @@ namespace TerryBros.UI.Menu
                 }
 
                 Levels.Level.ServerClear();
-                STBGame.ServerFinish();
 
                 Menu.Display = false;
                 StartScreen.StartScreen.Instance.Display = true;

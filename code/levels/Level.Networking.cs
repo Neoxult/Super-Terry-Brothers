@@ -68,15 +68,17 @@ namespace TerryBros.Levels
                 _currentPacketHash = -1;
 
                 STBGame.CurrentLevel?.Clear();
-                STBGame.CurrentLevel = new();
 
-                Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
+                Level level = new();
+                level.Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
 
                 if (Host.IsServer)
                 {
-                    STBGame.CurrentLevel.Restart();
+                    level.Restart();
                     STBGame.ClientRestartLevel();
                 }
+
+                STBGame.CurrentLevel = level;
             }
         }
 

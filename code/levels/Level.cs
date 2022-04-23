@@ -11,7 +11,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public partial class Level : Entity
+    public partial class Level : BaseNetworkable
     {
         public BBox LevelBounds { get; private set; }
         public BBox LevelBoundsLocal { get; private set; }
@@ -191,7 +191,7 @@ namespace TerryBros.Levels
             return JsonSerializer.Serialize(dict);
         }
 
-        public static void Import(Dictionary<string, List<Vector2>> dict)
+        public void Import(Dictionary<string, List<Vector2>> dict)
         {
             foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
             {
@@ -203,9 +203,13 @@ namespace TerryBros.Levels
                     {
                         BlockEntity blockEntity = BlockEntity.FromAsset(asset);
                         blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
+
+                        RegisterBlock(blockEntity);
                     }
                 }
             }
+
+            Event.Run(TBEvent.Level.LOADED, this);
         }
 
         public void Clear()
@@ -224,6 +228,8 @@ namespace TerryBros.Levels
 
             GridBlocks = new();
             LevelBoundsBlocks = IntBBox.Zero;
+
+            Event.Run(TBEvent.Level.CLEARED, this);
         }
     }
 }

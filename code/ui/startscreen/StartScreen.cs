@@ -128,7 +128,6 @@ namespace TerryBros.UI.StartScreen
                 panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
                     Levels.Loader.Local.Load(level);
-                    STBGame.ServerStart();
 
                     OnClickHome();
 

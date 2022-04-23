@@ -18,6 +18,16 @@ namespace TerryBros.Events
             /// Triggered when a level is finished.
             /// </summary>
             public const string FINISHED = "terrybros.level.finished";
+
+            /// <summary>
+            /// Triggered when a level was loaded completely.
+            /// </summary>
+            public const string LOADED = "terrybros.level.loaded";
+
+            /// <summary>
+            /// Triggered when a level was cleared completely.
+            /// </summary>
+            public const string CLEARED = "terrybros.level.cleared";
         }
     }
 }

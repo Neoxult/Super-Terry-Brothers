@@ -37,8 +37,6 @@ namespace TerryBros.LevelElements
             set
             {
                 base.Position = value + GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
-
-                STBGame.CurrentLevel?.RegisterBlock(this);
             }
         }
 

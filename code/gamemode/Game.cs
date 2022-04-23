@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 using Sandbox;
 
+using TerryBros.Events;
+using TerryBros.Levels;
+
 #pragma warning disable IDE0051
 
 namespace TerryBros.Gamemode
@@ -59,14 +62,14 @@ namespace TerryBros.Gamemode
             Event.Run("OnClientDisconnected", client, reason);
         }
 
-        [ServerCmd]
-        public static void ServerStart()
+        [Event(TBEvent.Level.LOADED)]
+        public static void Start(Level _)
         {
-            Start();
-        }
+            if (!Host.IsServer)
+            {
+                return;
+            }
 
-        public static void Start()
-        {
             STBGame game = Current as STBGame;
 
             game.PlayingClients = new(Client.All);
@@ -81,14 +84,14 @@ namespace TerryBros.Gamemode
             }
         }
 
-        [ServerCmd]
-        public static void ServerFinish()
+        [Event(TBEvent.Level.CLEARED)]
+        public static void Clear(Level _)
         {
-            Finish();
-        }
+            if (!Host.IsServer)
+            {
+                return;
+            }
 
-        public static void Finish()
-        {
             STBGame game = Current as STBGame;
 
             foreach (Client client in game.PlayingClients)
