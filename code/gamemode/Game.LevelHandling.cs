@@ -35,17 +35,5 @@ namespace TerryBros.Gamemode
 
             spawnPoint.MoveToSpawn(pawn);
         }
-
-        [Event.Entity.PostSpawn]
-        private static void PostLevelSpawn()
-        {
-            if (CurrentLevel != null)
-            {
-                return;
-            }
-
-            CurrentLevel = new DefaultLevel();
-            CurrentLevel.Build();
-        }
     }
 }

@@ -5,14 +5,13 @@ using System.Text.Json;
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public abstract partial class Level : Entity
+    public partial class Level : Entity
     {
         public BBox LevelBounds { get; private set; }
         public BBox LevelBoundsLocal { get; private set; }
@@ -44,8 +43,6 @@ namespace TerryBros.Levels
 
         protected LevelElements.SpawnPoint RestartSpawn;
         protected LevelElements.SpawnPoint CheckPointSpawn;
-
-        public abstract void Build();
 
         public void RegisterBlock(BlockEntity block)
         {
@@ -211,11 +208,11 @@ namespace TerryBros.Levels
             }
         }
 
-        public static void Clear()
+        public void Clear()
         {
-            foreach (Entity entity in All)
+            foreach (Dictionary<int, BlockEntity> dict in GridBlocks.Values)
             {
-                if (entity is BlockEntity blockEntity)
+                foreach (BlockEntity blockEntity in dict.Values)
                 {
                     try
                     {
@@ -225,10 +222,8 @@ namespace TerryBros.Levels
                 }
             }
 
-            Level level = STBGame.CurrentLevel;
-
-            level.GridBlocks = new();
-            level.LevelBoundsBlocks = IntBBox.Zero;
+            GridBlocks = new();
+            LevelBoundsBlocks = IntBBox.Zero;
         }
     }
 }

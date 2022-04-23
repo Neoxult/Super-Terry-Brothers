@@ -38,12 +38,6 @@ namespace TerryBros.Gamemode
             base.ClientJoined(client);
 
             ClientOnClientJoined(client);
-
-            Player player = new();
-            client.Pawn = player;
-
-            player.Clothing.LoadFromClient(client);
-            player.Spawn();
         }
 
         [ClientRpc]
@@ -65,14 +59,54 @@ namespace TerryBros.Gamemode
             Event.Run("OnClientDisconnected", client, reason);
         }
 
+        [ServerCmd]
+        public static void ServerStart()
+        {
+            Start();
+        }
+
         public static void Start()
         {
-            (Current as STBGame).PlayingClients = new(Client.All);
+            STBGame game = Current as STBGame;
+
+            game.PlayingClients = new(Client.All);
+
+            foreach (Client client in game.PlayingClients)
+            {
+                Player player = new();
+                client.Pawn = player;
+
+                player.Clothing.LoadFromClient(client);
+                player.Spawn();
+            }
+        }
+
+        [ServerCmd]
+        public static void ServerFinish()
+        {
+            Finish();
         }
 
         public static void Finish()
         {
-            (Current as STBGame).PlayingClients = null;
+            STBGame game = Current as STBGame;
+
+            foreach (Client client in game.PlayingClients)
+            {
+                if (client == null || !client.IsValid())
+                {
+                    continue;
+                }
+
+                if (client.Pawn is Player player)
+                {
+                    player.Delete();
+                }
+
+                client.Pawn = null;
+            }
+
+            game.PlayingClients = null;
         }
     }
 }
