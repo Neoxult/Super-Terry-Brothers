@@ -2,9 +2,6 @@ using System.Collections.Generic;
 
 using Sandbox;
 
-using TerryBros.Events;
-using TerryBros.Levels;
-
 #pragma warning disable IDE0051
 
 namespace TerryBros.Gamemode
@@ -64,89 +61,6 @@ namespace TerryBros.Gamemode
         public static void ClientOnClientDisconnected(Client client, NetworkDisconnectionReason reason)
         {
             Event.Run("OnClientDisconnected", client, reason);
-        }
-
-        [ServerCmd]
-        public static void StartGame(string levelPath)
-        {
-            foreach (Client client in Client.All)
-            {
-                client.SetValue("playing", true);
-            }
-
-            Levels.Loader.Local.Load(levelPath);
-        }
-
-        public static void StartEditor()
-        {
-            Level level = new();
-            level.Build();
-
-            Start(level);
-        }
-
-        [Event(TBEvent.Level.LOADED)]
-        protected static void Start(Level level)
-        {
-            CurrentLevel = level;
-
-            if (!Host.IsServer)
-            {
-                return;
-            }
-
-            STBGame game = Current as STBGame;
-
-            game.PlayingClients = new(Client.All);
-
-            foreach (Client client in game.PlayingClients)
-            {
-                Player player = new();
-                client.Pawn = player;
-
-                player.Clothing.LoadFromClient(client);
-                player.Spawn();
-            }
-        }
-
-        [Event(TBEvent.Level.CLEARED)]
-        protected static void Clear(Level level)
-        {
-            if (CurrentLevel == level)
-            {
-                CurrentLevel = null;
-            }
-
-            if (!Host.IsServer)
-            {
-                UI.Menu.Menu.Instance?.Delete(true);
-
-                return;
-            }
-
-            if (Current is not STBGame game)
-            {
-                return;
-            }
-
-            foreach (Client client in game.PlayingClients)
-            {
-                if (client == null || !client.IsValid())
-                {
-                    continue;
-                }
-
-                if (client.Pawn is Player player)
-                {
-                    player.Delete();
-                }
-
-                client.SetValue("playing", false);
-
-                client.Pawn = null;
-            }
-
-            game.PlayingClients = null;
         }
     }
 }

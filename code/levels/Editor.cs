@@ -94,32 +94,17 @@ namespace TerryBros.Levels
             }
         }
 
-        public static void Init()
-        {
-            STBGame.StartEditor();
-        }
-
         [ClientCmd("stb_editor")]
         public static void ClientToggleLevelEditor(bool toggle)
         {
             BuildPanel.Instance.Toggle(toggle);
 
             ServerToggleLevelEditor(toggle);
-
-            if (toggle)
-            {
-                Init();
-            }
         }
 
         [ServerCmd]
         public static void ServerToggleLevelEditor(bool toggle)
         {
-            if (toggle)
-            {
-                Init();
-            }
-
             foreach (Client client in Client.All)
             {
                 client.SetValue("leveleditor", toggle);
@@ -127,6 +112,7 @@ namespace TerryBros.Levels
                 if (client.Pawn is Player player)
                 {
                     player.EnableLevelEditor(toggle);
+                    player.Respawn();
                 }
             }
         }

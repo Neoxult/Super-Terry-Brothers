@@ -93,7 +93,7 @@ namespace TerryBros.UI.StartScreen
 
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
-                Levels.Editor.ClientToggleLevelEditor(true);
+                STBGame.StartEditor();
 
                 Display = false;
             });

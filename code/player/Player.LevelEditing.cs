@@ -35,24 +35,14 @@ namespace TerryBros
         {
             Host.AssertServer();
 
-            if (enable)
-            {
-                (Controller as MovementController).IsFreeze = true;
-                CameraMode = new LevelEditorCamera();
+            (Controller as MovementController).IsFreeze = enable;
+            EnableDrawing = !enable;
 
-                EnableDrawing = false;
-            }
-            else
+            if (!enable)
             {
-                (Controller as MovementController).IsFreeze = false;
-
                 ClearCollisionLayers();
                 AddCollisionLayer(CollisionLayer.Solid);
                 AddCollisionLayer(CollisionLayer.PhysicsProp);
-
-                EnableDrawing = true;
-
-                Respawn();
             }
         }
 
