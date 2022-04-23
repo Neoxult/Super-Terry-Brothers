@@ -20,7 +20,6 @@ namespace TerryBros.UI
 
             RootPanel.AddChild<StartScreen.StartScreen>();
             RootPanel.AddChild<LevelBuilder.BuildPanel>();
-            RootPanel.AddChild<Menu.Menu>();
         }
 
         [Event.Hotload]

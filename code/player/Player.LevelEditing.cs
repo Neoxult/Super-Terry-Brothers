@@ -8,14 +8,12 @@ namespace TerryBros
 {
     public partial class Player
     {
-        public bool IsInLevelBuilder { get; set; }
-
         private IntVector3 _oldGrid = IntVector3.Zero;
         private bool _isDrawing = false;
 
         private void SimulateLevelEditing()
         {
-            if (!IsInLevelBuilder || CameraMode is not LevelEditorCamera camera)
+            if (!Client.GetValue("leveleditor", false) || CameraMode is not LevelEditorCamera camera)
             {
                 return;
             }
@@ -35,12 +33,7 @@ namespace TerryBros
 
         public void EnableLevelEditor(bool enable)
         {
-            IsInLevelBuilder = enable;
-
-            if (!Host.IsServer)
-            {
-                return;
-            }
+            Host.AssertServer();
 
             if (enable)
             {

@@ -63,12 +63,7 @@ namespace TerryBros.UI.Menu
                 SetContent("Load Level", ShowLevels, "levels");
             });
 
-            bool toggle = false;
-
-            if (Local.Pawn is Player player)
-            {
-                toggle = !player.IsInLevelBuilder;
-            }
+            bool toggle = !Local.Client?.GetValue("leveleditor", false) ?? false;
 
             wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
             {
@@ -84,7 +79,7 @@ namespace TerryBros.UI.Menu
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {
-                if (Local.Client.Pawn is Player player && player.IsInLevelBuilder)
+                if (!toggle)
                 {
                     Levels.Editor.ClientToggleLevelEditor(false);
                 }

@@ -78,6 +78,13 @@ namespace TerryBros
             SetCameraDimension();
         }
 
+        public override void ClientSpawn()
+        {
+            base.ClientSpawn();
+
+            UI.Hud.Instance?.RootPanel.AddChild<UI.Menu.Menu>();
+        }
+
         /// <summary>
         /// Called every tick, clientside and serverside.
         /// </summary>

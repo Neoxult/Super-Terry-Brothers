@@ -13,7 +13,7 @@ namespace TerryBros.Gamemode
         public static Level CurrentLevel
         {
             get => _currentLevel;
-            set
+            protected set
             {
                 LastLevel = _currentLevel;
                 _currentLevel = value;

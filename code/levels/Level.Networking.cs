@@ -69,10 +69,7 @@ namespace TerryBros.Levels
 
                 STBGame.CurrentLevel?.Clear();
 
-                Level level = new();
-                STBGame.CurrentLevel = level;
-
-                level.Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
+                new Level().Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
             }
         }
 
@@ -95,7 +92,6 @@ namespace TerryBros.Levels
         public static void ServerClear()
         {
             STBGame.CurrentLevel?.Clear();
-            STBGame.CurrentLevel = null;
 
             ClientClear();
         }
@@ -104,7 +100,6 @@ namespace TerryBros.Levels
         public static void ClientClear()
         {
             STBGame.CurrentLevel?.Clear();
-            STBGame.CurrentLevel = null;
         }
     }
 }

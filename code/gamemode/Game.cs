@@ -23,9 +23,13 @@ namespace TerryBros.Gamemode
             if (IsClient)
             {
                 _ = new UI.Hud();
-
-                UI.StartScreen.StartScreen.Instance.Display = true;
             }
+        }
+
+        [Event.Hotload]
+        public static void Reset()
+        {
+            CurrentLevel?.Clear();
         }
 
         public override void Simulate(Client cl)
@@ -63,8 +67,10 @@ namespace TerryBros.Gamemode
         }
 
         [Event(TBEvent.Level.LOADED)]
-        public static void Start(Level _)
+        public static void Start(Level level)
         {
+            CurrentLevel = level;
+
             if (!Host.IsServer)
             {
                 return;
@@ -85,14 +91,24 @@ namespace TerryBros.Gamemode
         }
 
         [Event(TBEvent.Level.CLEARED)]
-        public static void Clear(Level _)
+        public static void Clear(Level level)
         {
+            if (CurrentLevel == level)
+            {
+                CurrentLevel = null;
+            }
+
             if (!Host.IsServer)
             {
+                UI.Menu.Menu.Instance?.Delete(true);
+
                 return;
             }
 
-            STBGame game = Current as STBGame;
+            if (Current is not STBGame game)
+            {
+                return;
+            }
 
             foreach (Client client in game.PlayingClients)
             {

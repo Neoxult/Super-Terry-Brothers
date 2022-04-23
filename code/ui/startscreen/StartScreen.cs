@@ -60,7 +60,7 @@ namespace TerryBros.UI.StartScreen
 
             OnClickHome();
 
-            Display = false;
+            Display = true;
         }
 
         public void SetContent(string title, Action<Panel> onSetContent = null, string view = null)
@@ -94,8 +94,6 @@ namespace TerryBros.UI.StartScreen
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
                 Levels.Editor.ClientToggleLevelEditor(true);
-
-                Menu.Menu.Instance.MenuContent.OnClickHome();
 
                 Display = false;
             });
