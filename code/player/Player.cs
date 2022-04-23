@@ -60,6 +60,8 @@ namespace TerryBros
             Controller = new MovementController();
             Animator = new StandardPlayerAnimator();
 
+            EnableAllCollisions = false;
+
             Respawn();
         }
 

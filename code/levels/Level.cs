@@ -124,6 +124,7 @@ namespace TerryBros.Levels
 
         protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new() => new()
         {
+            Asset = BlockAsset.GetByName("blooming"),
             Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
         };
 

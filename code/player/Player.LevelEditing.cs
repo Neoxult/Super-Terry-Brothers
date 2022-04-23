@@ -47,14 +47,16 @@ namespace TerryBros
                 (Controller as MovementController).IsFreeze = true;
                 CameraMode = new LevelEditorCamera();
 
-                EnableAllCollisions = false;
                 EnableDrawing = false;
             }
             else
             {
                 (Controller as MovementController).IsFreeze = false;
 
-                EnableAllCollisions = true;
+                ClearCollisionLayers();
+                AddCollisionLayer(CollisionLayer.Solid);
+                AddCollisionLayer(CollisionLayer.PhysicsProp);
+
                 EnableDrawing = true;
 
                 Respawn();
