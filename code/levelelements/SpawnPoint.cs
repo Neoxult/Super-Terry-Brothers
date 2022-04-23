@@ -5,7 +5,7 @@ using TerryBros.Settings;
 namespace TerryBros.LevelElements
 {
     [Library("stb_spawnpoint"), Hammer.Skip]
-    public partial class SpawnPoint : Entity
+    public partial class SpawnPoint : Sandbox.SpawnPoint
     {
         /// <summary>
         /// Make sure the Player can spawn here properly.

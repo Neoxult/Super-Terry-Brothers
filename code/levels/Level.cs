@@ -11,7 +11,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public partial class Level : BaseNetworkable
+    public partial class Level
     {
         public BBox LevelBounds { get; private set; }
         public BBox LevelBoundsLocal { get; private set; }
@@ -40,6 +40,9 @@ namespace TerryBros.Levels
         private static IntBBox _levelBoundsBlocks = IntBBox.Zero;
 
         public Dictionary<int, Dictionary<int, BlockEntity>> GridBlocks = new();
+
+        public Sky Sky { get; set; }
+        public List<EnvironmentLightEntity> Lights { get; set; } = new();
 
         protected LevelElements.SpawnPoint RestartSpawn;
         protected LevelElements.SpawnPoint CheckPointSpawn;
@@ -119,9 +122,9 @@ namespace TerryBros.Levels
             CheckPointSpawn = null;
         }
 
-        protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new() => new()
+        protected static T CreateBox<T>(int GridX, int GridY, BlockAsset asset) where T : BlockEntity, new() => new()
         {
-            Asset = BlockAsset.GetByName("blooming"),
+            Asset = asset,
             Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
         };
 
@@ -136,7 +139,7 @@ namespace TerryBros.Levels
                 {
                     int y = GridY + j;
 
-                    CreateBox<T>(x, y);
+                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
                 }
             }
         }
@@ -147,7 +150,7 @@ namespace TerryBros.Levels
             {
                 for (int y = StartGridY; y <= EndGridY; y++)
                 {
-                    CreateBox<T>(x, y);
+                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
                 }
             }
         }
@@ -158,14 +161,57 @@ namespace TerryBros.Levels
             {
                 for (int y = GridY; y < GridY + height; y++)
                 {
-                    CreateBox<T>(x, y);
+                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
                 }
             }
         }
 
-        protected static Checkpoint CreateCheckPoint(int GridX, int GridY) => CreateBox<Checkpoint>(GridX, GridY);
+        protected static Checkpoint CreateCheckPoint(int GridX, int GridY) => CreateBox<Checkpoint>(GridX, GridY, BlockAsset.GetByName("checkpoint"));
 
-        protected static Goal CreateGoal(int GridX, int GridY) => CreateBox<Goal>(GridX, GridY);
+        protected static Goal CreateGoal(int GridX, int GridY) => CreateBox<Goal>(GridX, GridY, BlockAsset.GetByName("goal"));
+
+        public void Build()
+        {
+            RestartSpawn = new()
+            {
+                Position = GlobalSettings.GetBlockPosForGridCoordinates(0, 1)
+            };
+
+            Sky = new DefaultSky();
+
+            //TODO: Properly set lights up in local space
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(1, 4, -1));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(1, 4, -1));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(-1, 1, 4), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(-1, 1, -0.5f));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(-1, 1, -0.5f));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(1, 0.5f, 1), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+        }
 
         public string Export()
         {
@@ -193,6 +239,8 @@ namespace TerryBros.Levels
 
         public void Import(Dictionary<string, List<Vector2>> dict)
         {
+            Build();
+
             foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
             {
                 BlockAsset asset = BlockAsset.GetByName(blockList.Key);
@@ -226,7 +274,20 @@ namespace TerryBros.Levels
                 }
             }
 
-            GridBlocks = new();
+            Sky.Delete();
+            Sky = null;
+
+            foreach (EnvironmentLightEntity environmentLightEntity in Lights)
+            {
+                environmentLightEntity.Delete();
+            }
+
+            Lights.Clear();
+            GridBlocks.Clear();
+
+            RestartSpawn?.Delete();
+            RestartSpawn = null;
+
             LevelBoundsBlocks = IntBBox.Zero;
 
             Event.Run(TBEvent.Level.CLEARED, this);
