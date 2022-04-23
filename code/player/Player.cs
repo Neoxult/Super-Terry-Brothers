@@ -67,11 +67,6 @@ namespace TerryBros
         {
             base.Respawn();
 
-            (Controller as MovementController).IsFreeze = false;
-
-            EnableAllCollisions = true;
-            EnableDrawing = true;
-
             ClientRespawn(To.Single(this));
         }
 

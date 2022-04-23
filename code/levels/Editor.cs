@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 using Sandbox;
@@ -9,12 +8,12 @@ using TerryBros.Settings;
 using TerryBros.Utils;
 using TerryBros.UI.LevelBuilder;
 
-namespace TerryBros.Levels.Builder
+namespace TerryBros.Levels
 {
     public static partial class Editor
     {
         // Just some testing, to create blocks dynamically
-        [ServerCmd(Name = "stb_block", Help = "Spawns a block in front of the player")]
+        [ServerCmd(Name = "stb_block", Help = "Spawns a block")]
         public static void ServerCreateBlock(Vector3 position, string blockName)
         {
             CreateBlock(position, blockName);
@@ -22,7 +21,7 @@ namespace TerryBros.Levels.Builder
         }
 
         // Just some testing, to create blocks dynamically
-        [ServerCmd(Name = "stb_block_delete", Help = "Removes a block in front of the player")]
+        [ServerCmd(Name = "stb_block_delete", Help = "Removes a block")]
         public static void ServerDeleteBlock(Vector3 position)
         {
             DeleteBlock(position);
@@ -98,27 +97,34 @@ namespace TerryBros.Levels.Builder
         [ClientCmd("stb_editor")]
         public static void ClientToggleLevelEditor()
         {
-            if (Local.Pawn is not Player player)
+            if (Local.Pawn is not Player caller)
             {
                 return;
             }
 
-            bool toggle = !player.IsInLevelBuilder;
+            bool toggle = !caller.IsInLevelBuilder;
 
-            player.EnableLevelEditor(toggle);
             ServerToggleLevelEditor(toggle);
-            BuildPanel.Instance.Toggle(toggle);
+
+            foreach (Client client in Client.All)
+            {
+                if (client.Pawn is Player player)
+                {
+                    BuildPanel.Instance.Toggle(toggle);
+                }
+            }
         }
 
         [ServerCmd]
         public static void ServerToggleLevelEditor(bool toggle)
         {
-            if (ConsoleSystem.Caller?.Pawn is not Player player)
+            foreach (Client client in Client.All)
             {
-                return;
+                if (client.Pawn is Player player)
+                {
+                    player.EnableLevelEditor(toggle);
+                }
             }
-
-            player.EnableLevelEditor(toggle);
         }
 
         [ServerCmd]

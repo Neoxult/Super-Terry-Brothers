@@ -23,7 +23,7 @@ namespace TerryBros.UI.Menu
                 {
                     player.IsInMenu = _display;
 
-                    Levels.Builder.Editor.ServerToggleMenu(_display);
+                    Levels.Editor.ServerToggleMenu(_display);
                 }
 
                 if (!_display)

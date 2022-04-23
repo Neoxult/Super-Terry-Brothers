@@ -8,7 +8,8 @@ namespace TerryBros
 {
     public partial class Player
     {
-        public bool IsInLevelBuilder { get; private set; }
+        [Net]
+        public bool IsInLevelBuilder { get; set; }
 
         private IntVector3 oldGrid = IntVector3.Zero;
         private bool isDrawing = false;
@@ -41,7 +42,6 @@ namespace TerryBros
             {
                 if (enable)
                 {
-                    //TODO: Solve Prediction error for Camera!!
                     (Controller as MovementController).IsFreeze = true;
                     CameraMode = new LevelEditorCamera();
 
@@ -50,6 +50,11 @@ namespace TerryBros
                 }
                 else
                 {
+                    (Controller as MovementController).IsFreeze = false;
+
+                    EnableAllCollisions = true;
+                    EnableDrawing = true;
+
                     Respawn();
                 }
             }
@@ -86,11 +91,11 @@ namespace TerryBros
 
                 if (buildPanel.IsLeftMouseButtonDown)
                 {
-                    Levels.Builder.Editor.ServerCreateBlock(pos, buildPanel.SelectedAsset.Name);
+                    Levels.Editor.ServerCreateBlock(pos, buildPanel.SelectedAsset.Name);
                 }
                 else if (buildPanel.IsRightMouseButtonDown)
                 {
-                    Levels.Builder.Editor.ServerDeleteBlock(pos);
+                    Levels.Editor.ServerDeleteBlock(pos);
                 }
             }
             else if (isDrawing && !buildPanel.IsMouseDown)

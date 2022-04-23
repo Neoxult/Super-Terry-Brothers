@@ -4,6 +4,8 @@ using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
+using TerryBros.Gamemode;
+
 namespace TerryBros.UI.StartScreen
 {
     [UseTemplate]
@@ -24,7 +26,7 @@ namespace TerryBros.UI.StartScreen
                 {
                     player.IsInMenu = _display;
 
-                    Levels.Builder.Editor.ServerToggleMenu(_display);
+                    Levels.Editor.ServerToggleMenu(_display);
                 }
 
                 if (!_display)
@@ -91,7 +93,7 @@ namespace TerryBros.UI.StartScreen
 
             wrapperPanel.Add.Button("Level Editor", "entry", () =>
             {
-                Levels.Builder.Editor.ClientToggleLevelEditor();
+                Levels.Editor.ClientToggleLevelEditor();
 
                 Display = false;
             });
@@ -117,13 +119,15 @@ namespace TerryBros.UI.StartScreen
 
         public void ShowLevels(Panel wrapperPanel)
         {
-            foreach (string level in Levels.Builder.Loader.GetLevels())
+            foreach (string level in Levels.Loader.Local.Get())
             {
                 Panel panel = wrapperPanel.Add.Panel("buttons");
 
                 panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
-                    Levels.Builder.Loader.LoadLevel(level);
+                    Levels.Loader.Local.Load(level);
+
+                    STBGame.Start();
 
                     OnClickHome();
 
@@ -132,7 +136,7 @@ namespace TerryBros.UI.StartScreen
 
                 panel.Add.Button("X", "entry delete", () =>
                 {
-                    Levels.Builder.Loader.DeleteLevel(level);
+                    Levels.Loader.Local.Delete(level);
 
                     panel.Delete();
                 });

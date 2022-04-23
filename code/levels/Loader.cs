@@ -7,34 +7,36 @@ using Sandbox;
 
 using TerryBros.Gamemode;
 
-namespace TerryBros.Levels.Builder
+namespace TerryBros.Levels.Loader
 {
-    public static partial class Loader
+    public static partial class Local
     {
         private static int _currentPacketHash = -1;
         private static int _packetCount;
         private static string[] _packetData;
 
+        public const string CUSTOM_LEVEL_FOLDER = "custom_levels";
+
         [ClientCmd(Name = "stb_save")]
-        public static void SaveLevel(string fileName)
+        public static void Save(string fileName)
         {
-            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            if (!FileSystem.Data.DirectoryExists(CUSTOM_LEVEL_FOLDER))
             {
-                FileSystem.Data.CreateDirectory("custom_levels");
+                FileSystem.Data.CreateDirectory(CUSTOM_LEVEL_FOLDER);
             }
 
-            FileSystem.Data.WriteAllText($"custom_levels/{fileName.Split('.')[0]}.json", STBGame.CurrentLevel.Export());
+            FileSystem.Data.WriteAllText($"{CUSTOM_LEVEL_FOLDER}/{fileName.Split('.')[0]}.json", STBGame.CurrentLevel.Export());
         }
 
         [ClientCmd(Name = "stb_delete")]
-        public static void DeleteLevel(string fileName)
+        public static void Delete(string fileName)
         {
-            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            if (!FileSystem.Data.DirectoryExists(CUSTOM_LEVEL_FOLDER))
             {
                 return;
             }
 
-            string filePath = $"custom_levels/{fileName.Split('.')[0]}.json";
+            string filePath = $"{CUSTOM_LEVEL_FOLDER}/{fileName.Split('.')[0]}.json";
 
             if (!FileSystem.Data.FileExists(filePath))
             {
@@ -45,9 +47,9 @@ namespace TerryBros.Levels.Builder
         }
 
         [ClientCmd(Name = "stb_load")]
-        public static void LoadLevel(string fileName)
+        public static void Load(string fileName)
         {
-            string file = $"custom_levels/{fileName.Split('.')[0]}.json";
+            string file = $"{CUSTOM_LEVEL_FOLDER}/{fileName.Split('.')[0]}.json";
 
             if (!FileSystem.Data.FileExists(file))
             {
@@ -56,24 +58,24 @@ namespace TerryBros.Levels.Builder
 
             try
             {
-                ServerSendLevelData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
+                ServerSendData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
             }
             catch (Exception) { }
         }
 
-        public static List<string> GetLevels()
+        public static List<string> Get()
         {
             Assert.True(Host.IsClient);
 
-            if (!FileSystem.Data.DirectoryExists("custom_levels"))
+            if (!FileSystem.Data.DirectoryExists(CUSTOM_LEVEL_FOLDER))
             {
                 return new();
             }
 
-            return FileSystem.Data.FindFile("custom_levels", "*.json").ToList();
+            return FileSystem.Data.FindFile(CUSTOM_LEVEL_FOLDER, "*.json").ToList();
         }
 
-        public static void ServerSendLevelData(Dictionary<string, List<Vector2>> dict)
+        public static void ServerSendData(Dictionary<string, List<Vector2>> dict)
         {
             string levelDataJson = JsonSerializer.Serialize(dict);
             int splitLength = 150;
@@ -81,29 +83,29 @@ namespace TerryBros.Levels.Builder
 
             for (int i = 0; i < splitCount; i++)
             {
-                ServerSendPartialLevelData(levelDataJson.GetHashCode(), i, splitCount, levelDataJson.Substring(splitLength * i, splitLength + Math.Min(0, levelDataJson.Length - splitLength * (i + 1))));
+                ServerSendPartialData(levelDataJson.GetHashCode(), i, splitCount, levelDataJson.Substring(splitLength * i, splitLength + Math.Min(0, levelDataJson.Length - splitLength * (i + 1))));
             }
         }
 
         [ServerCmd(Name = "stb_send_partialleveldata")]
-        public static void ServerSendPartialLevelData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
+        public static void ServerSendPartialData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
         {
             if (!ConsoleSystem.Caller?.HasPermission("import") ?? true)
             {
                 return;
             }
 
-            ProceedPartialLevelData(packetHash, packetNum, maxPackets, partialLevelData);
-            ClientSendPartialLevelData(packetHash, packetNum, maxPackets, partialLevelData);
+            ProceedPartialData(packetHash, packetNum, maxPackets, partialLevelData);
+            ClientSendPartialData(packetHash, packetNum, maxPackets, partialLevelData);
         }
 
         [ClientRpc]
-        public static void ClientSendPartialLevelData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
+        public static void ClientSendPartialData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
         {
-            ProceedPartialLevelData(packetHash, packetNum, maxPackets, partialLevelData);
+            ProceedPartialData(packetHash, packetNum, maxPackets, partialLevelData);
         }
 
-        public static void ProceedPartialLevelData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
+        public static void ProceedPartialData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
         {
             if (_currentPacketHash != packetHash)
             {

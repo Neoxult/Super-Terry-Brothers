@@ -3,6 +3,8 @@ using System;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
+using TerryBros.Gamemode;
+
 namespace TerryBros.UI.Menu
 {
     public partial class MenuContent : Panel
@@ -62,7 +64,7 @@ namespace TerryBros.UI.Menu
 
             wrapperPanel.Add.Button("Level Editor / Test", "entry", () =>
             {
-                Levels.Builder.Editor.ClientToggleLevelEditor();
+                Levels.Editor.ClientToggleLevelEditor();
 
                 Menu.Display = false;
             });
@@ -76,8 +78,10 @@ namespace TerryBros.UI.Menu
             {
                 if (Sandbox.Local.Client.Pawn is Player player && player.IsInLevelBuilder)
                 {
-                    Levels.Builder.Editor.ClientToggleLevelEditor();
+                    Levels.Editor.ClientToggleLevelEditor();
                 }
+
+                STBGame.Finish();
 
                 Menu.Display = false;
                 StartScreen.StartScreen.Instance.Display = true;

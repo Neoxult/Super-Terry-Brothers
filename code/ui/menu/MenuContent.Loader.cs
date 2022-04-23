@@ -7,13 +7,13 @@ namespace TerryBros.UI.Menu
     {
         public void ShowLevels(Panel wrapperPanel)
         {
-            foreach (string level in Levels.Builder.Loader.GetLevels())
+            foreach (string level in Levels.Loader.Local.Get())
             {
                 Panel panel = wrapperPanel.Add.Panel("buttons");
 
                 panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
-                    Levels.Builder.Loader.LoadLevel(level);
+                    Levels.Loader.Local.Load(level);
 
                     OnClickHome();
 
@@ -22,7 +22,7 @@ namespace TerryBros.UI.Menu
 
                 panel.Add.Button("X", "entry delete", () =>
                 {
-                    Levels.Builder.Loader.DeleteLevel(level);
+                    Levels.Loader.Local.Delete(level);
 
                     panel.Delete();
                 });
@@ -48,7 +48,7 @@ namespace TerryBros.UI.Menu
 
                 bool found = false;
 
-                foreach (string level in Levels.Builder.Loader.GetLevels())
+                foreach (string level in Levels.Loader.Local.Get())
                 {
                     if (level.Split('.')[0].ToLower() == text)
                     {
@@ -71,7 +71,7 @@ namespace TerryBros.UI.Menu
 
         private void SaveLevel(string text)
         {
-            Levels.Builder.Loader.SaveLevel(text);
+            Levels.Loader.Local.Save(text);
 
             OnClickHome();
 
