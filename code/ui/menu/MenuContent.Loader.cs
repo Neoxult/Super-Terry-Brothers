@@ -9,6 +9,8 @@ namespace TerryBros.UI
     {
         public void ShowLevels(Panel wrapperPanel)
         {
+            wrapperPanel.SetClass("scroll", true);
+
             foreach (string level in Levels.Loader.Local.Get())
             {
                 Panel panel = wrapperPanel.Add.Panel("buttons");

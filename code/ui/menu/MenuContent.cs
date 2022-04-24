@@ -58,6 +58,8 @@ namespace TerryBros.UI
 
         public void ShowDefaultMenu(Panel wrapperPanel)
         {
+            wrapperPanel.SetClass("scroll", false);
+
             bool toggle = !Local.Client?.GetValue("leveleditor", false) ?? false;
 
             if (STBGame.Instance.State != STBGame.GameState.Game)

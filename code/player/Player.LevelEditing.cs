@@ -28,7 +28,7 @@ namespace TerryBros
             Vector3 mousePos = new Vector3(screenPos.x + Mouse.Position.x, screenPos.y - Mouse.Position.y, 0) * orthoSize;
             Vector3 blockPos = PreviewAndGetBlockPlacement(mousePos);
 
-            CreateBlockOnMouseEvent(blockPos);
+            CreateBlockOnMouseEvent(blockPos); // TODO create blocks in FrameSimulate, send data to server in Tick in packets
         }
 
         public void EnableLevelEditor(bool enable)

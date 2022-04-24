@@ -22,6 +22,9 @@ Menu {
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
 
+        max-height: 400px;
+        max-width: 800px;
+
         padding: 20px 60px;
         background-color: rgb(221, 181, 128);
 
@@ -59,11 +62,20 @@ Menu {
         .wrapper {
             flex-direction: column;
 
+            &.scroll {
+                overflow: scroll;
+            }
+
+            .buttons {
+                flex-shrink: 0;
+            }
+
             .entry {
                 padding: 5px 10px;
                 margin: 5px;
 
                 flex-grow: 1;
+                flex-shrink: 0;
 
                 justify-content: center;
 

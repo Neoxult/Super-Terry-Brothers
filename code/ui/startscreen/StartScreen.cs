@@ -86,6 +86,8 @@ namespace TerryBros.UI
 
         public void ShowDefaultMenu(Panel wrapperPanel)
         {
+            wrapperPanel.SetClass("scroll", false);
+
             wrapperPanel.Add.Button("Start Game", "entry", () =>
             {
                 SetContent("Choose Level", ShowLevels, "levels");
@@ -119,6 +121,8 @@ namespace TerryBros.UI
 
         public void ShowLevels(Panel wrapperPanel)
         {
+            wrapperPanel.SetClass("scroll", true);
+
             foreach (string level in Levels.Loader.Local.Get())
             {
                 Panel panel = wrapperPanel.Add.Panel("buttons");
