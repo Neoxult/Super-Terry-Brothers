@@ -45,7 +45,12 @@ namespace TerryBros
 
         public void SetCameraDimension()
         {
-            CameraMode = Client.GetValue("leveleditor", false) ? new LevelEditorCamera() : Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
+            CameraMode cameraMode = Client.GetValue("leveleditor", false) ? new LevelEditorCamera() : Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
+
+            if (CameraMode?.GetType() != cameraMode.GetType())
+            {
+                CameraMode = cameraMode;
+            }
         }
 
         public override void Spawn()

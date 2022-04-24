@@ -8,9 +8,8 @@ namespace TerryBros.Settings
     {
         public static float BlockSize { get; set; } = 20f;
 
-        //TODO: Get the real Height of the playermodel;
-        public static float FigureHeight { get; set; } = 80f;
         public static Vector3 GroundPos { get; set; } = Vector3.Forward * 20f - Vector3.Up * 100f;
+
         public static Vector3 ForwardDir
         {
             get => _forwardDir;

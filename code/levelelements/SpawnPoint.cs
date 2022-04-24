@@ -14,7 +14,7 @@ namespace TerryBros.LevelElements
         public override Vector3 Position
         {
             get => base.Position;
-            set => base.Position = value + GlobalSettings.UpwardDir * (GlobalSettings.FigureHeight - GlobalSettings.BlockSize / 2) / 2;
+            set => base.Position = value - GlobalSettings.UpwardDir * GlobalSettings.BlockSize / 2;
         }
 
         public void MoveToSpawn(Entity pawn)
