@@ -43,6 +43,7 @@ namespace TerryBros
                 ClearCollisionLayers();
                 AddCollisionLayer(CollisionLayer.Solid);
                 AddCollisionLayer(CollisionLayer.PhysicsProp);
+                AddCollisionLayer(CollisionLayer.Trigger);
             }
         }
 

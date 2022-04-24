@@ -62,7 +62,7 @@ namespace TerryBros
             Controller = new MovementController();
             Animator = new StandardPlayerAnimator();
 
-            EnableAllCollisions = false;
+            EnableAllCollisions = true;
 
             if (Gamemode.STBGame.Instance.State == Gamemode.STBGame.GameState.LevelEditor)
             {
