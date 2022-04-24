@@ -6,7 +6,7 @@ using Sandbox.UI.Construct;
 
 using TerryBros.Gamemode;
 
-namespace TerryBros.UI.StartScreen
+namespace TerryBros.UI
 {
     [UseTemplate]
     public partial class StartScreen : Panel

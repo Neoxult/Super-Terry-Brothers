@@ -150,7 +150,7 @@ namespace TerryBros.Gamemode
 
             if (!Host.IsServer)
             {
-                UI.Menu.Menu.Instance?.Delete(true);
+                UI.Menu.Instance?.Delete(true);
 
                 return;
             }

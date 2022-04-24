@@ -97,7 +97,7 @@ namespace TerryBros
         {
             base.ClientSpawn();
 
-            UI.Hud.Instance?.RootPanel.AddChild<UI.Menu.Menu>();
+            UI.Hud.Instance?.RootPanel.AddChild<UI.Menu>();
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ using Sandbox.UI.Construct;
 
 using TerryBros.Gamemode;
 
-namespace TerryBros.UI.Menu
+namespace TerryBros.UI
 {
     public partial class MenuContent : Panel
     {
@@ -85,7 +85,7 @@ namespace TerryBros.UI.Menu
                 STBGame.QuitGame();
 
                 Menu.Display = false;
-                StartScreen.StartScreen.Instance.Display = true;
+                StartScreen.Instance.Display = true;
             });
         }
 

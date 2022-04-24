@@ -4,7 +4,7 @@ using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-namespace TerryBros.UI.StartScreen
+namespace TerryBros.UI
 {
     [UseTemplate]
     public partial class PlayerList : Panel

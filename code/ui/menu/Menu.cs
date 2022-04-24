@@ -1,7 +1,7 @@
 using Sandbox;
 using Sandbox.UI;
 
-namespace TerryBros.UI.Menu
+namespace TerryBros.UI
 {
     public partial class Menu : Panel
     {
@@ -57,7 +57,7 @@ namespace TerryBros.UI.Menu
             // own pressing detection, as Input.Pressed is unreliable
             if (Input.Down(InputButton.Menu))
             {
-                if (!_pressed && !StartScreen.StartScreen.Instance.Display)
+                if (!_pressed && !StartScreen.Instance.Display)
                 {
                     _pressed = true;
 

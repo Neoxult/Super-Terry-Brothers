@@ -59,7 +59,7 @@ namespace TerryBros.Levels
         public static void ClientToggleLevelEditor(bool toggle)
         {
             BuildPanel.Instance?.Toggle(toggle);
-            UI.Menu.Menu.Instance?.MenuContent?.OnClickHome();
+            UI.Menu.Instance?.MenuContent?.OnClickHome();
 
             if (Local.Pawn is Player player)
             {

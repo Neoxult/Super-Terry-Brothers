@@ -18,7 +18,7 @@ namespace TerryBros.UI
         {
             Instance = this;
 
-            RootPanel.AddChild<StartScreen.StartScreen>();
+            RootPanel.AddChild<StartScreen>();
             RootPanel.AddChild<LevelBuilder.BuildPanel>();
         }
 

@@ -3,7 +3,7 @@ using Sandbox.UI.Construct;
 
 using TerryBros.Gamemode;
 
-namespace TerryBros.UI.Menu
+namespace TerryBros.UI
 {
     public partial class MenuContent
     {
