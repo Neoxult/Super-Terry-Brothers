@@ -314,7 +314,7 @@ namespace TerryBros
                     return;
                 }
 
-                StepMove();
+                Move();
             }
             finally
             {
@@ -355,18 +355,6 @@ namespace TerryBros
 
 			return tr;
 		}
-
-        public override void StepMove()
-        {
-            MoveHelper mover = new(Position, Velocity);
-            mover.Trace = mover.Trace.Size(mins, maxs).Ignore(Pawn).WithoutTags("player");
-            mover.MaxStandableAngle = GroundAngle;
-
-            mover.TryMoveWithStep(Time.Delta, StepSize);
-
-            Position = mover.Position;
-            Velocity = mover.Velocity;
-        }
 
 		public override void Move()
 		{
