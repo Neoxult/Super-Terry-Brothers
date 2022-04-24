@@ -8,6 +8,11 @@ namespace TerryBros.Gamemode
 {
     public partial class STBGame : Game
     {
+        public static STBGame Instance
+        {
+            get => Current as STBGame;
+        }
+
         public List<Client> PlayingClients { get; set; }
 
         public bool IsPlaying
@@ -15,14 +20,28 @@ namespace TerryBros.Gamemode
             get => PlayingClients != null;
         }
 
+        public enum GameState
+        {
+            LevelEditor,
+            Game,
+            StartScreen
+        }
+
+        [Net]
+        public GameState State { get; set; } = GameState.StartScreen;
+
         public STBGame() : base()
         {
             if (IsClient)
             {
                 _ = new UI.Hud();
-
-                UI.StartScreen.StartScreen.Instance.Display = true;
             }
+        }
+
+        [Event.Hotload]
+        public static void Reset()
+        {
+            CurrentLevel?.Clear();
         }
 
         public override void Simulate(Client cl)
@@ -38,18 +57,12 @@ namespace TerryBros.Gamemode
             base.ClientJoined(client);
 
             ClientOnClientJoined(client);
-
-            Player player = new();
-            client.Pawn = player;
-
-            player.Clothing.LoadFromClient(client);
-            player.Spawn();
         }
 
         [ClientRpc]
         public static void ClientOnClientJoined(Client client)
         {
-            Event.Run("OnClientConnected", client);
+            Event.Run(Events.TBEvent.Game.CLIENT_CONNECTED, client);
         }
 
         public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
@@ -62,17 +75,7 @@ namespace TerryBros.Gamemode
         [ClientRpc]
         public static void ClientOnClientDisconnected(Client client, NetworkDisconnectionReason reason)
         {
-            Event.Run("OnClientDisconnected", client, reason);
-        }
-
-        public static void Start()
-        {
-            (Current as STBGame).PlayingClients = new(Client.All);
-        }
-
-        public static void Finish()
-        {
-            (Current as STBGame).PlayingClients = null;
+            Event.Run(Events.TBEvent.Game.CLIENT_DISCONNECTED, client, reason);
         }
     }
 }

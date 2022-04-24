@@ -47,13 +47,13 @@ namespace TerryBros.UI.StartScreen
             ClientPanels.Remove(client);
         }
 
-        [Event("OnClientConnected")]
+        [Event(Events.TBEvent.Game.CLIENT_CONNECTED)]
         public void OnClientConnected(Client client)
         {
             AddClient(client);
         }
 
-        [Event("OnClientDisconnected")]
+        [Event(Events.TBEvent.Game.CLIENT_DISCONNECTED)]
         public void OnClientDisconnected(Client client, NetworkDisconnectionReason _)
         {
             RemoveClient(client);

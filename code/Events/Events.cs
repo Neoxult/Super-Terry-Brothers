@@ -18,6 +18,29 @@ namespace TerryBros.Events
             /// Triggered when a level is finished.
             /// </summary>
             public const string FINISHED = "terrybros.level.finished";
+
+            /// <summary>
+            /// Triggered when a level was loaded completely.
+            /// </summary>
+            public const string LOADED = "terrybros.level.loaded";
+
+            /// <summary>
+            /// Triggered when a level was cleared completely.
+            /// </summary>
+            public const string CLEARED = "terrybros.level.cleared";
+        }
+
+        public static class Game
+        {
+            /// <summary>
+            /// Triggered whenever a client connected successfully
+            /// </summary>
+            public const string CLIENT_CONNECTED = "terrybros.game.clientconnected";
+
+            /// <summary>
+            /// Triggered whenever a client disconnected
+            /// </summary>
+            public const string CLIENT_DISCONNECTED = "terrybros.game.clientdisconnected";
         }
     }
 }

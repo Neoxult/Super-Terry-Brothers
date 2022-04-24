@@ -13,6 +13,8 @@ namespace TerryBros
 
         public static Model PlayerModel { get; } = Model.Load("models/citizen/citizen.vmdl");
 
+        public LevelElements.SpawnPoint CheckPointSpawn { get; internal set; }
+
         [ClientVar]
         public static bool Camera2D
         {
@@ -43,7 +45,7 @@ namespace TerryBros
 
         public void SetCameraDimension()
         {
-            CameraMode = Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
+            CameraMode = Client.GetValue("leveleditor", false) ? new LevelEditorCamera() : Camera2D ? new SideScroller2DCamera() : new SideScroller3DCamera();
         }
 
         public override void Spawn()
@@ -62,6 +64,11 @@ namespace TerryBros
 
             EnableAllCollisions = false;
 
+            if (Gamemode.STBGame.Instance.State == Gamemode.STBGame.GameState.LevelEditor)
+            {
+                EnableLevelEditor(true);
+            }
+
             Respawn();
         }
 
@@ -76,6 +83,13 @@ namespace TerryBros
         public void ClientRespawn()
         {
             SetCameraDimension();
+        }
+
+        public override void ClientSpawn()
+        {
+            base.ClientSpawn();
+
+            UI.Hud.Instance?.RootPanel.AddChild<UI.Menu.Menu>();
         }
 
         /// <summary>

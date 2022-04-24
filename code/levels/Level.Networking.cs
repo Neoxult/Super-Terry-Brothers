@@ -9,7 +9,7 @@ using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public abstract partial class Level
+    public partial class Level
     {
         private static int _currentPacketHash = -1;
         private static int _packetCount;
@@ -30,7 +30,7 @@ namespace TerryBros.Levels
             }
         }
 
-        [ServerCmd(Name = "stb_send_partialleveldata")]
+        [ServerCmd]
         public static void ServerSendPartialData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
         {
             if (!ConsoleSystem.Caller?.HasPermission("import") ?? true)
@@ -67,22 +67,9 @@ namespace TerryBros.Levels
             {
                 _currentPacketHash = -1;
 
-                Clear();
-                Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
+                STBGame.CurrentLevel?.Clear();
 
-                if (Host.IsServer)
-                {
-                    STBGame.CurrentLevel?.Restart();
-                    STBGame.ClientRestartLevel();
-
-                    foreach (Client client in Client.All)
-                    {
-                        if (client.Pawn is Player player)
-                        {
-                            player.Respawn();
-                        }
-                    }
-                }
+                new Level().Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
             }
         }
 
@@ -99,19 +86,6 @@ namespace TerryBros.Levels
             }
 
             return combinedArray;
-        }
-
-        [ServerCmd(Name = "stb_clear")]
-        public static void ServerClear()
-        {
-            Clear();
-            ClientClear();
-        }
-
-        [ClientRpc]
-        public static void ClientClear()
-        {
-            Clear();
         }
     }
 }

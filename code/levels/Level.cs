@@ -5,14 +5,13 @@ using System.Text.Json;
 using Sandbox;
 
 using TerryBros.Events;
-using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
 
 namespace TerryBros.Levels
 {
-    public abstract partial class Level : Entity
+    public partial class Level
     {
         public BBox LevelBounds { get; private set; }
         public BBox LevelBoundsLocal { get; private set; }
@@ -42,10 +41,10 @@ namespace TerryBros.Levels
 
         public Dictionary<int, Dictionary<int, BlockEntity>> GridBlocks = new();
 
-        protected LevelElements.SpawnPoint RestartSpawn;
-        protected LevelElements.SpawnPoint CheckPointSpawn;
+        public Sky Sky { get; set; }
+        public List<EnvironmentLightEntity> Lights { get; set; } = new();
 
-        public abstract void Build();
+        protected LevelElements.SpawnPoint RestartSpawn;
 
         public void RegisterBlock(BlockEntity block)
         {
@@ -108,67 +107,82 @@ namespace TerryBros.Levels
 
         public LevelElements.SpawnPoint GetRestartPoint() => RestartSpawn;
 
-        public LevelElements.SpawnPoint GetLastCheckPoint() => CheckPointSpawn ?? GetRestartPoint();
+        public LevelElements.SpawnPoint GetLastCheckPoint(Player player) => player.CheckPointSpawn ?? GetRestartPoint();
 
-        public void CheckPointReached(Player _, Checkpoint checkPoint)
+        public void CheckPointReached(Player player, Checkpoint checkPoint)
         {
-            //TODO: Allow different players to have different checkpoints
-            CheckPointSpawn = checkPoint.SpawnPoint;
+            if (Host.IsClient && player != Local.Pawn)
+            {
+                return;
+            }
+
+            player.CheckPointSpawn = checkPoint.SpawnPoint;
         }
 
         [Event(TBEvent.Level.RESTART)]
-        public void Restart()
+        public static void Restart()
         {
-            CheckPointSpawn = null;
-        }
-
-        protected static T CreateBox<T>(int GridX, int GridY) where T : BlockEntity, new() => new()
-        {
-            Asset = BlockAsset.GetByName("blooming"),
-            Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
-        };
-
-        protected static void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
-        {
-            for (int i = 0; i < height; i++)
+            if (Host.IsClient)
             {
-                int x = GridX + i;
-                int maxHeight = upward ? i + 1 : height - i;
-
-                for (int j = 0; j < maxHeight; j++)
+                if (Local.Pawn is Player player)
                 {
-                    int y = GridY + j;
-
-                    CreateBox<T>(x, y);
+                    player.CheckPointSpawn = null;
+                }
+            }
+            else
+            {
+                foreach (Client client in Gamemode.STBGame.Instance.PlayingClients)
+                {
+                    if (client.Pawn is Player player)
+                    {
+                        player.CheckPointSpawn = null;
+                    }
                 }
             }
         }
 
-        protected static void CreateWallFromTo<T>(int StartGridX, int StartGridY, int EndGridX, int EndGridY) where T : BlockEntity, new()
+        public void Build()
         {
-            for (int x = StartGridX; x <= EndGridX; x++)
+            RestartSpawn = new()
             {
-                for (int y = StartGridY; y <= EndGridY; y++)
-                {
-                    CreateBox<T>(x, y);
-                }
-            }
-        }
+                Position = GlobalSettings.GetBlockPosForGridCoordinates(0, 1)
+            };
 
-        protected static void CreateWall<T>(int GridX, int GridY, int width, int height) where T : BlockEntity, new()
-        {
-            for (int x = GridX; x < GridX + width; x++)
+            Sky = new DefaultSky();
+
+            //TODO: Properly set lights up in local space
+            Lights.Add(new()
             {
-                for (int y = GridY; y < GridY + height; y++)
-                {
-                    CreateBox<T>(x, y);
-                }
-            }
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(1, 4, -1));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(-1, 1, -4), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(1, 4, -1));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(-1, 1, 4), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(-1, 1, -0.5f));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(1, 0.5f, -1), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
+
+            Lights.Add(new()
+            {
+                //light.Position = GlobalSettings.ConvertLocalToGlobalCoordinates(new Vector3(-1, 1, -0.5f));
+                //light.Rotation = Rotation.LookAt(GlobalSettings.GroundPos - light.Position, GlobalSettings.UpwardDir);
+                Rotation = Rotation.LookAt(new Vector3(1, 0.5f, 1), GlobalSettings.UpwardDir),
+                Brightness = 2f
+            });
         }
-
-        protected static Checkpoint CreateCheckPoint(int GridX, int GridY) => CreateBox<Checkpoint>(GridX, GridY);
-
-        protected static Goal CreateGoal(int GridX, int GridY) => CreateBox<Goal>(GridX, GridY);
 
         public string Export()
         {
@@ -194,8 +208,10 @@ namespace TerryBros.Levels
             return JsonSerializer.Serialize(dict);
         }
 
-        public static void Import(Dictionary<string, List<Vector2>> dict)
+        public void Import(Dictionary<string, List<Vector2>> dict)
         {
+            Build();
+
             foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
             {
                 BlockAsset asset = BlockAsset.GetByName(blockList.Key);
@@ -206,29 +222,42 @@ namespace TerryBros.Levels
                     {
                         BlockEntity blockEntity = BlockEntity.FromAsset(asset);
                         blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
+
+                        RegisterBlock(blockEntity);
                     }
                 }
             }
+
+            Event.Run(TBEvent.Level.LOADED, this);
         }
 
-        public static void Clear()
+        public void Clear()
         {
-            foreach (Entity entity in All)
+            foreach (Dictionary<int, BlockEntity> dict in GridBlocks.Values)
             {
-                if (entity is BlockEntity blockEntity)
+                foreach (BlockEntity blockEntity in dict.Values)
                 {
-                    try
-                    {
-                        blockEntity.Delete();
-                    }
-                    catch (Exception) { }
+                    blockEntity.Delete();
                 }
             }
 
-            Level level = STBGame.CurrentLevel;
+            Sky.Delete();
+            Sky = null;
 
-            level.GridBlocks = new();
-            level.LevelBoundsBlocks = IntBBox.Zero;
+            foreach (EnvironmentLightEntity environmentLightEntity in Lights)
+            {
+                environmentLightEntity.Delete();
+            }
+
+            Lights.Clear();
+            GridBlocks.Clear();
+
+            RestartSpawn?.Delete();
+            RestartSpawn = null;
+
+            LevelBoundsBlocks = IntBBox.Zero;
+
+            Event.Run(TBEvent.Level.CLEARED, this);
         }
     }
 }

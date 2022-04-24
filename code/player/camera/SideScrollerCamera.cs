@@ -26,7 +26,7 @@ namespace TerryBros
                 return;
             }
 
-            if (!player.IsInLevelBuilder)
+            if (!Local.Client.GetValue("leveleditor", false))
             {
                 Position = new(player.Position.x, GlobalSettings.GroundPos.y, player.Position.z);
                 Position -= GlobalSettings.UpwardDir * GlobalSettings.BlockSize * _visibleGroundBlocks;
@@ -75,7 +75,7 @@ namespace TerryBros
             Rotation = Rotation.LookAt(GlobalSettings.LookDir, GlobalSettings.UpwardDir);
 
             // Camera 3d effect
-            if (!player.IsInLevelBuilder && !Player.Camera2D)
+            if (!Local.Client.GetValue("leveleditor", false) && !Player.Camera2D)
             {
                 Rotation = Rotation.RotateAroundAxis(Vector3.Forward.Cross(Vector3.Up), -10f);
 

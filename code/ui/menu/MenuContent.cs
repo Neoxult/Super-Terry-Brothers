@@ -58,39 +58,31 @@ namespace TerryBros.UI.Menu
 
         public void ShowDefaultMenu(Panel wrapperPanel)
         {
-            wrapperPanel.Add.Button("Load Level", "entry", () =>
-            {
-                SetContent("Load Level", ShowLevels, "levels");
-            });
+            bool toggle = !Local.Client?.GetValue("leveleditor", false) ?? false;
 
-            bool toggle = false;
-
-            if (Local.Pawn is Player player)
+            if (STBGame.Instance.State != STBGame.GameState.Game)
             {
-                toggle = !player.IsInLevelBuilder;
+                wrapperPanel.Add.Button("Load Level", "entry", () =>
+                {
+                    SetContent("Load Level", ShowLevels, "levels");
+                });
+
+                wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
+                {
+                    Levels.Editor.ServerToggleLevelEditor(toggle);
+
+                    Menu.Display = false;
+                });
+
+                wrapperPanel.Add.Button("Save", "entry", () =>
+                {
+                    SetContent("Save Level", ShowLevelInput, "saving");
+                });
             }
-
-            wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
-            {
-                Levels.Editor.ClientToggleLevelEditor(toggle);
-
-                Menu.Display = false;
-            });
-
-            wrapperPanel.Add.Button("Save", "entry", () =>
-            {
-                SetContent("Save Level", ShowLevelInput, "saving");
-            });
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {
-                if (Local.Client.Pawn is Player player && player.IsInLevelBuilder)
-                {
-                    Levels.Editor.ClientToggleLevelEditor(false);
-                }
-
-                Levels.Level.ServerClear();
-                STBGame.Finish();
+                STBGame.QuitGame();
 
                 Menu.Display = false;
                 StartScreen.StartScreen.Instance.Display = true;

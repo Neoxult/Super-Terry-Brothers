@@ -8,14 +8,12 @@ namespace TerryBros
 {
     public partial class Player
     {
-        public bool IsInLevelBuilder { get; set; }
-
         private IntVector3 _oldGrid = IntVector3.Zero;
         private bool _isDrawing = false;
 
         private void SimulateLevelEditing()
         {
-            if (!IsInLevelBuilder || CameraMode is not LevelEditorCamera camera)
+            if (!Client.GetValue("leveleditor", false) || CameraMode is not LevelEditorCamera camera)
             {
                 return;
             }
@@ -35,31 +33,16 @@ namespace TerryBros
 
         public void EnableLevelEditor(bool enable)
         {
-            IsInLevelBuilder = enable;
+            Host.AssertServer();
 
-            if (!Host.IsServer)
+            (Controller as MovementController).IsFreeze = enable;
+            EnableDrawing = !enable;
+
+            if (!enable)
             {
-                return;
-            }
-
-            if (enable)
-            {
-                (Controller as MovementController).IsFreeze = true;
-                CameraMode = new LevelEditorCamera();
-
-                EnableDrawing = false;
-            }
-            else
-            {
-                (Controller as MovementController).IsFreeze = false;
-
                 ClearCollisionLayers();
                 AddCollisionLayer(CollisionLayer.Solid);
                 AddCollisionLayer(CollisionLayer.PhysicsProp);
-
-                EnableDrawing = true;
-
-                Respawn();
             }
         }
 

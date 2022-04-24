@@ -13,7 +13,7 @@ namespace TerryBros.Levels.Loader
     {
         public const string CUSTOM_LEVEL_FOLDER = "custom_levels";
 
-        [ClientCmd(Name = "stb_save")]
+        [ClientRpc]
         public static void Save(string fileName)
         {
             if (!FileSystem.Data.DirectoryExists(CUSTOM_LEVEL_FOLDER))
@@ -24,7 +24,7 @@ namespace TerryBros.Levels.Loader
             FileSystem.Data.WriteAllText($"{CUSTOM_LEVEL_FOLDER}/{fileName.Split('.')[0]}.json", STBGame.CurrentLevel.Export());
         }
 
-        [ClientCmd(Name = "stb_delete")]
+        [ClientRpc]
         public static void Delete(string fileName)
         {
             if (!FileSystem.Data.DirectoryExists(CUSTOM_LEVEL_FOLDER))
@@ -42,7 +42,7 @@ namespace TerryBros.Levels.Loader
             FileSystem.Data.DeleteFile(filePath);
         }
 
-        [ClientCmd(Name = "stb_load")]
+        [ClientRpc]
         public static void Load(string fileName)
         {
             string file = $"{CUSTOM_LEVEL_FOLDER}/{fileName.Split('.')[0]}.json";
@@ -69,6 +69,14 @@ namespace TerryBros.Levels.Loader
             }
 
             return FileSystem.Data.FindFile(CUSTOM_LEVEL_FOLDER, "*.json").ToList();
+        }
+
+        public static Level Empty()
+        {
+            Level level = new();
+            level.Build();
+
+            return level;
         }
     }
 }

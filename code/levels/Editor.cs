@@ -6,40 +6,11 @@ using TerryBros.Gamemode;
 using TerryBros.LevelElements;
 using TerryBros.Settings;
 using TerryBros.Utils;
-using TerryBros.UI.LevelBuilder;
 
 namespace TerryBros.Levels
 {
     public static partial class Editor
     {
-        // Just some testing, to create blocks dynamically
-        [ServerCmd(Name = "stb_block", Help = "Spawns a block")]
-        public static void ServerCreateBlock(Vector3 position, string blockName)
-        {
-            CreateBlock(position, blockName);
-            ClientCreateBlock(position, blockName);
-        }
-
-        // Just some testing, to create blocks dynamically
-        [ServerCmd(Name = "stb_block_delete", Help = "Removes a block")]
-        public static void ServerDeleteBlock(Vector3 position)
-        {
-            DeleteBlock(position);
-            ClientDeleteBlock(position);
-        }
-
-        [ClientRpc]
-        public static void ClientCreateBlock(Vector3 position, string blockName)
-        {
-            CreateBlock(position, blockName);
-        }
-
-        [ClientRpc]
-        public static void ClientDeleteBlock(Vector3 position)
-        {
-            DeleteBlock(position);
-        }
-
         public static ModelEntity CreateBlock(Vector3 position, string blockName)
         {
             Level level = STBGame.CurrentLevel;
@@ -64,7 +35,7 @@ namespace TerryBros.Levels
                 {
                     blockEntity.Position = position;
 
-                    dict[intVector3.Y] = blockEntity;
+                    level.RegisterBlock(blockEntity);
                 }
             }
 
@@ -91,46 +62,9 @@ namespace TerryBros.Levels
             {
                 dict.Remove(intVector3.Y);
                 blockEntity.Delete();
+
+                // TODO unregister block and recalculate bounds
             }
-        }
-
-        [ClientCmd("stb_editor")]
-        public static void ClientToggleLevelEditor(bool toggle)
-        {
-            BuildPanel.Instance.Toggle(toggle);
-
-            foreach (Client client in Client.All)
-            {
-                if (client.Pawn is Player player)
-                {
-                    player.EnableLevelEditor(toggle);
-                }
-            }
-
-            ServerToggleLevelEditor(toggle);
-        }
-
-        [ServerCmd]
-        public static void ServerToggleLevelEditor(bool toggle)
-        {
-            foreach (Client client in Client.All)
-            {
-                if (client.Pawn is Player player)
-                {
-                    player.EnableLevelEditor(toggle);
-                }
-            }
-        }
-
-        [ServerCmd]
-        public static void ServerToggleMenu(bool toggle)
-        {
-            if (ConsoleSystem.Caller?.Pawn is not Player player)
-            {
-                return;
-            }
-
-            player.IsInMenu = toggle;
         }
     }
 }
