@@ -69,7 +69,7 @@ namespace TerryBros.UI.Menu
 
                 wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
                 {
-                    Levels.Editor.ServerToggleLevelEditor(toggle);
+                    Levels.Editor.ServerToggleLevelEditor(toggle, true);
 
                     Menu.Display = false;
                 });

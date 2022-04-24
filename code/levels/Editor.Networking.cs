@@ -33,7 +33,7 @@ namespace TerryBros.Levels
         }
 
         [ServerCmd]
-        public static void ServerToggleLevelEditor(bool toggle)
+        public static void ServerToggleLevelEditor(bool toggle, bool respawn)
         {
             if (ConsoleSystem.Caller == null)
             {
@@ -45,6 +45,11 @@ namespace TerryBros.Levels
             if (ConsoleSystem.Caller.Pawn is Player player)
             {
                 player.EnableLevelEditor(toggle);
+
+                if (respawn)
+                {
+                    player.Respawn();
+                }
             }
 
             ClientToggleLevelEditor(To.Single(ConsoleSystem.Caller), toggle);
