@@ -66,7 +66,9 @@ namespace TerryBros
             EnableSelfCollisions = true;
 
             ClearCollisionLayers();
-            AddCollisionLayer(CollisionLayer.All);
+            AddCollisionLayer(CollisionLayer.Player);
+
+            Tags.Add("player");
 
             CollisionGroup = CollisionGroup.Player;
 

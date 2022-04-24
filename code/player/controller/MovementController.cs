@@ -326,10 +326,40 @@ namespace TerryBros
             StayOnGround();
         }
 
+		/// <summary>
+		/// Traces the bbox and returns the trace result.
+		/// LiftFeet will move the start position up by this amount, while keeping the top of the bbox at the same
+		/// position. This is good when tracing down because you won't be tracing through the ceiling above.
+		/// </summary>
+		public override TraceResult TraceBBox(Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f)
+		{
+			if (liftFeet > 0)
+			{
+				start += Vector3.Up * liftFeet;
+				maxs = maxs.WithZ(maxs.z - liftFeet);
+			}
+
+			TraceResult tr = Trace.Ray(start + TraceOffset, end + TraceOffset)
+                .Size(mins, maxs)
+                .HitLayer(CollisionLayer.All, false)
+                .HitLayer(CollisionLayer.Solid, true)
+                .HitLayer(CollisionLayer.GRATE, true)
+                .HitLayer(CollisionLayer.PLAYER_CLIP, true)
+                .HitLayer(CollisionLayer.WINDOW, true)
+                .HitLayer(CollisionLayer.NPC, true)
+                .Ignore(Pawn)
+                .WithoutTags("player")
+                .Run();
+
+			tr.EndPosition -= TraceOffset;
+
+			return tr;
+		}
+
         public override void StepMove()
         {
             MoveHelper mover = new(Position, Velocity);
-            mover.Trace = mover.Trace.Size(mins, maxs).Ignore(Pawn);
+            mover.Trace = mover.Trace.Size(mins, maxs).Ignore(Pawn).WithoutTags("player");
             mover.MaxStandableAngle = GroundAngle;
 
             mover.TryMoveWithStep(Time.Delta, StepSize);
@@ -337,6 +367,18 @@ namespace TerryBros
             Position = mover.Position;
             Velocity = mover.Velocity;
         }
+
+		public override void Move()
+		{
+			MoveHelper mover = new(Position, Velocity);
+			mover.Trace = mover.Trace.Size(mins, maxs).Ignore(Pawn).WithoutTags("player");
+			mover.MaxStandableAngle = GroundAngle;
+
+			mover.TryMove(Time.Delta);
+
+			Position = mover.Position;
+			Velocity = mover.Velocity;
+		}
 
         public override void CheckJumpButton()
         {
