@@ -55,7 +55,7 @@ namespace TerryBros.Gamemode
         }
 
         [ServerCmd]
-        public static void StartLevelEditor()
+        public static void StartLevelEditor(string levelPath = null)
         {
             if (!ConsoleSystem.Caller?.HasPermission("startleveleditor") ?? true)
             {
@@ -64,15 +64,28 @@ namespace TerryBros.Gamemode
 
             Instance.State = GameState.LevelEditor;
 
-            Start(Levels.Loader.Local.Empty());
-
-            ClientStartLevelEditor();
+            if (string.IsNullOrEmpty(levelPath))
+            {
+                Start(Levels.Loader.Local.Empty());
+                ClientStartLevelEditor();
+            }
+            else
+            {
+                Levels.Loader.Local.Load(levelPath);
+            }
         }
 
         [ClientRpc]
         public static void ClientStartLevelEditor()
         {
             Start(Levels.Loader.Local.Empty());
+        }
+
+        [ServerCmd]
+        public static void ClearLevel()
+        {
+            CurrentLevel.Clear();
+            ClientClearLevel();
         }
 
         [ServerCmd]
@@ -87,13 +100,11 @@ namespace TerryBros.Gamemode
 
             Levels.Editor.ClientToggleLevelEditor(false);
 
-            CurrentLevel.Clear();
-
-            ClientQuitGame();
+            ClearLevel();
         }
 
         [ClientRpc]
-        public static void ClientQuitGame()
+        public static void ClientClearLevel()
         {
             CurrentLevel.Clear();
         }

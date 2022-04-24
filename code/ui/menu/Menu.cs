@@ -36,6 +36,11 @@ namespace TerryBros.UI.Menu
 
         public Menu() : base()
         {
+            if (Instance != null && !Instance.IsDeleting)
+            {
+                Instance.Delete(true);
+            }
+
             Instance = this;
 
             StyleSheet.Load("/ui/menu/Menu.scss");

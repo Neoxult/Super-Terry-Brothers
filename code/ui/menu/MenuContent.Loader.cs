@@ -15,7 +15,8 @@ namespace TerryBros.UI.Menu
 
                 panel.Add.Button(level.Split('.')[0], "entry", () =>
                 {
-                    STBGame.StartGame(level);
+                    STBGame.ClearLevel();
+                    STBGame.StartLevelEditor(level);
 
                     OnClickHome();
 
