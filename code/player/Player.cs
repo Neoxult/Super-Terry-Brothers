@@ -63,6 +63,12 @@ namespace TerryBros
             Animator = new StandardPlayerAnimator();
 
             EnableAllCollisions = true;
+            EnableSelfCollisions = true;
+
+            ClearCollisionLayers();
+            AddCollisionLayer(CollisionLayer.All);
+
+            CollisionGroup = CollisionGroup.Player;
 
             if (Gamemode.STBGame.Instance.State == Gamemode.STBGame.GameState.LevelEditor)
             {

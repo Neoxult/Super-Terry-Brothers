@@ -11,6 +11,8 @@ namespace TerryBros.LevelElements
         {
             CollisionGroup = CollisionGroup.Trigger;
             RenderColor = Color.Green.WithAlpha(0.5f);
+
+            AddCollisionLayer(CollisionLayer.All);
         }
 
         public override void Touch(Entity other)

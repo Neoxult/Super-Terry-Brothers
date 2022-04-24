@@ -30,6 +30,8 @@ namespace TerryBros.LevelElements
         {
             CollisionGroup = CollisionGroup.Trigger;
             RenderColor = Color.Blue.WithAlpha(0.5f);
+
+            AddCollisionLayer(CollisionLayer.All);
         }
 
         public override void Spawn()

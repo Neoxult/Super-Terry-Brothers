@@ -37,14 +37,6 @@ namespace TerryBros
 
             (Controller as MovementController).IsFreeze = enable;
             EnableDrawing = !enable;
-
-            if (!enable)
-            {
-                ClearCollisionLayers();
-                AddCollisionLayer(CollisionLayer.Solid);
-                AddCollisionLayer(CollisionLayer.PhysicsProp);
-                AddCollisionLayer(CollisionLayer.Trigger);
-            }
         }
 
         private static Vector3 PreviewAndGetBlockPlacement(Vector3 localPosition)
