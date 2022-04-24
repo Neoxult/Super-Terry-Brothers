@@ -56,7 +56,10 @@ namespace TerryBros.Gamemode
         {
             if (State != GameState.StartScreen)
             {
+                client.SetValue("kicked", true);
                 client.Kick();
+
+                return;
             }
 
             base.ClientJoined(client);
@@ -72,6 +75,11 @@ namespace TerryBros.Gamemode
 
         public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
         {
+            if (client.GetValue("kicked", false))
+            {
+                return;
+            }
+
             ClientOnClientDisconnected(client, reason);
 
             base.ClientDisconnect(client, reason);

@@ -41,9 +41,8 @@ namespace TerryBros.Gamemode
 
             ClientRestartLevel();
 
-            foreach (Client client in Client.All)
+            foreach (Client client in Instance.PlayingClients)
             {
-
                 if (client.Pawn is Player player)
                 {
                     player.Respawn();
