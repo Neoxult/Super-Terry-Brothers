@@ -11,7 +11,17 @@ namespace TerryBros.UI.StartScreen
     {
         public Dictionary<Client, Panel> ClientPanels { get; set; } = new();
 
+        public string Title { get; set; } = "Player List";
         public Panel WrapperPanel { get; set; }
+
+        [Event.Hotload]
+        public void OnHotload()
+        {
+            foreach (Client client in Client.All)
+            {
+                AddClient(client);
+            }
+        }
 
         public void AddClient(Client client)
         {
