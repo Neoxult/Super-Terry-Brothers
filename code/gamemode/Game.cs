@@ -54,6 +54,11 @@ namespace TerryBros.Gamemode
 
         public override void ClientJoined(Client client)
         {
+            if (State != GameState.StartScreen)
+            {
+                client.Kick();
+            }
+
             base.ClientJoined(client);
 
             ClientOnClientJoined(client);
