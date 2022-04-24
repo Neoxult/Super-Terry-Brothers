@@ -19,16 +19,16 @@ namespace TerryBros.Gamemode
                 return;
             }
 
-            if (Host.IsServer)
+            if (Host.IsServer && cl.Pawn is Player player)
             {
-                if (DebugPlayerCollisionBox && cl.Pawn is Player player && player.Controller is MovementController controller)
+                if (DebugPlayerCollisionBox && player.Controller is MovementController controller)
                 {
                     ShowPlayerCollisionBox(controller.GetBounds() + player.Position);
                 }
 
                 if (DebugSpawnPoint)
                 {
-                    LevelElements.SpawnPoint spawnpoint = CurrentLevel?.GetLastCheckPoint();
+                    LevelElements.SpawnPoint spawnpoint = CurrentLevel?.GetLastCheckPoint(player);
 
                     if (spawnpoint != null)
                     {

@@ -29,5 +29,18 @@ namespace TerryBros.Events
             /// </summary>
             public const string CLEARED = "terrybros.level.cleared";
         }
+
+        public static class Game
+        {
+            /// <summary>
+            /// Triggered whenever a client connected successfully
+            /// </summary>
+            public const string CLIENT_CONNECTED = "terrybros.game.clientconnected";
+
+            /// <summary>
+            /// Triggered whenever a client disconnected
+            /// </summary>
+            public const string CLIENT_DISCONNECTED = "terrybros.game.clientdisconnected";
+        }
     }
 }

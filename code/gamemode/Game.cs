@@ -8,12 +8,27 @@ namespace TerryBros.Gamemode
 {
     public partial class STBGame : Game
     {
+        public static STBGame Instance
+        {
+            get => Current as STBGame;
+        }
+
         public List<Client> PlayingClients { get; set; }
 
         public bool IsPlaying
         {
             get => PlayingClients != null;
         }
+
+        public enum GameState
+        {
+            LevelEditor,
+            Game,
+            StartScreen
+        }
+
+        [Net]
+        public GameState State { get; set; } = GameState.StartScreen;
 
         public STBGame() : base()
         {
@@ -47,7 +62,7 @@ namespace TerryBros.Gamemode
         [ClientRpc]
         public static void ClientOnClientJoined(Client client)
         {
-            Event.Run("OnClientConnected", client);
+            Event.Run(Events.TBEvent.Game.CLIENT_CONNECTED, client);
         }
 
         public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
@@ -60,7 +75,7 @@ namespace TerryBros.Gamemode
         [ClientRpc]
         public static void ClientOnClientDisconnected(Client client, NetworkDisconnectionReason reason)
         {
-            Event.Run("OnClientDisconnected", client, reason);
+            Event.Run(Events.TBEvent.Game.CLIENT_DISCONNECTED, client, reason);
         }
     }
 }

@@ -45,7 +45,6 @@ namespace TerryBros.Levels
         public List<EnvironmentLightEntity> Lights { get; set; } = new();
 
         protected LevelElements.SpawnPoint RestartSpawn;
-        protected LevelElements.SpawnPoint CheckPointSpawn;
 
         public void RegisterBlock(BlockEntity block)
         {
@@ -108,67 +107,39 @@ namespace TerryBros.Levels
 
         public LevelElements.SpawnPoint GetRestartPoint() => RestartSpawn;
 
-        public LevelElements.SpawnPoint GetLastCheckPoint() => CheckPointSpawn ?? GetRestartPoint();
+        public LevelElements.SpawnPoint GetLastCheckPoint(Player player) => player.CheckPointSpawn ?? GetRestartPoint();
 
-        public void CheckPointReached(Player _, Checkpoint checkPoint)
+        public void CheckPointReached(Player player, Checkpoint checkPoint)
         {
-            //TODO: Allow different players to have different checkpoints
-            CheckPointSpawn = checkPoint.SpawnPoint;
+            if (Host.IsClient && player != Local.Pawn)
+            {
+                return;
+            }
+
+            player.CheckPointSpawn = checkPoint.SpawnPoint;
         }
 
         [Event(TBEvent.Level.RESTART)]
-        public void Restart()
+        public static void Restart()
         {
-            CheckPointSpawn = null;
-        }
-
-        protected static T CreateBox<T>(int GridX, int GridY, BlockAsset asset) where T : BlockEntity, new() => new()
-        {
-            Asset = asset,
-            Position = GlobalSettings.GetBlockPosForGridCoordinates(GridX, GridY)
-        };
-
-        protected static void CreateStair<T>(int GridX, int GridY, int height, bool upward = true) where T : BlockEntity, new()
-        {
-            for (int i = 0; i < height; i++)
+            if (Host.IsClient)
             {
-                int x = GridX + i;
-                int maxHeight = upward ? i + 1 : height - i;
-
-                for (int j = 0; j < maxHeight; j++)
+                if (Local.Pawn is Player player)
                 {
-                    int y = GridY + j;
-
-                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
+                    player.CheckPointSpawn = null;
+                }
+            }
+            else
+            {
+                foreach (Client client in Gamemode.STBGame.Instance.PlayingClients)
+                {
+                    if (client.Pawn is Player player)
+                    {
+                        player.CheckPointSpawn = null;
+                    }
                 }
             }
         }
-
-        protected static void CreateWallFromTo<T>(int StartGridX, int StartGridY, int EndGridX, int EndGridY) where T : BlockEntity, new()
-        {
-            for (int x = StartGridX; x <= EndGridX; x++)
-            {
-                for (int y = StartGridY; y <= EndGridY; y++)
-                {
-                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
-                }
-            }
-        }
-
-        protected static void CreateWall<T>(int GridX, int GridY, int width, int height) where T : BlockEntity, new()
-        {
-            for (int x = GridX; x < GridX + width; x++)
-            {
-                for (int y = GridY; y < GridY + height; y++)
-                {
-                    CreateBox<T>(x, y, BlockAsset.GetByName("blooming"));
-                }
-            }
-        }
-
-        protected static Checkpoint CreateCheckPoint(int GridX, int GridY) => CreateBox<Checkpoint>(GridX, GridY, BlockAsset.GetByName("checkpoint"));
-
-        protected static Goal CreateGoal(int GridX, int GridY) => CreateBox<Goal>(GridX, GridY, BlockAsset.GetByName("goal"));
 
         public void Build()
         {
@@ -266,11 +237,7 @@ namespace TerryBros.Levels
             {
                 foreach (BlockEntity blockEntity in dict.Values)
                 {
-                    try
-                    {
-                        blockEntity.Delete();
-                    }
-                    catch (Exception) { }
+                    blockEntity.Delete();
                 }
             }
 

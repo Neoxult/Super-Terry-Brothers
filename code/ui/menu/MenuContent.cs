@@ -60,7 +60,7 @@ namespace TerryBros.UI.Menu
         {
             bool toggle = !Local.Client?.GetValue("leveleditor", false) ?? false;
 
-            if (!Local.Client.GetValue("playing", false))
+            if (STBGame.Instance.State != STBGame.GameState.Game)
             {
                 wrapperPanel.Add.Button("Load Level", "entry", () =>
                 {
@@ -69,7 +69,7 @@ namespace TerryBros.UI.Menu
 
                 wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
                 {
-                    Levels.Editor.ClientToggleLevelEditor(toggle);
+                    Levels.Editor.ServerToggleLevelEditor(toggle);
 
                     Menu.Display = false;
                 });
@@ -82,12 +82,7 @@ namespace TerryBros.UI.Menu
 
             wrapperPanel.Add.Button("Quit", "entry", () =>
             {
-                if (!toggle)
-                {
-                    Levels.Editor.ClientToggleLevelEditor(false);
-                }
-
-                Levels.Level.ServerClear();
+                STBGame.QuitGame();
 
                 Menu.Display = false;
                 StartScreen.StartScreen.Instance.Display = true;

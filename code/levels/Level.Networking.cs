@@ -30,7 +30,7 @@ namespace TerryBros.Levels
             }
         }
 
-        [ServerCmd(Name = "stb_send_partialleveldata")]
+        [ServerCmd]
         public static void ServerSendPartialData(int packetHash, int packetNum, int maxPackets, string partialLevelData)
         {
             if (!ConsoleSystem.Caller?.HasPermission("import") ?? true)
@@ -86,20 +86,6 @@ namespace TerryBros.Levels
             }
 
             return combinedArray;
-        }
-
-        [ServerCmd(Name = "stb_clear")]
-        public static void ServerClear()
-        {
-            STBGame.CurrentLevel?.Clear();
-
-            ClientClear();
-        }
-
-        [ClientRpc]
-        public static void ClientClear()
-        {
-            STBGame.CurrentLevel?.Clear();
         }
     }
 }

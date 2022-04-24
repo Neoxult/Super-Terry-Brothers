@@ -20,12 +20,16 @@ namespace TerryBros.Gamemode
                 _currentLevel = value;
             }
         }
-
         private static Level _currentLevel;
 
         public override void MoveToSpawnpoint(Entity pawn)
         {
-            LevelElements.SpawnPoint spawnPoint = CurrentLevel?.GetLastCheckPoint();
+            if (pawn is not Player player)
+            {
+                return;
+            }
+
+            LevelElements.SpawnPoint spawnPoint = CurrentLevel?.GetLastCheckPoint(player);
 
             if (spawnPoint == null)
             {
@@ -40,34 +44,58 @@ namespace TerryBros.Gamemode
         [ServerCmd]
         public static void StartGame(string levelPath)
         {
-            foreach (Client client in Client.All)
+            if (!ConsoleSystem.Caller?.HasPermission("startgame") ?? true)
             {
-                client.SetValue("playing", true);
+                return;
             }
+
+            Instance.State = GameState.Game;
 
             Levels.Loader.Local.Load(levelPath);
         }
 
-        public static void StartEditor()
+        [ServerCmd]
+        public static void StartLevelEditor()
         {
-            Levels.Editor.ClientToggleLevelEditor(true);
+            if (!ConsoleSystem.Caller?.HasPermission("startleveleditor") ?? true)
+            {
+                return;
+            }
 
-            ServerStartEditor();
-            InitLevel();
+            Instance.State = GameState.LevelEditor;
+
+            Start(Levels.Loader.Local.Empty());
+
+            ClientStartLevelEditor();
+        }
+
+        [ClientRpc]
+        public static void ClientStartLevelEditor()
+        {
+            Start(Levels.Loader.Local.Empty());
         }
 
         [ServerCmd]
-        private static void ServerStartEditor()
+        public static void QuitGame()
         {
-            InitLevel();
+            if (!ConsoleSystem.Caller?.HasPermission("quitgamestate") ?? true)
+            {
+                return;
+            }
+
+            Instance.State = GameState.StartScreen;
+
+            Levels.Editor.ClientToggleLevelEditor(false);
+
+            CurrentLevel.Clear();
+
+            ClientQuitGame();
         }
 
-        protected static void InitLevel()
+        [ClientRpc]
+        public static void ClientQuitGame()
         {
-            Level level = new();
-            level.Build();
-
-            Start(level);
+            CurrentLevel.Clear();
         }
 
         [Event(TBEvent.Level.LOADED)]
@@ -80,17 +108,24 @@ namespace TerryBros.Gamemode
                 return;
             }
 
-            STBGame game = Current as STBGame;
+            STBGame game = Instance;
 
             game.PlayingClients = new(Client.All);
 
             foreach (Client client in game.PlayingClients)
             {
+                client.SetValue("leveleditor", game.State == GameState.LevelEditor);
+
                 Player player = new();
                 client.Pawn = player;
 
                 player.Clothing.LoadFromClient(client);
                 player.Spawn();
+            }
+
+            if (game.State == GameState.LevelEditor)
+            {
+                Levels.Editor.ClientToggleLevelEditor(true);
             }
         }
 
@@ -126,9 +161,9 @@ namespace TerryBros.Gamemode
                     player.Delete();
                 }
 
-                client.SetValue("playing", false);
-
                 client.Pawn = null;
+
+                client.SetValue("leveleditor", false);
             }
 
             game.PlayingClients = null;

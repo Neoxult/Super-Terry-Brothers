@@ -70,5 +70,13 @@ namespace TerryBros.Levels.Loader
 
             return FileSystem.Data.FindFile(CUSTOM_LEVEL_FOLDER, "*.json").ToList();
         }
+
+        public static Level Empty()
+        {
+            Level level = new();
+            level.Build();
+
+            return level;
+        }
     }
 }

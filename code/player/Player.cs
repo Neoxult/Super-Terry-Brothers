@@ -13,6 +13,8 @@ namespace TerryBros
 
         public static Model PlayerModel { get; } = Model.Load("models/citizen/citizen.vmdl");
 
+        public LevelElements.SpawnPoint CheckPointSpawn { get; internal set; }
+
         [ClientVar]
         public static bool Camera2D
         {
@@ -61,6 +63,11 @@ namespace TerryBros
             Animator = new StandardPlayerAnimator();
 
             EnableAllCollisions = false;
+
+            if (Gamemode.STBGame.Instance.State == Gamemode.STBGame.GameState.LevelEditor)
+            {
+                EnableLevelEditor(true);
+            }
 
             Respawn();
         }
