@@ -365,6 +365,6 @@ launchSettings.json
 
 # S&Box
 # ignore compiled stuff
-.vtex_c
-.vmat_c
-.vmdl_c
+*.vtex_c
+*.vmat_c
+*.vmdl_c
