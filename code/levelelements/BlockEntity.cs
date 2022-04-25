@@ -56,7 +56,7 @@ namespace TerryBros.LevelElements
                 if (_asset != null)
                 {
                     SetModel(_asset.ModelPath);
-                    if (IsClient) {
+                    if (Host.IsClient) {
                         SceneObject.Attributes.Set("color", Texture.Find(_asset.ImagePath));
                     }
                 }
