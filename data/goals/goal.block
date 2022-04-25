@@ -2,8 +2,8 @@
 {
 	data = 
 	{
-		imagepath = "materials/blocks/sampletexture.png"
-		modelpath = resource:"models/blocks/layered_block.vmdl"
+		imagepath = "materials/blocks/textures/default_color.png"
+		modelpath = resource:"models/blocks/block.vmdl"
 		blocksize = [ 1.0, 8.0, 1.0 ]
 		category = "4"
 	}
