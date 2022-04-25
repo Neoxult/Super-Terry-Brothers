@@ -11,11 +11,14 @@ namespace TerryBros.LevelElements
         public static IReadOnlyList<BlockAsset> All => _all;
         internal static List<BlockAsset> _all = new();
 
-        [Property, Category("Model"), ResourceType("png")]
-        public string ImagePath { get; set; }
+        [Property, Category("Display"), ResourceType("png")]
+        public string IconPath { get; set; }
 
         [Property, Category("Model"), ResourceType("vmdl")]
         public string ModelPath { get; set; }
+
+        [Property, Category("Model"), ResourceType("vmat")]
+        public string MaterialPath { get; set; }
 
         [Property, Category("Data")]
         public Vector3 BlockSize { get; set; } = new(1, 1, 1);
@@ -30,7 +33,7 @@ namespace TerryBros.LevelElements
             CheckPoint
         }
 
-        [Property, Category("Category")]
+        [Property, Category("Data")]
         public Categories Category { get; set; } = Categories.Block;
 
         protected override void PostLoad()
