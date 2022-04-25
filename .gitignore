@@ -368,3 +368,4 @@ launchSettings.json
 *.vtex_c
 *.vmat_c
 *.vmdl_c
+*.block_c
