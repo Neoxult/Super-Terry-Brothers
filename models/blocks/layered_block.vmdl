@@ -14,7 +14,7 @@
 						remaps = 
 						[
 							{
-								from = ""
+								from = "default_material.vmat"
 								to = "materials/blocks/default.vmat"
 							},
 						]

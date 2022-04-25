@@ -14,11 +14,11 @@
 						remaps = 
 						[
 							{
-								from = ""
+								from = "default_material.vmat"
 								to = "materials/blocks/default.vmat"
 							},
 						]
-						use_global_default = false
+						use_global_default = true
 						global_default_material = "materials/blocks/default.vmat"
 					},
 				]

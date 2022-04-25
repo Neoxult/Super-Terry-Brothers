@@ -11,13 +11,7 @@
 				[
 					{
 						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = ""
-								to = "materials/blocks/default.vmat"
-							},
-						]
+						remaps = [  ]
 						use_global_default = true
 						global_default_material = "materials/blocks/default.vmat"
 					},

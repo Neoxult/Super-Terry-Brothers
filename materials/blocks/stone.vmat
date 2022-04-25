@@ -6,6 +6,7 @@ Layer0
 
 	//---- Rendering ----
 	F_ALPHA_TEST 1
+	F_RENDER_BACKFACES 1
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
@@ -23,7 +24,7 @@ Layer0
 
 	//---- Material ----
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
-	TextureColor "materials/blocks/textures/default_color.png"
+	TextureColor "materials/blocks/textures/stone_color.png"
 	TextureMetalness "materials/default/default_metal.tga"
 	TextureNormal "materials/default/default_normal.tga"
 	TextureRoughness "materials/default/default_rough.tga"
