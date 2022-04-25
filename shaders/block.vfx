@@ -1,0 +1,216 @@
+//=========================================================================================================================
+// Optional
+//=========================================================================================================================
+HEADER
+{
+	CompileTargets = ( IS_SM_50 && ( PC || VULKAN ) );
+	Description = "Point filter with alpha clip";
+}
+
+//=========================================================================================================================
+// Optional
+//=========================================================================================================================
+FEATURES
+{
+    #include "common/features.minimal.hlsl"
+    Feature( F_ADDITIVE_BLEND, 0..1 );
+    Feature( F_PREPASS_ALPHA_TEST, 0..1 );
+    Feature( F_ALPHA_TEST, 0..1, "Rendering" );
+    Feature( F_SPECULAR, 0..1, "Rendering" );
+}
+
+//=========================================================================================================================
+// Optional
+//=========================================================================================================================
+MODES
+{
+    VrForward();													// Indicates this shader will be used for main rendering
+    Depth( "culled_depth.vfx" ); 									// Shader that will be used for shadowing and depth prepass
+    ToolsVis( S_MODE_TOOLS_VIS ); 									// Ability to see in the editor
+    ToolsWireframe( "vr_tools_wireframe.vfx" ); 					// Allows for mat_wireframe to work
+	ToolsShadingComplexity( "vr_tools_shading_complexity.vfx" ); 	// Shows how expensive drawing is in debug view
+}
+
+//=========================================================================================================================
+COMMON
+{
+    #include "system.fxc" // This should always be the first include in COMMON
+    #include "sbox_shared.fxc"
+    #define S_TRANSLUCENT 0
+    #define VS_INPUT_HAS_TANGENT_BASIS 1
+    #define PS_INPUT_HAS_TANGENT_BASIS 1
+
+    CreateInputTexture2D( TextureColor, Srgb, 8, "", "_color", "Material,10/10", Default3( 1.0f, 1.0f, 1.0f ) );
+    CreateTexture2DWithoutSampler( g_tColor )  < Channel( RGBA, Box( TextureColor ), Srgb ); OutputFormat( BC7 ); SrgbRead( true ); >;
+
+    SamplerState TextureFiltering < Filter( POINT ); >;
+}
+
+//=========================================================================================================================
+
+struct VertexInput
+{
+	#include "common/vertexinput.hlsl"
+};
+
+//=========================================================================================================================
+
+struct PixelInput
+{
+	#include "common/pixelinput.hlsl"
+};
+
+struct GS_INPUT
+{
+	#include "common/pixelinput.hlsl"
+};
+
+//=========================================================================================================================
+
+VS
+{
+	#include "common/vertex.hlsl"
+	//
+	// Main
+	//
+	PixelInput MainVs( INSTANCED_SHADER_PARAMS( VS_INPUT i ) )
+	{
+		PixelInput o = ProcessVertex( i );
+		// Add your vertex manipulation functions here
+		return FinalizeVertex( o );
+	}
+}
+
+//=========================================================================================================================
+
+GS
+{
+    DynamicCombo( D_BAKED_LIGHTING_FROM_LIGHTMAP, 0..1, Sys( ALL ) );
+
+    bool FustrumCull( float4 vPositionPs0, float4 vPositionPs1, float4 vPositionPs2 )
+    {
+        // Discard if all the vertices are behind the near plane
+        if ( ( vPositionPs0.z < 0.0 ) && ( vPositionPs1.z < 0.0 ) && ( vPositionPs2.z < 0.0 ) )
+            return true;
+
+        // Discard if all the vertices are behind the far plane
+        if ( ( vPositionPs0.z > vPositionPs0.w ) && ( vPositionPs1.z > vPositionPs1.w ) && ( vPositionPs2.z > vPositionPs2.w ) )
+        	return true;
+
+        // Discard if all the vertices are outside one of the frustum sides
+        if ( vPositionPs0.x < -vPositionPs0.w &&
+        	 vPositionPs1.x < -vPositionPs1.w &&
+        	 vPositionPs2.x < -vPositionPs2.w )
+        	 return true;
+        if ( vPositionPs0.y < -vPositionPs0.w &&
+        	 vPositionPs1.y < -vPositionPs1.w &&
+        	 vPositionPs2.y < -vPositionPs2.w )
+        	 return true;
+        if ( vPositionPs0.x > vPositionPs0.w &&
+        	 vPositionPs1.x > vPositionPs1.w &&
+        	 vPositionPs2.x > vPositionPs2.w )
+        	 return true;
+        if ( vPositionPs0.y > vPositionPs0.w &&
+        	 vPositionPs1.y > vPositionPs1.w &&
+        	 vPositionPs2.y > vPositionPs2.w )
+        	 return true;
+
+        return false;
+    }
+
+    [maxvertexcount( 3 )]
+    void MainGs( triangle GS_INPUT i[ 3 ], inout TriangleStream< PS_INPUT > triStream )
+    {
+        PS_INPUT o = (PS_INPUT)0;
+
+        if( FustrumCull(i[0].vPositionPs, i[1].vPositionPs, i[2].vPositionPs) )
+        {
+            return;
+        }
+        
+        [unroll] for ( uint v = 0; v < 3; v++ )
+        {
+            GSAppendVertex( triStream, i[v] );
+        }
+        GSRestartStrip( triStream );
+    }
+}
+
+//=========================================================================================================================
+
+PS
+{
+    DynamicCombo( D_BAKED_LIGHTING_FROM_VERTEX_STREAM, 0..1, Sys( ALL ) );
+    DynamicCombo( D_BAKED_LIGHTING_FROM_PROBE, 0..1, Sys( ALL ) );
+    DynamicCombo( D_BAKED_LIGHTING_FROM_LIGHTMAP, 0..1, Sys( ALL ) );
+    StaticCombo( S_ALPHA_TEST, F_ALPHA_TEST, Sys( ALL ) );
+
+    #include "common/pixel.material.minimal.hlsl"
+
+    #include "sbox_pixel.fxc"
+
+    #if S_HIGH_QUALITY_REFLECTIONS
+        #include "common/pixel.raytrace.sdf.hlsl"
+    #endif
+
+    // To reduce texture lookups, we're combining
+    // as many maps together
+
+    CreateInputTexture2D( TextureNormal,           Linear, 8, "NormalizeNormals", "_normal", "Material,10/20", Default3( 0.5, 0.5, 1.0 ) );
+    CreateInputTexture2D( TextureRoughness,        Linear, 8, "",                 "_rough",  "Material,10/30", Default( 0.5 ) );
+    CreateInputTexture2D( TextureMetalness,        Linear, 8, "",                 "_metal",  "Material,10/40", Default( 1.0 ) );
+    CreateInputTexture2D( TextureAmbientOcclusion, Linear, 8, "",                 "_ao",     "Material,10/50", Default( 1.0 ) );
+
+    CreateTexture2DWithoutSampler( g_tNormal ) < Channel( RGB, Box( TextureNormal ), Linear ); OutputFormat( BC7 ); SrgbRead( false ); >;
+    CreateTexture2DWithoutSampler( g_tRma )    < Channel( R,    Box( TextureRoughness ), Linear ); Channel( G, Box( TextureMetalness ), Linear ); Channel( B, Box( TextureAmbientOcclusion ), Linear ); OutputFormat( BC7 ); SrgbRead( false ); >;
+    
+    RenderState( CullMode, F_RENDER_BACKFACES ? NONE : DEFAULT );
+
+	//
+	// Main
+	//
+	PixelOutput MainPs( PixelInput i )
+	{
+        float2 vUV = i.vTextureCoords.xy;
+
+        float4 vAlbedo = Tex2DS( g_tColor, TextureFiltering, vUV ).rgba;
+
+        // Bail early
+        #if S_ALPHA_TEST
+            if( vAlbedo.a < g_flAlphaTestReference  )
+            {
+                discard;
+            }
+        #endif
+
+        float3 vNormal = Tex2DS( g_tNormal, TextureFiltering, vUV ).rgb;
+        float3 vRMA = Tex2DS( g_tRma, TextureFiltering, vUV ).rgb;
+
+        Material m;
+
+        m.Albedo = vAlbedo.rgb;
+        m.Normal = vNormal.rgb;
+        m.Emission = float3(0, 0, 0);
+        m.Roughness = vRMA.r;
+        m.Metalness = vRMA.g;
+        m.AmbientOcclusion = vRMA.b;
+        m.BlendMask = 0.0f;
+        m.TintMask = 0.0f;
+        m.TransmissiveMask = float3( 0.0f, 0.0f, 0.0f );
+
+        #if S_ALPHA_TEST
+            m.Opacity = vAlbedo.a;
+        #else
+            m.Opacity = 1.0f;
+        #endif
+
+		CombinerInput o = MaterialToCombinerInput( i, m );
+
+        #if S_HIGH_QUALITY_REFLECTIONS
+            float r = TraceSDF( m, i );
+            return FinalizePixelReflectionTemp( o, r );
+        #endif
+		
+		return FinalizePixel( o );
+	}
+}
