@@ -2,9 +2,9 @@
 {
 	data = 
 	{
-		imagepath = "materials/blocks/textures/spikes_color.png"
+		imagepath = "materials/blocks/textures/bush_color.png"
 		modelpath = resource:"models/blocks/decorative_block.vmdl"
-		blocksize = [ 0.0, 0.0, 0.0 ]
-		category = "3"
+		blocksize = [ 1.0, 1.0, 1.0 ]
+		category = "0"
 	}
 }
