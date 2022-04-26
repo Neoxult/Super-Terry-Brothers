@@ -369,3 +369,5 @@ launchSettings.json
 *.vmat_c
 *.vmdl_c
 *.block_c
+*.ini
+*.vcs
