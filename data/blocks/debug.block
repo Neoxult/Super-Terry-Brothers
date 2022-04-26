@@ -2,9 +2,10 @@
 {
 	data = 
 	{
-		iconpath = "materials/blocks/textures/default_color.png"
+		iconpath = "materials/blocks/textures/debug_color.png"
 		modelpath = resource:"models/blocks/block.vmdl"
-		materialpath = resource:"materials/blocks/default.vmat"
+		materialpath = resource:"materials/blocks/debug.vmat"
 		blocksize = [ 1.0, 1.0, 1.0 ]
+		category = "0"
 	}
 }
