@@ -2,10 +2,10 @@
 {
 	data = 
 	{
-		iconpath = "materials/blocks/textures/spikes_color.png"
-		modelpath = resource:"models/blocks/decorative_block.vmdl"
-		materialpath = resource:"materials/blocks/spikes.vmat"
-		blocksize = [ 1.0, 1.0, 1.0 ]
-		category = "0"
+		IconPath = resource:"materials/blocks/textures/spikes_color.png"
+		ModelPath = resource:"models/blocks/decorative_block.vmdl"
+		MaterialPath = resource:"materials/blocks/spikes.vmat"
+		BlockSize = "0,0,0"
+		Category = 3
 	}
 }
