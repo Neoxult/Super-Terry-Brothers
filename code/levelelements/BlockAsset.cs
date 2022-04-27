@@ -17,35 +17,37 @@ namespace TerryBros.LevelElements
         [Property, Category("Model"), ResourceType("vmdl")]
         public string ModelPath { get; set; }
 
-        private string _material_path;
         [Property, Category("Model"), ResourceType("vmat")]
         public string MaterialPath {
-            get => _material_path;
+            get => _materialPath;
             set
             {
-                _material_path = value;
-                Mat = Material.Load(_material_path).CreateCopy();
-                Mat.OverrideTexture("Color", Tex);
+                _materialPath = value;
+
+                Material = Material.Load(_materialPath).CreateCopy();
+                Material.OverrideTexture("Color", Texture);
             }
         }
+        private string _materialPath;
 
-        private string _texture_path;
         [Property, Category("Model"), ResourceType("png")]
         public string TexturePath {
-            get => _texture_path;
+            get => _texturePath;
             set
             {
-                _texture_path = value;
-                Tex = Texture.Find(_texture_path);
-                Mat.OverrideTexture("Color", Tex);
+                _texturePath = value;
+                Texture = Texture.Find(_texturePath);
+
+                Material.OverrideTexture("Color", Texture);
             }
         }
+        private string _texturePath;
 
         [Property, Category("Data")]
         public Vector3 BlockSize { get; set; } = new(1, 1, 1);
 
-        public Material Mat { get; private set; }
-        public Texture Tex { get; private set; }
+        public Material Material { get; private set; }
+        public Texture Texture { get; private set; }
 
         public enum Categories
         {
