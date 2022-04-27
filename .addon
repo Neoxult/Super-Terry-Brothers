@@ -8,7 +8,8 @@
   "AssetsPath": "",
   "ResourcePaths": [
     "/models/*",
-    "/materials/*"
+    "/materials/*",
+    "/shaders/*"
   ],
   "HasCode": true,
   "CodePath": "code",

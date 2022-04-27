@@ -2,9 +2,11 @@
 {
 	data = 
 	{
+		iconpath = "materials/blocks/textures/brick_color.png"
+		modelpath = resource:"models/blocks/layered_block.vmdl"
+		materialpath = resource:"materials/blocks/default.vmat"
+		texturepath = "materials/blocks/textures/brick_color.png"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "0"
-		imagepath = "materials/blocks/stair_block.png"
-		modelpath = resource:"materials/blocks/stair_block.vmat"
 	}
 }

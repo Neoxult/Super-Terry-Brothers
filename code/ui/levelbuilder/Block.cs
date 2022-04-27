@@ -16,7 +16,7 @@ namespace TerryBros.UI.LevelBuilder
         {
             Asset = asset;
 
-            Image = Add.Image(Asset.ImagePath, "image");
+            Image = Add.Image(Asset.IconPath, "image");
             TextLabel = Add.Label(Asset.Name, "name");
 
             AddEventListener("onclick", (e) =>

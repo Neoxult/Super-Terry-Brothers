@@ -1,7 +1,0 @@
-"settings"
-{
-	"nolod"		"1"
-	"maxres"		"64"
-	"maxresmobile"		"64"
-	"nomip"		"1"
-}
