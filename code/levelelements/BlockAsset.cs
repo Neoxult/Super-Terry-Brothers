@@ -43,7 +43,7 @@ namespace TerryBros.LevelElements
 
         [Property, Category("Data")]
         public Vector3 BlockSize { get; set; } = new(1, 1, 1);
-        
+
         public Material Mat { get; private set; }
         public Texture Tex { get; private set; }
 
