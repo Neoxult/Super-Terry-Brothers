@@ -63,7 +63,7 @@ namespace TerryBros.LevelElements
         protected override void PostLoad()
         {
             base.PostLoad();
-            
+
             if (!_all.Contains(this))
             {
                 _all.Add(this);
