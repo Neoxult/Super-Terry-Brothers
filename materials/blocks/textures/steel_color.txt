@@ -1,0 +1,6 @@
+"settings"
+{
+	"nocompress"		"1"
+	"maxres"		"64"
+	"maxresmobile"		"64"
+}
