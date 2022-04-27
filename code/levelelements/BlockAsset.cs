@@ -78,7 +78,6 @@ namespace TerryBros.LevelElements
             }
 
             Precache.Add(MaterialPath);
-            Precache.Add(TexturePath);
             Precache.Add(ModelPath);
         }
 
