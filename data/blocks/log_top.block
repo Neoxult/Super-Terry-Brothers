@@ -2,9 +2,10 @@
 {
 	data = 
 	{
-		iconpath = "materials/blocks/textures/log_top_color.png"
+		iconpath = "materials/blocks/textures/log_color.png"
 		modelpath = resource:"models/blocks/layered_block.vmdl"
-		materialpath = resource:"materials/blocks/log_top.vmat"
+		materialpath = resource:"materials/blocks/default.vmat"
+		texturepath = "materials/blocks/textures/log_color.png"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "0"
 	}

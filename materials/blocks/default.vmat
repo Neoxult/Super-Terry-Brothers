@@ -4,10 +4,9 @@ Layer0
 {
 	shader "block.vfx"
 
-	F_PREPASS_ALPHA_TEST 1
-
 	//---- Rendering ----
 	F_ALPHA_TEST 1
+	F_RENDER_BACKFACES 1
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
@@ -40,4 +39,9 @@ Layer0
 	//---- Translucent ----
 	g_flAlphaTestReference "0.500"
 	g_flAntiAliasedEdgeStrength "1.000"
+
+	DynamicParams
+	{
+		TextureColor "color"
+	}
 }

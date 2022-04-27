@@ -4,7 +4,8 @@
 	{
 		iconpath = "materials/blocks/textures/flowers_color.png"
 		modelpath = resource:"models/blocks/decorative_block.vmdl"
-		materialpath = resource:"materials/blocks/flowers.vmat"
+		materialpath = resource:"materials/blocks/backface_culled.vmat"
+		texturepath = "materials/blocks/textures/flowers_color.png"
 		blocksize = [ 1.0, 8.0, 1.0 ]
 		category = "4"
 	}

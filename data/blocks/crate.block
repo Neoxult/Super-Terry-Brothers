@@ -4,7 +4,8 @@
 	{
 		iconpath = "materials/blocks/textures/crate_color.png"
 		modelpath = resource:"models/blocks/layered_block.vmdl"
-		materialpath = resource:"materials/blocks/crate.vmat"
+		materialpath = resource:"materials/blocks/default.vmat"
+		texturepath = "materials/blocks/textures/crate_color.png"
 		blocksize = [ 1.0, 1.0, 1.0 ]
 		category = "0"
 	}

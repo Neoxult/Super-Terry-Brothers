@@ -57,7 +57,7 @@ namespace TerryBros.LevelElements
                 {
                     SetModel(_asset.ModelPath);
                     if (Host.IsClient) {
-                        SetMaterialOverride(_asset.MaterialPath);
+                        SetMaterialOverride(_asset.Mat);
                     }
                 }
             }
