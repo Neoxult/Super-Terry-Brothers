@@ -18,36 +18,42 @@ namespace TerryBros.LevelElements
         public string ModelPath { get; set; }
 
         [Property, Category("Model"), ResourceType("vmat")]
-        public string MaterialPath {
-            get => _materialPath;
-            set
-            {
-                _materialPath = value;
-
-                Material = Material.Load(_materialPath).CreateCopy();
-                Material.OverrideTexture("Color", Texture);
-            }
-        }
-        private string _materialPath;
+        public string MaterialPath { get; set; }
 
         [Property, Category("Model"), ResourceType("png")]
-        public string TexturePath {
-            get => _texturePath;
-            set
-            {
-                _texturePath = value;
-                Texture = Texture.Find(_texturePath);
-
-                Material.OverrideTexture("Color", Texture);
-            }
-        }
-        private string _texturePath;
+        public string TexturePath { get; set; }
 
         [Property, Category("Data")]
         public Vector3 BlockSize { get; set; } = new(1, 1, 1);
 
-        public Material Material { get; private set; }
-        public Texture Texture { get; private set; }
+        public Material Material
+        {
+            get
+            {
+                if (_material == null)
+                {
+                    _material = Material.Load(MaterialPath).CreateCopy();
+                    _material.OverrideTexture("Color", Texture);
+                }
+
+                return _material;
+            }
+        }
+        private Material _material;
+
+        public Texture Texture {
+            get
+            {
+                if (_texture == null)
+                {
+                    _texture = Texture.Find(TexturePath);
+                    Material.OverrideTexture("Color", _texture);
+                }
+
+                return _texture;
+            }
+        }
+        private Texture _texture;
 
         public enum Categories
         {
@@ -70,6 +76,10 @@ namespace TerryBros.LevelElements
             {
                 _all.Add(this);
             }
+
+            Precache.Add(MaterialPath);
+            Precache.Add(TexturePath);
+            Precache.Add(ModelPath);
         }
 
         public static BlockAsset GetByName(string name)
