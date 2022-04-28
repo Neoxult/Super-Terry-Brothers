@@ -6,7 +6,6 @@ Layer0
 
 	//---- Rendering ----
 	F_ALPHA_TEST 1
-	F_RENDER_BACKFACES 1
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
