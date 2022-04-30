@@ -363,7 +363,7 @@ MigrationBackup/
 
 launchSettings.json
 
-# Sbox issue
-# *.vtex_c
-# *.vmat_c
-# *.vmdl_c
+# s&box
+*.vtex_c
+*.vmat_c
+*.vmdl_c
