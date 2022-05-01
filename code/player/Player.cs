@@ -113,6 +113,7 @@ namespace TerryBros
             base.Simulate(cl);
 
             SimulateActiveChild(cl, ActiveChild);
+            SimulateLevelNetworking(cl);
         }
 
         public override void FrameSimulate(Client cl)

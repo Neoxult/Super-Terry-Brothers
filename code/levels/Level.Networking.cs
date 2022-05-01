@@ -69,23 +69,8 @@ namespace TerryBros.Levels
 
                 STBGame.CurrentLevel?.Clear();
 
-                new Level().Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(CombineByteArrays(_packetData.ToArray())));
+                new Level().Import(Compression.Decompress<Dictionary<string, List<Vector2>>>(Compression.CombineByteArrays(_packetData.ToArray())));
             }
-        }
-
-        private static byte[] CombineByteArrays(params byte[][] arrays)
-        {
-            byte[] combinedArray = new byte[arrays.Sum(a => a.Length)];
-            int offset = 0;
-
-            foreach (byte[] array in arrays)
-            {
-                array.CopyTo(combinedArray, offset);
-
-                offset += array.Length;
-            }
-
-            return combinedArray;
         }
     }
 }

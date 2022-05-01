@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text.Json;
 
 namespace TerryBros.Utils
@@ -34,5 +35,20 @@ namespace TerryBros.Utils
 
 			return JsonSerializer.Deserialize<T>(uncompressStream.ToArray());
 		}
+
+        public static byte[] CombineByteArrays(params byte[][] arrays)
+        {
+            byte[] combinedArray = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+
+            foreach (byte[] array in arrays)
+            {
+                array.CopyTo(combinedArray, offset);
+
+                offset += array.Length;
+            }
+
+            return combinedArray;
+        }
 	}
 }
