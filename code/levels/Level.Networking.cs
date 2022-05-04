@@ -15,18 +15,20 @@ namespace TerryBros.Levels
         private static int _packetCount;
         private static byte[][] _packetData;
 
+        private readonly static int _splitLength = 510 - "ServerSendPartialData".Length - 3 * (int.MaxValue.ToString().Length + 4) - 3; // 510 max length including cmd name length + 3 extra chars per argument // -int => +1
+
         public static void ServerSendData(Dictionary<string, List<Vector2>> dict)
         {
             byte[] levelDataJson = Compression.Compress(dict);
-            int splitLength = 150;
-            int splitCount = (int) MathF.Ceiling((float) levelDataJson.Length / splitLength);
+            string stringArray = levelDataJson.StringArray();
+            int stringArrayLength = stringArray.Length;
+            int splitCount = (int) MathF.Ceiling((float) stringArrayLength / _splitLength);
 
-            for (int i = 0; i < splitCount; i++)
+            for (int i = 0, length = 0; i < splitCount; i++)
             {
-                int length = Math.Clamp(levelDataJson.Length - i * splitLength, 1, splitLength);
-                byte[] bytes = levelDataJson[(i * splitLength)..length];
+                length += Math.Clamp(stringArrayLength - i * _splitLength, 1, _splitLength);
 
-                ServerSendPartialData(levelDataJson.GetHashCode(), i, splitCount, bytes.StringArray());
+                ServerSendPartialData(levelDataJson.GetHashCode(), i, splitCount, stringArray[(i * _splitLength)..length]);
             }
         }
 

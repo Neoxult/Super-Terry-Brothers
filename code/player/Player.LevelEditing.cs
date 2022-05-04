@@ -13,7 +13,7 @@ namespace TerryBros
         public Vector3[] Positions { get; set; }
         public string BlockName { get; set; }
 
-        public StackData(Vector3[] positions, string blockName = "__delete__")
+        public StackData(Vector3[] positions, string blockName)
         {
             Positions = positions;
             BlockName = blockName;
@@ -122,7 +122,7 @@ namespace TerryBros
                 }
                 else if (buildPanel.IsRightMouseButtonDown)
                 {
-                    Stack.Push(new(pos));
+                    Stack.Push(new(pos, "__delete__"));
                 }
             }
             else if (IsDrawing && !buildPanel.IsMouseDown)
