@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 using Sandbox;
 
+using TerryBros.Gamemode;
+using TerryBros.LevelElements;
+using TerryBros.Levels;
 using TerryBros.Settings;
 using TerryBros.UI.LevelBuilder;
 using TerryBros.Utils;
@@ -27,12 +30,10 @@ namespace TerryBros
             get => _isDrawing;
             set
             {
-                _mousePos = Vector3.Zero;
                 _isDrawing = value;
             }
         }
         private bool _isDrawing = false;
-        private Vector3 _mousePos = Vector3.Zero;
         private IntVector3 _oldGridPos = IntVector3.Zero;
 
         public Stack<StackData> Stack { get; set; } = new();
@@ -56,7 +57,7 @@ namespace TerryBros
             IntVector3 currentGridPos = GlobalSettings.GetGridCoordinatesForBlockPos(finalGridPos);
             List<Vector3> blockPos = new();
 
-            if (IsDrawing && _mousePos != mousePos)
+            if (_oldGridPos != currentGridPos)
             {
                 bool smallerX = currentGridPos.X < _oldGridPos.X;
                 bool smallerY = currentGridPos.Y < _oldGridPos.Y;
@@ -68,12 +69,6 @@ namespace TerryBros
                         blockPos.Add(GlobalSettings.GetBlockPosForGridCoordinates(x, y));
                     }
                 }
-
-                _mousePos = mousePos;
-            }
-            else
-            {
-                blockPos.Add(finalGridPos);
             }
 
             _oldGridPos = currentGridPos;
@@ -116,13 +111,41 @@ namespace TerryBros
             {
                 IsDrawing = true;
 
+                List<Vector3> list = new();
+
+                foreach (Vector3 vector3 in pos)
+                {
+                    Level level = STBGame.CurrentLevel;
+                    IntVector3 gridPos = GlobalSettings.GetGridCoordinatesForBlockPos(vector3);
+
+                    level.GridBlocks.TryGetValue(gridPos.X, out Dictionary<int, BlockEntity> dict);
+
+                    if (dict == null)
+                    {
+                        dict = new();
+
+                        level.GridBlocks.Add(gridPos.X, dict);
+                    }
+
+                    dict.TryGetValue(gridPos.Y, out BlockEntity blockEntity);
+
+                    bool filled = blockEntity != null;
+
+                    if (buildPanel.IsLeftMouseButtonDown && filled || buildPanel.IsRightMouseButtonDown && !filled)
+                    {
+                        continue;
+                    }
+
+                    list.Add(vector3);
+                }
+
                 if (buildPanel.IsLeftMouseButtonDown)
                 {
-                    Stack.Push(new(pos, buildPanel.SelectedAsset.Name));
+                    Stack.Push(new(list.ToArray(), buildPanel.SelectedAsset.Name));
                 }
                 else if (buildPanel.IsRightMouseButtonDown)
                 {
-                    Stack.Push(new(pos, "__delete__"));
+                    Stack.Push(new(list.ToArray(), "__delete__"));
                 }
             }
             else if (IsDrawing && !buildPanel.IsMouseDown)
