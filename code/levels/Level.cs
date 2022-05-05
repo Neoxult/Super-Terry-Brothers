@@ -44,6 +44,8 @@ namespace TerryBros.Levels
         public Sky Sky { get; set; }
         public List<EnvironmentLightEntity> Lights { get; set; } = new();
 
+        public string Data { get; set; }
+
         protected LevelElements.SpawnPoint RestartSpawn;
 
         public void RegisterBlock(BlockEntity block)
@@ -208,8 +210,12 @@ namespace TerryBros.Levels
             return JsonSerializer.Serialize(dict);
         }
 
-        public void Import(Dictionary<string, List<Vector2>> dict)
+        public void Import(string data)
         {
+            Data = data;
+
+            Dictionary<string, List<Vector2>> dict = Compression.Decompress<Dictionary<string, List<Vector2>>>(data.ByteArray());
+
             Build();
 
             foreach (KeyValuePair<string, List<Vector2>> blockList in dict)
