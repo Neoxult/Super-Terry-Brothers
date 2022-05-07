@@ -57,7 +57,7 @@ namespace TerryBros.Gamemode
         [ServerCmd]
         public static void StartLevelEditor(string levelPath = null)
         {
-            if (!ConsoleSystem.Caller?.HasPermission("startleveleditor") ?? true)
+            if (!ConsoleSystem.Caller?.HasPermission("startleveleditor") ?? false)
             {
                 return;
             }
@@ -84,6 +84,11 @@ namespace TerryBros.Gamemode
         [ServerCmd]
         public static void ClearLevel()
         {
+            if (!ConsoleSystem.Caller?.HasPermission("clear") ?? false)
+            {
+                return;
+            }
+
             CurrentLevel.Clear();
             ClientClearLevel();
         }

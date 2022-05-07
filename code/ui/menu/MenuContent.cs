@@ -64,10 +64,15 @@ namespace TerryBros.UI
 
             if (STBGame.Instance.State != STBGame.GameState.Game)
             {
-                wrapperPanel.Add.Button("Load Level", "entry", () =>
+                Button loadButton = wrapperPanel.Add.Button("Load Level", "entry", () =>
                 {
                     SetContent("Load Level", ShowLevels, "levels");
                 });
+
+                if (!Local.Client.HasPermission("startleveleditor"))
+                {
+                    loadButton.AddClass("disabled");
+                }
 
                 wrapperPanel.Add.Button(toggle ? "Level Editor" : "Test", "entry", () =>
                 {
@@ -82,13 +87,18 @@ namespace TerryBros.UI
                 });
             }
 
-            wrapperPanel.Add.Button("Quit", "entry", () =>
+            Button quitButton = wrapperPanel.Add.Button("Quit", "entry", () =>
             {
                 STBGame.QuitGame();
 
                 Menu.Display = false;
                 StartScreen.Instance.Display = true;
             });
+
+            if (!Local.Client.HasPermission("quitgamestate"))
+            {
+                quitButton.AddClass("disabled");
+            }
         }
 
         public void OnClickBack(string currentView)

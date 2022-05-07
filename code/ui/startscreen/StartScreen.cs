@@ -88,17 +88,37 @@ namespace TerryBros.UI
         {
             wrapperPanel.SetClass("scroll", false);
 
-            wrapperPanel.Add.Button("Start Game", "entry", () =>
+            Button startButton = wrapperPanel.Add.Button("Start Game", "entry", () =>
             {
+                if (!Local.Client?.HasPermission("startgame") ?? true)
+                {
+                    return;
+                }
+
                 SetContent("Choose Level", ShowLevels, "levels");
             });
 
-            wrapperPanel.Add.Button("Level Editor", "entry", () =>
+            if (!Local.Client?.HasPermission("startgame") ?? false)
             {
+                startButton.AddClass("disabled");
+            }
+
+            Button leveleditorButton = wrapperPanel.Add.Button("Level Editor", "entry", () =>
+            {
+                if (!Local.Client?.HasPermission("startleveleditor") ?? true)
+                {
+                    return;
+                }
+
                 STBGame.StartLevelEditor();
 
                 Display = false;
             });
+
+            if (!Local.Client?.HasPermission("startleveleditor") ?? false)
+            {
+                leveleditorButton.AddClass("disabled");
+            }
 
             wrapperPanel.Add.Button("Settings", "entry disabled");
             wrapperPanel.Add.Button("About", "entry disabled");
