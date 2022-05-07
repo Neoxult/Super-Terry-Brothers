@@ -224,10 +224,10 @@ namespace TerryBros.Levels
 
                 if (asset != null)
                 {
-                    foreach (Vector2 position in blockList.Value)
+                    foreach (Vector3 position in blockList.Value)
                     {
                         BlockEntity blockEntity = BlockEntity.FromAsset(asset);
-                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
+                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.z);
 
                         RegisterBlock(blockEntity);
                     }
