@@ -38,12 +38,6 @@ namespace TerryBros.Gamemode
             }
         }
 
-        [Event.Hotload]
-        public static void Reset()
-        {
-            CurrentLevel?.Clear();
-        }
-
         public override void Simulate(Client cl)
         {
             base.Simulate(cl);

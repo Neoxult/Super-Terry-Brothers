@@ -21,18 +21,5 @@ namespace TerryBros.UI
             RootPanel.AddChild<StartScreen>();
             RootPanel.AddChild<LevelBuilder.BuildPanel>();
         }
-
-        [Event.Hotload]
-        public static void OnHotReloaded()
-        {
-            if (!Host.IsClient)
-            {
-                return;
-            }
-
-            Local.Hud?.Delete();
-
-            _ = new Hud();
-        }
     }
 }
