@@ -78,6 +78,13 @@ namespace TerryBros.LevelElements
 
         public static BlockEntity FromAsset(BlockAsset asset)
         {
+            if (asset.Name == "__delete__")
+            {
+                Log.Error("Found restricted Block asset name '__delete__'");
+
+                return null;
+            }
+
             BlockEntity blockEntity = asset.Category switch
             {
                 BlockAsset.Categories.Goal => new Goal(),
