@@ -11,9 +11,22 @@ namespace TerryBros.UI.LevelBuilder.Tools
 
         public override string IconPath { get; set; } = "";
 
+        public static BlockBuildTool Instance { get; set; }
+
         public static void OnClickBuildTool(MousePanelEvent e)
         {
-            Log.Info("Pressed BlockBuildTool");
+            Instance.BlockSelector.IsOpened = !Instance.BlockSelector.IsOpened;
+        }
+
+        public BlockSelector BlockSelector { get; set; }
+
+        public BlockBuildTool() : base()
+        {
+            Instance = this;
+
+            BlockSelector = new();
+
+            AddChild(BlockSelector);
         }
     }
 }

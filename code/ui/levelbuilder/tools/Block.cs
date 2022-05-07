@@ -3,7 +3,7 @@ using Sandbox.UI.Construct;
 
 using TerryBros.LevelElements;
 
-namespace TerryBros.UI.LevelBuilder
+namespace TerryBros.UI.LevelBuilder.Tools
 {
     public class Block : Panel
     {
@@ -21,7 +21,7 @@ namespace TerryBros.UI.LevelBuilder
 
             AddEventListener("onclick", (e) =>
             {
-                BuildPanel.Instance.BlockSelection.Select(Asset.Name);
+                BlockBuildTool.Instance.BlockSelector.Select(Asset.Name);
             });
         }
     }
