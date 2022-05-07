@@ -32,10 +32,10 @@ namespace TerryBros.LevelElements
         /// </summary>
         public override Vector3 Position
         {
-            get => base.Position - GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
+            get => base.Position - GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize * 0.5f);
             set
             {
-                base.Position = value + GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize / 2);
+                base.Position = value + GlobalSettings.ConvertLocalToGlobalScale((BlockSize - new IntVector3(1, 1, 1)) * GlobalSettings.BlockSize * 0.5f);
             }
         }
 
@@ -54,6 +54,8 @@ namespace TerryBros.LevelElements
 
                 if (_asset != null)
                 {
+                    BlockSize = (IntVector3) _asset.BlockSize;
+
                     SetModel(_asset.ModelPath);
 
                     if (Host.IsClient)
