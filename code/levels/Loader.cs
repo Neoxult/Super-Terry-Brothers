@@ -54,7 +54,7 @@ namespace TerryBros.Levels.Loader
 
             try
             {
-                Level.SyncData(JsonSerializer.Deserialize<Dictionary<string, List<Vector2>>>(FileSystem.Data.ReadAllText(file)));
+                Level.SyncData(JsonSerializer.Deserialize<Dictionary<string, string>>(FileSystem.Data.ReadAllText(file)));
             }
             catch (Exception) { }
         }

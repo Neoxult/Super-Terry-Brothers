@@ -207,7 +207,7 @@ namespace TerryBros.Levels
                 }
             }
 
-            return JsonSerializer.Serialize(dict);
+            return JsonSerializer.Serialize(Compress(dict));
         }
 
         public void Import(string data)

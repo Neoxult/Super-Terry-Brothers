@@ -12,11 +12,11 @@ namespace TerryBros.Levels
         [ConVar.ClientData("mapdata")]
         public static string MapData { get; set; } = null;
 
-        public static void SyncData(Dictionary<string, List<Vector2>> dict)
+        public static void SyncData(Dictionary<string, string> dict)
         {
             Host.AssertClient();
 
-            MapData = Compression.Compress(Compress(dict)).StringArray();
+            MapData = Compression.Compress(dict).StringArray();
         }
 
         [Event.Tick.Server]
