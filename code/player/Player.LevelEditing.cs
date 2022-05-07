@@ -178,33 +178,37 @@ namespace TerryBros
             }
 
             // merge same blocks together to reduce network messages
-            Dictionary<string, List<Vector3>> compressedDict = new();
+            Dictionary<string, List<Vector2>> normalizedDict = new();
 
             foreach (KeyValuePair<Vector3, string> keyValuePair in cleanedDict)
             {
-                if (!compressedDict.TryGetValue(keyValuePair.Value, out List<Vector3> list))
+                if (!normalizedDict.TryGetValue(keyValuePair.Value, out List<Vector2> list))
                 {
                     list = new();
 
-                    compressedDict.Add(keyValuePair.Value, list);
+                    normalizedDict.Add(keyValuePair.Value, list);
                 }
 
-                list.Add(keyValuePair.Key);
+                list.Add(new(keyValuePair.Key.x, keyValuePair.Key.z));
             }
 
-            // TODO break message in parts if it's too long
+            Dictionary<string, string> compressedDict = Level.Compress(normalizedDict);
+
+            // TODO break message in parts if it's too long (ServerCmd just supports a length of 510 chars including name + 3 chars per argument)
             // transmit to server
             using (Prediction.Off())
             {
-                foreach (KeyValuePair<string, List<Vector3>> keyValuePair in compressedDict)
+                foreach (KeyValuePair<string, string> keyValuePair in compressedDict)
                 {
+                    string compressedData = Compression.Compress(keyValuePair.Value).StringArray();
+
                     if (keyValuePair.Key == "__delete__")
                     {
-                        Levels.Editor.ServerDeleteBlocks(Compression.Compress(keyValuePair.Value).StringArray());
+                        Levels.Editor.ServerDeleteBlocks(compressedData);
                     }
                     else
                     {
-                        Levels.Editor.ServerCreateBlocks(Compression.Compress(keyValuePair.Value).StringArray(), keyValuePair.Key);
+                        Levels.Editor.ServerCreateBlocks(compressedData, keyValuePair.Key);
                     }
                 }
             }

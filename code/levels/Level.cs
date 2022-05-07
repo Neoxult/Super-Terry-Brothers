@@ -214,39 +214,22 @@ namespace TerryBros.Levels
         {
             Data = data;
 
-            Dictionary<string, string> dict = Compression.Decompress<Dictionary<string, string>>(data.ByteArray());
+            Dictionary<string, List<Vector3>> dict = Decompress(Compression.Decompress<Dictionary<string, string>>(data.ByteArray()));
 
             Build();
 
-            foreach (KeyValuePair<string, string> blockList in dict)
+            foreach (KeyValuePair<string, List<Vector3>> blockList in dict)
             {
                 BlockAsset asset = BlockAsset.GetByName(blockList.Key);
 
                 if (asset != null)
                 {
-                    List<CompressedData> compressedList = CompressedData.Decompress(blockList.Value);
-
-                    foreach (CompressedData compressedData in compressedList)
+                    foreach (Vector2 position in blockList.Value)
                     {
-                        List<Vector2> positions = new();
+                        BlockEntity blockEntity = BlockEntity.FromAsset(asset);
+                        blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
 
-                        for (int x = 0; x < (int) compressedData.Size.x; x++)
-                        {
-                            int xPos = (int) compressedData.Position.x + x;
-
-                            for (int y = 0; y < (int) compressedData.Size.y; y++)
-                            {
-                                positions.Add(new(xPos, (int) compressedData.Position.y + y));
-                            }
-                        }
-
-                        foreach (Vector2 position in positions)
-                        {
-                            BlockEntity blockEntity = BlockEntity.FromAsset(asset);
-                            blockEntity.Position = GlobalSettings.GetBlockPosForGridCoordinates((int) position.x, (int) position.y);
-
-                            RegisterBlock(blockEntity);
-                        }
+                        RegisterBlock(blockEntity);
                     }
                 }
             }

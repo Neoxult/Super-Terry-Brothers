@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Sandbox;
 
 using TerryBros.UI.LevelBuilder;
@@ -7,10 +9,12 @@ namespace TerryBros.Levels
 {
     public static partial class Editor
     {
+        private static List<Vector3> Decompress(string positions) => Level.Decompress(Compression.Decompress<string>(positions.ByteArray()));
+
         [ServerCmd]
         public static void ServerCreateBlocks(string positions, string blockName)
         {
-            foreach (Vector3 position in Compression.Decompress<Vector3[]>(positions.ByteArray()))
+            foreach (Vector3 position in Decompress(positions))
             {
                 CreateBlock(position, blockName);
             }
@@ -21,7 +25,7 @@ namespace TerryBros.Levels
         [ServerCmd]
         public static void ServerDeleteBlocks(string positions)
         {
-            foreach (Vector3 position in Compression.Decompress<Vector3[]>(positions.ByteArray()))
+            foreach (Vector3 position in Decompress(positions))
             {
                 DeleteBlock(position);
             }
@@ -32,7 +36,7 @@ namespace TerryBros.Levels
         [ClientRpc]
         public static void ClientCreateBlocks(string positions, string blockName)
         {
-            foreach (Vector3 position in Compression.Decompress<Vector3[]>(positions.ByteArray()))
+            foreach (Vector3 position in Decompress(positions))
             {
                 CreateBlock(position, blockName);
             }
@@ -41,7 +45,7 @@ namespace TerryBros.Levels
         [ClientRpc]
         public static void ClientDeleteBlocks(string positions)
         {
-            foreach (Vector3 position in Compression.Decompress<Vector3[]>(positions.ByteArray()))
+            foreach (Vector3 position in Decompress(positions))
             {
                 DeleteBlock(position);
             }

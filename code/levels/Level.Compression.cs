@@ -104,6 +104,38 @@ namespace TerryBros.Levels
             }
         }
 
+        public static List<Vector3> Decompress(string compressedString)
+        {
+            List<Vector3> list = new();
+
+            foreach (CompressedData compressedData in CompressedData.Decompress(compressedString))
+            {
+                for (int x = 0; x < (int) compressedData.Size.x; x++)
+                {
+                    int xPos = (int) compressedData.Position.x + x;
+
+                    for (int y = 0; y < (int) compressedData.Size.y; y++)
+                    {
+                        list.Add(new(xPos, 0, (int) compressedData.Position.y + y));
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public static Dictionary<string, List<Vector3>> Decompress(Dictionary<string, string> compressedDict)
+        {
+            Dictionary<string, List<Vector3>> dict = new();
+
+            foreach (KeyValuePair<string, string> keyValuePair in compressedDict)
+            {
+                dict.Add(keyValuePair.Key, Decompress(keyValuePair.Value));
+            }
+
+            return dict;
+        }
+
         public static Dictionary<string, string> Compress(Dictionary<string, List<Vector2>> dict)
         {
             Dictionary<string, string> compressedDict = new();
