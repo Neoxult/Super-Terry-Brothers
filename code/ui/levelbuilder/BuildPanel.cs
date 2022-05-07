@@ -11,6 +11,7 @@ namespace TerryBros.UI.LevelBuilder
         public float MouseWheel { get; private set; } = 0f;
         private float _mouseWheel = 0f;
         public LevelElements.BlockAsset SelectedAsset;
+        public Panel CurrentMouseOverPanel { get; set; }
 
         public BlockSelector BlockSelection;
 
@@ -48,23 +49,33 @@ namespace TerryBros.UI.LevelBuilder
             _mouseWheel = 0f;
         }
 
-        //TODO: Stop Scrolling when over BuildPanel for later use of scroll in blockList
-        /*protected override void OnMouseOver(MousePanelEvent e)
+        protected override void OnMouseOver(MousePanelEvent e)
         {
+            CurrentMouseOverPanel = e.Target;
+
             base.OnMouseOver(e);
 
-            if (e.Target is not BuildPanel) return;
+            if (e.Target is not BuildPanel)
+            {
+                return;
+            }
 
             MouseWheel = 0f;
             _mouseWheel = 0f;
-        }*/
+        }
 
         public override void OnMouseWheel(float value)
         {
             base.OnMouseWheel(value);
 
+            if (CurrentMouseOverPanel is not BuildPanel)
+            {
+                return;
+            }
+
             _mouseWheel = value;
         }
+
         protected override void OnMouseDown(MousePanelEvent e)
         {
             base.OnMouseDown(e);
