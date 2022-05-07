@@ -16,7 +16,7 @@ namespace TerryBros.Levels
         {
             Host.AssertClient();
 
-            MapData = Compression.Compress(dict).StringArray();
+            MapData = Compression.Compress(Compress(dict)).StringArray();
         }
 
         [Event.Tick.Server]
@@ -35,21 +35,29 @@ namespace TerryBros.Levels
 
                 if (string.IsNullOrWhiteSpace(mapData))
                 {
-                    break;
+                    continue;
                 }
 
                 byte[] bytes = mapData.ByteArray();
 
                 if (bytes == null || bytes.Length == 0 || mapData == STBGame.CurrentLevel?.Data)
                 {
-                    break;
+                    continue;
                 }
+
+                ClientResetMapData(To.Single(client));
 
                 ProceedData(bytes);
                 ClientSendData(bytes);
 
                 break;
             }
+        }
+
+        [ClientRpc]
+        public static void ClientResetMapData()
+        {
+            MapData = null;
         }
 
         [ClientRpc]
