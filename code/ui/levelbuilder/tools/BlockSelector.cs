@@ -1,13 +1,20 @@
 using System.Collections.Generic;
 
 using Sandbox.UI;
+using Sandbox.UI.Construct;
 
 namespace TerryBros.UI.LevelBuilder.Tools
 {
     [UseTemplate]
     public class BlockSelector : Panel
     {
+        public static BlockSelector Instance { get; set; }
+
+        public Panel Header { get; set; }
         public Panel Wrapper { get; set; }
+        public Panel Footer { get; set; }
+
+        public Panel Blocks { get; set; }
 
         public bool IsOpened
         {
@@ -25,7 +32,13 @@ namespace TerryBros.UI.LevelBuilder.Tools
 
         public BlockSelector() : base()
         {
-            AddBlocksData(Add.Panel("blocks"));
+            Instance = this;
+
+            AddBlocksData(Blocks);
+
+            Footer.Add.Button("Close", "close", () => {
+                IsOpened = !IsOpened;
+            });
         }
 
         private void AddBlocksData(Panel parent)

@@ -1,0 +1,30 @@
+.block {
+    &:not(:last-child) {
+        margin-right: 5px;
+    }
+
+    cursor: pointer;
+
+    height: 68px;
+    width: 68px;
+
+    border: 2px transparent solid;
+
+    flex-shrink: 0;
+
+    &.selected {
+        border: 2px white solid;
+    }
+
+    .name {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    .image {
+        width: 64px;
+        aspect-ratio: 1;
+    }
+}

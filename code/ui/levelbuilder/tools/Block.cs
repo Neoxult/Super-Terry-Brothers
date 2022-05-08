@@ -1,14 +1,17 @@
+using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
 
 using TerryBros.LevelElements;
 
 namespace TerryBros.UI.LevelBuilder.Tools
 {
+    [UseTemplate]
     public class Block : Panel
     {
-        public Label TextLabel;
-        public Image Image;
+        public Panel Wrapper { get; set; }
+
+        public Image Image { get; set; }
+        public Label TextLabel { get; set; }
 
         public BlockAsset Asset { get; set; }
 
@@ -16,12 +19,12 @@ namespace TerryBros.UI.LevelBuilder.Tools
         {
             Asset = asset;
 
-            Image = Add.Image(Asset.IconPath, "image");
-            TextLabel = Add.Label(Asset.Name, "name");
+            Image.Texture = Texture.Load(Asset.IconPath, false);
+            TextLabel.Text = Asset.Name;
 
             AddEventListener("onclick", (e) =>
             {
-                BlockBuildTool.Instance.BlockSelector.Select(Asset.Name);
+                BlockSelector.Instance.Select(Asset.Name);
             });
         }
     }

@@ -15,18 +15,22 @@ namespace TerryBros.UI.LevelBuilder.Tools
 
         public static void OnClickBuildTool(MousePanelEvent e)
         {
-            Instance.BlockSelector.IsOpened = !Instance.BlockSelector.IsOpened;
+            BlockSelector.Instance.IsOpened = !BlockSelector.Instance.IsOpened;
         }
-
-        public BlockSelector BlockSelector { get; set; }
 
         public BlockBuildTool() : base()
         {
             Instance = this;
 
-            BlockSelector = new();
+            Hud.Instance.RootPanel.AddChild(new BlockSelector());
+        }
 
-            AddChild(BlockSelector);
+        [Sandbox.Event.Hotload]
+        public static void OnHotload()
+        {
+            BlockSelector.Instance?.Delete(true);
+
+            Hud.Instance?.RootPanel.AddChild(new BlockSelector());
         }
     }
 }
