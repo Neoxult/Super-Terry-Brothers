@@ -1,5 +1,5 @@
-using Sandbox;
 using Sandbox.UI;
+using Sandbox.UI.Construct;
 
 using TerryBros.LevelElements;
 
@@ -10,6 +10,7 @@ namespace TerryBros.UI.LevelBuilder.Tools
     {
         public Panel Wrapper { get; set; }
 
+        public Panel ImageWrapper { get; set; }
         public Image Image { get; set; }
         public Label TextLabel { get; set; }
 
@@ -19,7 +20,7 @@ namespace TerryBros.UI.LevelBuilder.Tools
         {
             Asset = asset;
 
-            Image.Texture = Texture.Load(Asset.IconPath, false);
+            Image = ImageWrapper.Add.Image(Asset.IconPath, "image");
             TextLabel.Text = Asset.Name;
 
             AddEventListener("onclick", (e) =>
