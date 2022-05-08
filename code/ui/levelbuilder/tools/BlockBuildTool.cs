@@ -9,8 +9,11 @@ namespace TerryBros.UI.LevelBuilder.Tools
         public override int Priority { get; set; } = 0;
         public override Action<MousePanelEvent> OnClickTool { get; set; } = OnClickBuildTool;
 
-        public override string IconPath { get; set; } = "";
-
+        public override string IconPath
+        {
+            get => BuildPanel.Instance?.SelectedAsset?.IconPath;
+            set { }
+        }
         public static BlockBuildTool Instance { get; set; }
 
         public static void OnClickBuildTool(MousePanelEvent e)

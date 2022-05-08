@@ -71,6 +71,8 @@ namespace TerryBros.UI.LevelBuilder.Tools
                     BuildPanel.Instance.SelectedAsset = block.Asset;
                 }
             }
+
+            IsOpened = false;
         }
     }
 }

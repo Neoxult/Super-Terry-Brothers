@@ -23,14 +23,21 @@ $color: rgb(199, 145, 80);
         flex-direction: column;
 
         .header {
+            background-color: $color;
+
+            min-height: 20px;
+            min-width: 100%;
+
             flex-shrink: 0;
+
+            border-radius: 8px 8px 0px 0px;
         }
 
         .blocks {
             overflow: scroll;
             background-color: $color;
             color: white;
-            justify-content: space-between;
+            justify-content: flex-start;
             padding: 5px;
 
             flex-wrap: wrap;
@@ -43,9 +50,28 @@ $color: rgb(199, 145, 80);
             background-color: $color;
 
             min-height: 20px;
-            width: 100%;
+            min-width: 100%;
+
+            justify-content: center;
 
             flex-shrink: 0;
+
+            border-radius: 0px 0px 8px 8px;
+
+            button.close {
+                margin: 5px 10px;
+
+                padding: 5px 10px;
+
+                border: 4px rgb(148, 102, 42) solid;
+                border-radius: 8px;
+
+                &:hover {
+                    background-color: rgb(209, 161, 102);
+
+                    cursor: pointer;
+                }
+            }
         }
     }
 }
