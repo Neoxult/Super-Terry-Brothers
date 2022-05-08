@@ -1,0 +1,39 @@
+.build-tools {
+    position: absolute;
+    height: 100%;
+
+    .wrapper {
+        background-color: rgb(204, 160, 107);
+
+        overflow: scroll;
+
+        .build-tool {
+            max-height: 76px;
+            flex-shrink: 0;
+
+            padding: 10px;
+            margin: 10px;
+
+            background-color: rgb(255, 214, 163);
+
+            border-radius: 8px;
+            border: 4px rgb(248, 180, 98) solid;
+
+            image.icon {
+                aspect-ratio: 1;
+
+                width: 48px;
+                min-width: 48px;
+            }
+
+            .label {
+                display: none;
+            }
+
+            &:hover {
+                border: 4px beige solid;
+                border-radius: 0px;
+            }
+        }
+    }
+}

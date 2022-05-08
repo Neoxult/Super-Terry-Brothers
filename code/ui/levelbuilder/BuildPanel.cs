@@ -13,7 +13,7 @@ namespace TerryBros.UI.LevelBuilder
         public LevelElements.BlockAsset SelectedAsset;
         public Panel CurrentMouseOverPanel { get; set; }
 
-        public BlockSelector BlockSelection;
+        public BuildTools BuildTools;
 
         public BuildPanel() : base()
         {
@@ -21,7 +21,9 @@ namespace TerryBros.UI.LevelBuilder
 
             StyleSheet.Load("/ui/levelbuilder/BuildPanel.scss");
 
-            BlockSelection = new BlockSelector(this);
+            BuildTools = new();
+
+            AddChild(BuildTools);
 
             Toggle(false);
         }

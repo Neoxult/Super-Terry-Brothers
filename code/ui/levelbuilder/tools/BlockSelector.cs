@@ -1,13 +1,21 @@
 using System.Collections.Generic;
 
-using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-namespace TerryBros.UI.LevelBuilder
+namespace TerryBros.UI.LevelBuilder.Tools
 {
+    [UseTemplate]
     public class BlockSelector : Panel
     {
+        public static BlockSelector Instance { get; set; }
+
+        public Panel Header { get; set; }
+        public Panel Wrapper { get; set; }
+        public Panel Footer { get; set; }
+
+        public Panel Blocks { get; set; }
+
         public bool IsOpened
         {
             get => _isOpened;
@@ -16,29 +24,21 @@ namespace TerryBros.UI.LevelBuilder
                 SetClass("opened", value);
 
                 _isOpened = value;
-
-                OpenLabel.Text = value ? "Close" : "Open";
             }
         }
         private bool _isOpened = false;
 
-        public Label OpenLabel;
-
         public List<Block> BlockList = new();
 
-        public BlockSelector(Panel parent) : base(parent)
+        public BlockSelector() : base()
         {
-            StyleSheet.Load("/ui/levelbuilder/BlockSelector.scss");
+            Instance = this;
 
-            OpenLabel = Add.Label("Open", "openlabel");
-            OpenLabel.AddEventListener("onclick", (e) =>
-            {
+            AddBlocksData(Blocks);
+
+            Footer.Add.Button("Close", "close", () => {
                 IsOpened = !IsOpened;
             });
-
-            IsOpened = true;
-
-            AddBlocksData(Add.Panel("blocks"));
         }
 
         private void AddBlocksData(Panel parent)
@@ -71,6 +71,8 @@ namespace TerryBros.UI.LevelBuilder
                     BuildPanel.Instance.SelectedAsset = block.Asset;
                 }
             }
+
+            IsOpened = false;
         }
     }
 }
