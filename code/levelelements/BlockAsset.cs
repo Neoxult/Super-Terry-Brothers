@@ -6,7 +6,7 @@ using Sandbox;
 namespace TerryBros.LevelElements
 {
     [Library("block"), AutoGenerate, Hammer.Skip]
-    public class BlockAsset : Asset
+    public class BlockAsset : GameResource
     {
         public static IReadOnlyList<BlockAsset> All => _all;
         internal static List<BlockAsset> _all = new();
@@ -41,7 +41,8 @@ namespace TerryBros.LevelElements
         }
         private Material _material;
 
-        public Texture Texture {
+        public Texture Texture
+        {
             get
             {
                 if (_texture == null)

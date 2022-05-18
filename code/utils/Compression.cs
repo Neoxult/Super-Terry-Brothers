@@ -8,33 +8,33 @@ using System.Text.Json;
 
 namespace TerryBros.Utils
 {
-	public static class Compression
-	{
-		public static byte[] Compress<T>(T data)
-		{
-			using MemoryStream compressStream = new();
-			using DeflateStream deflateStream = new(compressStream, CompressionMode.Compress);
+    public static class Compression
+    {
+        public static byte[] Compress<T>(T data)
+        {
+            using MemoryStream compressStream = new();
+            using DeflateStream deflateStream = new(compressStream, CompressionMode.Compress);
 
-			byte[] serialized = JsonSerializer.SerializeToUtf8Bytes(data);
+            byte[] serialized = JsonSerializer.SerializeToUtf8Bytes(data);
 
-			deflateStream.Write(serialized);
-			deflateStream.Close();
+            deflateStream.Write(serialized);
+            deflateStream.Close();
 
-			return compressStream.ToArray();
-		}
+            return compressStream.ToArray();
+        }
 
-		public static T Decompress<T>(byte[] bytes)
-		{
-			using MemoryStream uncompressStream = new();
+        public static T Decompress<T>(byte[] bytes)
+        {
+            using MemoryStream uncompressStream = new();
 
-			using (MemoryStream compressStream = new(bytes))
-			{
-				using DeflateStream deflateStream = new(compressStream, CompressionMode.Decompress);
-				deflateStream.CopyTo(uncompressStream);
-			}
+            using (MemoryStream compressStream = new(bytes))
+            {
+                using DeflateStream deflateStream = new(compressStream, CompressionMode.Decompress);
+                deflateStream.CopyTo(uncompressStream);
+            }
 
-			return JsonSerializer.Deserialize<T>(uncompressStream.ToArray());
-		}
+            return JsonSerializer.Deserialize<T>(uncompressStream.ToArray());
+        }
 
         public static byte[] CombineByteArrays(params byte[][] arrays)
         {
@@ -50,5 +50,5 @@ namespace TerryBros.Utils
 
             return combinedArray;
         }
-	}
+    }
 }

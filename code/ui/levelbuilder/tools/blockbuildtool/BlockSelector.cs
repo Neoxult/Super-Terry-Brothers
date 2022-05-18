@@ -36,7 +36,8 @@ namespace TerryBros.UI.LevelBuilder.Tools
 
             AddBlocksData(Blocks);
 
-            Footer.Add.Button("Close", "close", () => {
+            Footer.Add.Button("Close", "close", () =>
+            {
                 IsOpened = !IsOpened;
             });
         }
