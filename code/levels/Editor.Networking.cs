@@ -11,7 +11,7 @@ namespace TerryBros.Levels
     {
         private static List<Vector3> Decompress(string positions) => Level.Decompress(Compression.Decompress<string>(positions.ByteArray()));
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ServerCreateBlocks(string positions, string blockName)
         {
             foreach (Vector3 position in Decompress(positions))
@@ -22,7 +22,7 @@ namespace TerryBros.Levels
             ClientCreateBlocks(positions, blockName);
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ServerDeleteBlocks(string positions)
         {
             foreach (Vector3 position in Decompress(positions))
@@ -51,7 +51,7 @@ namespace TerryBros.Levels
             }
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ServerToggleLevelEditor(bool toggle, bool respawn)
         {
             if (ConsoleSystem.Caller == null)
@@ -86,7 +86,7 @@ namespace TerryBros.Levels
             }
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ServerToggleMenu(bool toggle)
         {
             if (ConsoleSystem.Caller?.Pawn is not Player player)

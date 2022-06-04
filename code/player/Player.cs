@@ -9,13 +9,13 @@ namespace TerryBros
         /// <summary>
         /// The clothing container is what dresses the citizen
         /// </summary>
-        public Clothing.Container Clothing = new();
+        public ClothingContainer Clothing = new();
 
         public static Model PlayerModel { get; } = Model.Load("models/citizen/citizen.vmdl");
 
         public LevelElements.SpawnPoint CheckPointSpawn { get; internal set; }
 
-        [ClientVar]
+        [ConVar.Client]
         public static bool Camera2D
         {
             get => _camera2D;

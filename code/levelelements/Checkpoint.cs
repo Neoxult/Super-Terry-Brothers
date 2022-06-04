@@ -5,7 +5,7 @@ using TerryBros.Gamemode;
 
 namespace TerryBros.LevelElements
 {
-    [Library("stb_checkpoint"), Hammer.Skip]
+    [Library("stb_checkpoint"), HideInEditor]
     public partial class Checkpoint : BlockEntity
     {
         public SpawnPoint SpawnPoint { get; private set; }

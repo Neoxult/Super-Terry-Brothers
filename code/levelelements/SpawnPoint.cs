@@ -4,7 +4,7 @@ using TerryBros.Settings;
 
 namespace TerryBros.LevelElements
 {
-    [Library("stb_spawnpoint"), Hammer.Skip]
+    [Library("stb_spawnpoint"), HideInEditor]
     public partial class SpawnPoint : Sandbox.SpawnPoint
     {
         /// <summary>

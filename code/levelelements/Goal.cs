@@ -4,7 +4,7 @@ using TerryBros.Events;
 
 namespace TerryBros.LevelElements
 {
-    [Library("stb_goal"), Hammer.Skip]
+    [Library("stb_goal"), HideInEditor]
     public partial class Goal : BlockEntity
     {
         public Goal() : base()

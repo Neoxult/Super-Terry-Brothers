@@ -97,7 +97,7 @@ namespace TerryBros.LevelElements
             return blockEntity;
         }
 
-        public static BlockEntity FromPath(string assetPath) => FromAsset(Resource.FromPath<BlockAsset>(assetPath));
+        public static BlockEntity Get(string assetPath) => FromAsset(ResourceLibrary.Get<BlockAsset>(assetPath));
 
         public static BlockEntity FromName(string name)
         {

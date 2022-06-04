@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Sandbox;
 using Sandbox.UI;
 
 namespace TerryBros.UI.LevelBuilder
@@ -13,7 +12,7 @@ namespace TerryBros.UI.LevelBuilder
 
         public BuildTools()
         {
-            IEnumerable<Type> buildToolTypes = Library.GetAll<Tools.BuildTool>();
+            IEnumerable<Type> buildToolTypes = TypeLibrary.GetTypes<Tools.BuildTool>();
 
             List<Tools.BuildTool> buildTools = new();
 
@@ -24,7 +23,7 @@ namespace TerryBros.UI.LevelBuilder
                     continue;
                 }
 
-                buildTools.Add(Library.Create<Tools.BuildTool>(type));
+                buildTools.Add(TypeLibrary.Create<Tools.BuildTool>(type));
             }
 
             buildTools.Sort((x, y) => x.Priority.CompareTo(y.Priority));

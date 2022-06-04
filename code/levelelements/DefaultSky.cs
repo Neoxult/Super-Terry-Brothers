@@ -5,7 +5,7 @@ namespace TerryBros.LevelElements
     /// <summary>
 	/// Skybox
 	/// </summary>
-    [Library("stb_sky_sidescroller"), Hammer.Skip]
+    [Library("stb_sky_sidescroller"), HideInEditor]
     public partial class DefaultSky : Sky
     {
         public override void Spawn()

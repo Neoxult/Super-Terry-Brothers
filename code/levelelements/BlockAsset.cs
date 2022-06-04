@@ -5,7 +5,7 @@ using Sandbox;
 
 namespace TerryBros.LevelElements
 {
-    [Library("block"), AutoGenerate, Hammer.Skip]
+    [GameResource("Block", "block", "STB Block"), AutoGenerate]
     public class BlockAsset : GameResource
     {
         public static IReadOnlyList<BlockAsset> All => _all;

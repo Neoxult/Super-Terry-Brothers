@@ -41,7 +41,7 @@ namespace TerryBros.Gamemode
             spawnPoint.MoveToSpawn(pawn);
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void StartGame(string levelPath)
         {
             if (!ConsoleSystem.Caller?.HasPermission("startgame") ?? true)
@@ -54,7 +54,7 @@ namespace TerryBros.Gamemode
             Levels.Loader.Local.Load(levelPath);
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void StartLevelEditor(string levelPath = null)
         {
             if (!ConsoleSystem.Caller?.HasPermission("startleveleditor") ?? false)
@@ -81,7 +81,7 @@ namespace TerryBros.Gamemode
             Start(Levels.Loader.Local.Empty());
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ClearLevel()
         {
             if (!ConsoleSystem.Caller?.HasPermission("clear") ?? false)
@@ -93,7 +93,7 @@ namespace TerryBros.Gamemode
             ClientClearLevel();
         }
 
-        [ServerCmd]
+        [ConCmd.Server]
         public static void QuitGame()
         {
             if (!ConsoleSystem.Caller?.HasPermission("quitgamestate") ?? true)
